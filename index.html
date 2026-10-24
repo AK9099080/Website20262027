@@ -42,7 +42,7 @@ input[type=text],input[type=password]{width:100%;padding:12px 14px;border-radius
 .lane{display:flex;align-items:center;gap:12px;margin:8px 0;font-weight:600;font-size:13px}.lane .bar{flex:1;height:10px;margin:0}.lane span:first-child{width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--mut)}
 table{width:100%;border-collapse:collapse}td,th{padding:11px 8px;text-align:left;border-bottom:1px solid var(--line)}th{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}tr.me td{background:color-mix(in srgb,var(--pri2) 12%,transparent);font-weight:700}
 .av{display:inline-flex;align-items:center;justify-content:center;border-radius:50%;color:#fff;font-weight:800;flex:none}
-.badge{display:inline-flex;flex-direction:column;align-items:center;width:100px;margin:8px;text-align:center;font-size:12px;font-weight:600}.badge b{width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:Consolas,monospace;font-size:18px;color:#fff;background:linear-gradient(135deg,var(--pri),var(--pri2));margin-bottom:6px}.badge.lock{opacity:.3;filter:grayscale(1)}
+.badge{display:inline-flex;flex-direction:column;align-items:center;width:124px;margin:8px;text-align:center;font-size:12px;font-weight:600}.badge b{width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:Consolas,monospace;font-size:18px;color:#fff;background:linear-gradient(135deg,var(--pri),var(--pri2));margin-bottom:6px}.badge.lock{opacity:.3;filter:grayscale(1)}
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:11px 20px;border-radius:9px;font-weight:700;z-index:99;font-size:14px}
 .src{font-size:12px}.res{text-align:center;padding:10px}
 footer{text-align:center;color:var(--mut);padding:24px;font-size:12px}
@@ -91,7 +91,40 @@ var MYTH=[
 {q:'You should fact-check AI answers.',o:['True','False'],a:0},{q:'AI understands things exactly like humans do.',o:['True','False'],a:1},
 {q:'Deepfakes can be made with AI.',o:['True','False'],a:0},{q:'Prompts with more context usually work better.',o:['True','False'],a:0},
 {q:'It’s fine to share passwords with a chatbot.',o:['True','False'],a:1}];
-var BADGES=[['first','I','First Lesson'],['mod','II','Module Master'],['win','III','Race Winner'],['lvl3','IV','Level 3'],['all','V','AI Scholar']];
+var ACH=[
+['first','L1','First Lesson','Complete your first lesson',function(c){return c.les>=1}],
+['five','L5','Warm-Up','Complete 5 lessons',function(c){return c.les>=5}],
+['ten','L10','Deep Diver','Complete 10 lessons',function(c){return c.les>=10}],
+['all','AI','AI Scholar','Complete every lesson',function(c){return c.les>=c.tot}],
+['mod','M1','Module Master','Finish a module',function(c){return c.mods>=1}],
+['mod3','M3','Triple Threat','Finish 3 modules',function(c){return c.mods>=3}],
+['basics','FN','Foundations','Finish AI Basics',function(c){return c.md.basics}],
+['tools','TL','Toolkit','Finish Practical AI Tools',function(c){return c.md.tools}],
+['ethics','ET','Ethics Champion','Finish Ethical AI Use',function(c){return c.md.ethics}],
+['gen','GN','Creator','Finish Generative AI',function(c){return c.md.gen}],
+['opt','PP','Prompt Pro','Finish Optimizing Your AI Use',function(c){return c.md.opt}],
+['lvl3','Lv3','Rising Star','Reach level 3',function(c){return c.lv>=3}],
+['lvl5','Lv5','On a Roll','Reach level 5',function(c){return c.lv>=5}],
+['lvl10','Lv10','Veteran','Reach level 10',function(c){return c.lv>=10}],
+['xp500','5H','500 Club','Earn 500 XP',function(c){return c.xp>=500}],
+['xp1000','1K','1,000 Club','Earn 1,000 XP',function(c){return c.xp>=1000}],
+['win','RW','Race Winner','Win a Quiz Race',function(c){return U.wins>=1}],
+['win5','R5','Race Veteran','Win 5 races',function(c){return U.wins>=5}],
+['play10','G10','Regular','Play 10 games',function(c){return c.st.played>=10}],
+['play25','G25','Dedicated','Play 25 games',function(c){return c.st.played>=25}],
+['doc','Rx','Prompt Doctor','Win a Prompt Doctor round',function(c){return c.st.docWins>=1}],
+['fc','FC','Memory Maker','Clear a Flashcard Sprint deck',function(c){return c.st.fcDone>=1}],
+['match','MU','Quick Match','Finish Match Up in under 60 seconds',function(c){return c.st.matchFast>=1}],
+['b1','B1','Sharpshooter','Clear round 1 in Quiz Blaster',function(c){return c.st.blRounds>=1}],
+['b3','B3','Dead Eye','Clear 3 rounds in Quiz Blaster',function(c){return c.st.blRounds>=3}],
+['b500','B5','Big Score','Score 500+ in one Quiz Blaster game',function(c){return c.st.blBest>=500}],
+['duel','D1','First Duel','Play a friend duel',function(c){return c.st.duels>=1}],
+['dwin','DW','Duelist','Win a duel',function(c){return c.st.duelWins>=1}],
+['dwin5','D5','Champion','Win 5 duels',function(c){return c.st.duelWins>=5}],
+['fr1','F1','Friendly','Add a friend',function(c){return c.fr>=1}],
+['fr5','F5','Social','Add 5 friends',function(c){return c.fr>=5}],
+['team','TM','Team Player','Set your school and class code',function(c){return c.sch&&c.cls}]];
+var BADGES=ACH.map(function(a){return[a[0],a[1],a[2],a[3]]});
 var AVS=[['#6d6bff,#22d3ee','Aurora',1],['#f43f5e,#fb923c','Ember',1],['#10b981,#22d3ee','Mint',2],['#8b5cf6,#ec4899','Nebula',3],['#f59e0b,#ef4444','Solar',4],['#0ea5e9,#1e3a8a','Deep',5],['#9ca3af,#4b5563','Chrome',6]];
 function av(sz,u){u=u||U;var i=typeof u.av==='number'?u.av:0;return '<span class="av" style="width:'+sz+'px;height:'+sz+'px;font-size:'+Math.round(sz*.45)+'px;background:linear-gradient(135deg,'+AVS[i][0]+')">'+u.name.charAt(0).toUpperCase()+'</span>'}
 var FAKE=['Maya R.','Jordan T.','Priya S.','Leo M.','Sofia G.','Dev K.','Ava L.','Noah B.','Zoe C.','Eli W.'];
@@ -106,7 +139,7 @@ function prog(m){return Math.round(((U.done[m.id]||[]).length/m.L.length)*100)}
 function toast(t){var d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(function(){d.remove()},2400)}
 function addXp(n){var before=lvl();U.xp+=n;sb.rpc('add_xp',{n:n}).then(fail);if(lvl()>before)toast('Level up. You are now level '+lvl());chk();save()}
 function badge(k){if(U.badges.indexOf(k)<0){U.badges.push(k);if(!QUIET)toast('New badge: '+BADGES.filter(function(b){return b[0]==k})[0][2])}}
-function chk(){var td=0,full=0;MODS.forEach(function(m){var n=(U.done[m.id]||[]).length;td+=n;if(n==m.L.length)full++});if(td>0)badge('first');if(full>0)badge('mod');if(lvl()>=3)badge('lvl3');if(full==MODS.length)badge('all');if(U.wins>0)badge('win')}
+function chk(){var c={les:0,tot:0,mods:0,md:{},lv:lvl(),xp:U.xp,st:U.st||{},fr:U.friends?U.friends.length:0,sch:U.school,cls:U.cls};MODS.forEach(function(m){var n=(U.done[m.id]||[]).length;c.les+=n;c.tot+=m.L.length;if(n==m.L.length){c.mods++;c.md[m.id]=1}});ACH.forEach(function(a){if(a[4](c))badge(a[0])})}
 function go(r){route=r;render();window.scrollTo(0,0);if(r=='lb'&&U)loadBoard();if(r=='games'&&U)loadDuels()}
 var PUB=[['home','Home'],['why','Why Learn AI'],['stats','Statistics'],['news','News']];
 var PRI=[['dash','Dashboard'],['lib','Library'],['games','Games'],['lb','Leaderboards'],['me','Profile']];
@@ -142,13 +175,13 @@ function draw(){var g=$('game');if(!g||!G)return;var q=G.qs[G.i];if(!q)return;
 function lane(nm,v){return '<div class="lane"><span>'+nm+'</span><div class="bar"><i style="width:'+Math.min(100,v/G.n*100)+'%"></i></div></div>'}
 g.innerHTML='<div class="card" style="margin-top:18px"><h2>'+G.name+'</h2>'+lane(U.name,G.i)+lane('Bot Byte',G.bots[0])+lane('Bot Bit',G.bots[1])+'<h3 style="margin-top:16px">'+q.q+'</h3>'+q.o.map(function(o,i){return '<button class="opt" onclick="ans('+i+',this)">'+o+'</button>'}).join('')+'</div>'}
 function ans(i,el){if(G.lock||G.end)return;var q=G.qs[G.i];G.lock=true;if(i==q.a){el.classList.add('good');setTimeout(function(){G.i++;G.lock=false;if(G.i>=G.n)finish(true);else draw()},500)}else{el.classList.add('no');setTimeout(function(){G.lock=false;draw()},700)}}
-function finish(win){G.end=true;clearInterval(G.t);if(win){U.wins++;locW();addXp(50)}else addXp(20);chk();save();
+function finish(win){bump('played');G.end=true;clearInterval(G.t);if(win){U.wins++;locW();if(G.name=='Prompt Doctor')bump('docWins');addXp(50)}else addXp(20);chk();save();
 $('game').innerHTML='<div class="card res" style="margin-top:18px"><div class="eyebrow">'+(win?'Victory':'Race over')+'</div><h2>'+(win?'You won! +50 XP':'A bot got there first. +20 XP')+'</h2><button class="btn" onclick="go(\'games\')">Play again</button></div>';render0()}
 function board(){var tabs=[['friends','Friends'],['class','Class'],['school','School'],['world','World']],extra='';
 if(lb=='friends')extra='<div class="card" style="margin-top:14px"><h3>Add a friend</h3><input type="text" id="fr" maxlength="16" placeholder="Their exact username"><button class="btn" onclick="addFr()">Add</button></div>';
 var body=LB.loading?'<p class="mut">Loading…</p>':LB.rows.length?'<table><tr><th>#</th><th>Player</th><th>XP</th><th></th></tr>'+LB.rows.map(function(r,i){return '<tr class="'+(r.me?'me':'')+'"><td>'+(i+1)+'</td><td><span style="display:inline-flex;align-items:center;gap:10px">'+av(28,r.u)+r.n+(r.me?' (you)':'')+'</span></td><td>'+r.x+'</td><td>'+(r.fi>=0?'<a style="cursor:pointer" onclick="rmFr('+r.fi+')">remove</a>':'')+'</td></tr>'}).join('')+'</table>':'<p class="mut">'+(LB.note||'Nobody here yet.')+'</p>';
 return '<h1>Leaderboards</h1><div class="pills">'+tabs.map(function(t){return '<button class="pill '+(lb==t[0]?'on':'')+'" onclick="lb=\''+t[0]+'\';loadBoard()">'+t[1]+'</button>'}).join('')+'</div><div class="card">'+body+'</div>'+(LB.note&&LB.rows.length?'<p class="src mut">'+LB.note+'</p>':'')+extra}
-function me0(){return '<h1>Your profile</h1><div class="card">'+av(72)+'<h2>'+U.name+'</h2><p class="mut">Level '+lvl()+' · '+U.xp+' XP</p></div><div class="sec"><h2>Choose your avatar</h2><div class="pills">'+AVS.map(function(a,i){var ok=lvl()>=a[2];return '<button class="pill '+(U.av==i?'on':'')+'" '+(ok?'onclick="setAv('+i+')"':'disabled style="opacity:.4"')+'><span class="av" style="width:22px;height:22px;background:linear-gradient(135deg,'+a[0]+')"></span>'+a[1]+(ok?'':' · Lv '+a[2])+'</button>'}).join('')+'</div></div><div class="sec"><h2>Badges</h2><div class="card">'+BADGES.map(function(b){return '<div class="badge '+(U.badges.indexOf(b[0])<0?'lock':'')+'"><b>'+b[1]+'</b>'+b[2]+'</div>'}).join('')+'</div></div>'}
+function me0(){return '<h1>Your profile</h1><div class="card">'+av(72)+'<h2>'+U.name+'</h2><p class="mut">Level '+lvl()+' · '+U.xp+' XP</p></div><div class="sec"><h2>Choose your avatar</h2><div class="pills">'+AVS.map(function(a,i){var ok=lvl()>=a[2];return '<button class="pill '+(U.av==i?'on':'')+'" '+(ok?'onclick="setAv('+i+')"':'disabled style="opacity:.4"')+'><span class="av" style="width:22px;height:22px;background:linear-gradient(135deg,'+a[0]+')"></span>'+a[1]+(ok?'':' · Lv '+a[2])+'</button>'}).join('')+'</div></div><div class="sec"><h2>Achievements ('+U.badges.length+'/'+BADGES.length+')</h2><div class="card">'+BADGES.map(function(b){return '<div class="badge '+(U.badges.indexOf(b[0])<0?'lock':'')+'" title="'+b[3]+'"><b>'+b[1]+'</b>'+b[2]+'<span class="src mut" style="font-weight:400">'+b[3]+'</span></div>'}).join('')+'</div></div>'}
 function render0(){var m=$('sub').querySelector('.me');if(m)m.innerHTML=meHtml()}
 function meHtml(){return av(28)+'<b>'+U.name+'</b> Level '+lvl()+'<span class="xpm"><i style="width:'+(U.xp%100)+'%"></i></span>'+U.xp+' XP'}
 var SB_URL='https://rytzhadculmofsblaxju.supabase.co';
@@ -162,12 +195,12 @@ var p=await sb.from('profiles').select('*').eq('id',id).single();
 if(p.error||!p.data){await sb.auth.signOut();U=null;return false}
 var pr=await sb.from('progress').select('module_id,lessons').eq('user_id',id);
 var fr=await sb.from('friends').select('friend_id').eq('user_id',id);
-U={id:id,name:p.data.username,xp:p.data.xp,av:Math.min(p.data.avatar||0,AVS.length-1),school:p.data.school||'',cls:p.data.class_code||'',done:{},badges:[],wins:0,friends:[]};
+U={id:id,name:p.data.username,xp:p.data.xp,av:Math.min(p.data.avatar||0,AVS.length-1),school:p.data.school||'',cls:p.data.class_code||'',done:{},badges:[],wins:0,st:(p.data.stats&&typeof p.data.stats=='object'?p.data.stats:{}),friends:[]};
 (pr.data||[]).forEach(function(r){U.done[r.module_id]=r.lessons});
-try{U.wins=parseInt(localStorage.getItem('sh_w_'+id))||0}catch(e){}
+U.wins=U.st.raceWins||0;
 var ids=(fr.data||[]).map(function(r){return r.friend_id});
 if(ids.length){var f=await sb.from('profiles').select('id,username,xp,avatar').in('id',ids);U.friends=(f.data||[]).map(function(x){return{id:x.id,name:x.username,xp:x.xp,av:x.avatar}})}
-QUIET=true;chk();QUIET=false;return true}
+QUIET=true;chk();QUIET=false;startInbox();return true}
 async function init(){if(sb){try{var r=await sb.auth.getSession();if(r.data.session)await loadUser(r.data.session.user.id)}catch(e){}}render()}
 function loginBox(){$('modal').innerHTML='<div class="modal" onclick="if(event.target==this)$(\'modal\').innerHTML=\'\'"><div class="box"><h2>Log in or sign up</h2><p class="mut">Pick a username (3–16 letters, numbers or _) and a 6-digit PIN. New username? We’ll create your account. Existing one? Enter your PIN to continue. Don’t use your real name.</p><input type="text" id="un" maxlength="16" placeholder="Username" autocomplete="off"><input type="password" id="pin" inputmode="numeric" maxlength="6" placeholder="6-digit PIN" onkeydown="if(event.key==\'Enter\')doLogin()"><button class="btn" id="lgbtn" onclick="doLogin()">Let’s go</button> <button class="btn ghost" onclick="$(\'modal\').innerHTML=\'\'">Cancel</button></div></div>';$('un').focus()}
 async function doLogin(){var v=$('un').value.trim(),pin=$('pin').value.trim();
@@ -182,11 +215,11 @@ var ins=await sb.from('profiles').insert({id:s.data.user.id,username:v});
 if(ins.error){await sb.auth.signOut();b.disabled=false;toast('That username is already taken');return}
 r={data:{user:s.data.user}}}
 await loadUser(r.data.user.id);$('modal').innerHTML='';toast('Welcome, '+U.name+'!');go('dash')}
-async function logout(){try{await sb.auth.signOut()}catch(e){}U=null;go('home')}
+async function logout(){try{if(INB)sb.removeChannel(INB)}catch(e){}if(RT)liveStop();try{await sb.auth.signOut()}catch(e){}U=null;go('home')}
 function saveProg(id){sb.from('progress').upsert({user_id:U.id,module_id:id,lessons:U.done[id]}).then(fail)}
 function setAv(i){U.av=i;sb.from('profiles').update({avatar:i}).eq('id',U.id).then(fail);render()}
-function locW(){try{localStorage.setItem('sh_w_'+U.id,U.wins)}catch(e){}}
-function saveSet(){U.school=clean($('sch').value);U.cls=clean($('cls').value);sb.from('profiles').update({school:U.school||null,class_code:U.cls||null}).eq('id',U.id).then(function(r){fail(r);if(!r.error)toast('Saved')})}
+function locW(){U.st.raceWins=U.wins;saveSt()}
+function saveSet(){U.school=clean($('sch').value);U.cls=clean($('cls').value);chk();sb.from('profiles').update({school:U.school||null,class_code:U.cls||null}).eq('id',U.id).then(function(r){fail(r);if(!r.error)toast('Saved')})}
 function settings(){return '<div class="sec"><h2>Class and school</h2><div class="card"><p class="mut">Enter the same school name and class code as your classmates to appear on the same leaderboard. Spelling must match.</p><input type="text" id="sch" maxlength="30" placeholder="School name" value="'+U.school+'"><input type="text" id="cls" maxlength="30" placeholder="Class code" value="'+U.cls+'"><button class="btn" onclick="saveSet()">Save</button></div><p class="src mut" style="margin-top:14px">Your progress is saved to your account online, so you can log in from any device with your username and PIN.</p></div>'}
 function me(){return me0()+settings()}
 async function loadBoard(){LB={rows:[],note:'',loading:true};render();
@@ -204,7 +237,7 @@ if(!r.data){toast('No player with that exact username');return}
 if(r.data.id==U.id){toast('That’s you!');return}
 if(U.friends.some(function(f){return f.id==r.data.id})){toast('Already a friend');return}
 var i=await sb.from('friends').insert({user_id:U.id,friend_id:r.data.id});if(i.error){fail(i);return}
-U.friends.push({id:r.data.id,name:r.data.username,xp:r.data.xp,av:r.data.avatar});toast('Friend added');loadBoard()}
+U.friends.push({id:r.data.id,name:r.data.username,xp:r.data.xp,av:r.data.avatar});toast('Friend added');chk();loadBoard()}
 async function rmFr(i){var f=U.friends[i];var r=await sb.from('friends').delete().eq('user_id',U.id).eq('friend_id',f.id);if(r.error){fail(r);return}U.friends.splice(i,1);loadBoard()}
 var TERMS=[['Machine learning','Software that learns patterns from examples instead of fixed rules'],['Training data','The examples an AI learns from'],['Hallucination','When AI confidently states something false or invented'],['Bias','Unfair patterns an AI picks up from its data'],['Prompt','The instruction or question you give an AI'],['Deepfake','An AI-made fake image, audio or video of a real person'],['Generative AI','AI that creates new text, images or audio'],['Iteration','Improving an answer through follow-up requests'],['Plagiarism','Passing off someone else’s or an AI’s work as your own'],['Privacy','Keeping personal information out of tools you don’t control']];
 var PROMPT=[
@@ -223,12 +256,12 @@ return '<h1>Games</h1><p class="mut">Every round earns XP. Questions live in the
 +c('Rx','Prompt Doctor','Pick the prompt that gets the best answer. This skill improves every AI result.','play(PROMPT,\'Prompt Doctor\',5)')
 +c('FC','Flashcard Sprint','Learn 10 key terms. Cards you miss come back soon, which helps them stick.','fcStart()')
 +c('M','Match Up','Match terms to definitions. Finish under 60 seconds for bonus XP.','muStart()')
-+c('VS','Friend Duels','Challenge a friend to the same 5 timed questions. Higher score wins bonus XP.','$(\'duels\').scrollIntoView({behavior:\'smooth\'})','Open')
++c('BL','Quiz Blaster','Aim and shoot the correct answer while the targets drift and bounce. Beat each 60-second round to advance.','blStart()')+c('VS','Friend Duels','Challenge a friend: play live together or send a duel to play later. Winners earn bonus XP.','$(\'duels\').scrollIntoView({behavior:\'smooth\'})','Open')
 +'</div><div id="game"></div><div id="duels"></div>'}
 var FC=null;
 function fcStart(){var q=TERMS.slice().sort(rnd);FC={q:q,n:q.length,show:false,miss:0};fcDraw()}
 function fcDraw(){var g=$('game');if(!g)return;
-if(!FC.q.length){addXp(20);g.innerHTML='<div class="card res" style="margin-top:18px"><div class="eyebrow">Deck cleared</div><h2>All '+FC.n+' terms learned. +20 XP</h2><p class="mut">Cards you needed again: '+FC.miss+'</p><button class="btn" onclick="fcStart()">Go again</button></div>';return}
+if(!FC.q.length){addXp(20);bump('fcDone');bump('played');g.innerHTML='<div class="card res" style="margin-top:18px"><div class="eyebrow">Deck cleared</div><h2>All '+FC.n+' terms learned. +20 XP</h2><p class="mut">Cards you needed again: '+FC.miss+'</p><button class="btn" onclick="fcStart()">Go again</button></div>';return}
 var c=FC.q[0];g.innerHTML='<div class="card" style="margin-top:18px"><div class="eyebrow">Flashcard Sprint · '+(FC.n-FC.q.length)+'/'+FC.n+' learned</div><div class="bar"><i style="width:'+((FC.n-FC.q.length)/FC.n*100)+'%"></i></div><h2 style="margin:18px 0">'+c[0]+'</h2>'+(FC.show?'<p>'+c[1]+'</p><button class="btn" onclick="fcNext(1)">Got it</button> <button class="btn ghost" onclick="fcNext(0)">Show again soon</button>':'<p class="mut">Say the definition in your head, then reveal it.</p><button class="btn" onclick="FC.show=true;fcDraw()">Reveal</button>')+'</div>'}
 function fcNext(k){var c=FC.q.shift();if(!k){FC.miss++;FC.q.splice(Math.min(2,FC.q.length),0,c)}FC.show=false;fcDraw()}
 var MU=null;
@@ -237,7 +270,7 @@ function muBtn(i,side){var dn=MU.done[i],sel=side=='t'&&MU.sel==i;return '<butto
 function muDraw(){var g=$('game');if(!g)return;g.innerHTML='<div class="card" style="margin-top:18px"><div class="eyebrow">Match Up · '+Object.keys(MU.done).length+'/'+MU.p.length+' matched</div><p class="mut">Pick a term, then its definition.</p><div style="display:grid;grid-template-columns:1fr 1.6fr;gap:12px"><div>'+MU.t.map(function(i){return muBtn(i,'t')}).join('')+'</div><div>'+MU.d.map(function(i){return muBtn(i,'d')}).join('')+'</div></div></div>'}
 function muPick(i,side){if(side=='t'){MU.sel=i;muDraw();return}
 if(MU.sel<0){toast('Pick a term first');return}
-if(MU.sel==i){MU.done[i]=1;MU.sel=-1;if(Object.keys(MU.done).length==MU.p.length){var s=Math.round((Date.now()-MU.t0)/1000);addXp(s<60?40:25);$('game').innerHTML='<div class="card res" style="margin-top:18px"><div class="eyebrow">Complete</div><h2>Matched in '+s+' seconds. +'+(s<60?40:25)+' XP</h2><button class="btn" onclick="muStart()">Play again</button></div>';return}}
+if(MU.sel==i){MU.done[i]=1;MU.sel=-1;if(Object.keys(MU.done).length==MU.p.length){var s=Math.round((Date.now()-MU.t0)/1000);addXp(s<60?40:25);bump('played');if(s<60)bump('matchFast');$('game').innerHTML='<div class="card res" style="margin-top:18px"><div class="eyebrow">Complete</div><h2>Matched in '+s+' seconds. +'+(s<60?40:25)+' XP</h2><button class="btn" onclick="muStart()">Play again</button></div>';return}}
 else{MU.sel=-1;toast('Not a match')}muDraw()}
 var DU={},DG=null;
 async function loadDuels(){var el=$('duels');if(!el||!U)return;
@@ -249,10 +282,10 @@ DU={};var inc='',wait='',fin='',bonus=0,cl=[];try{cl=JSON.parse(localStorage.get
 rows.forEach(function(d){DU[d.id]=d;var mine=d.challenger==U.id,o=m[mine?d.opponent:d.challenger]||'Player';
 if(d.o_score==null){if(mine)wait+='<tr><td>'+o+'</td><td class="mut">Waiting for them to play</td><td></td></tr>';else inc+='<tr><td>'+o+'</td><td>challenged you</td><td><button class="btn" onclick="acceptDuel(\''+d.id+'\')">Play</button></td></tr>'}
 else{var a=mine?d.c_score:d.o_score,b=mine?d.o_score:d.c_score;if(a>b&&cl.indexOf(d.id)<0){cl.push(d.id);bonus+=20}fin+='<tr><td>'+o+'</td><td>'+a+' – '+b+'</td><td>'+(a>b?'Win':a<b?'Loss':'Tie')+'</td></tr>'}});
-if(bonus){addXp(bonus);toast('Duel win bonus: +'+bonus+' XP');try{localStorage.setItem('sh_dc_'+U.id,JSON.stringify(cl.slice(-100)))}catch(e){}}
+if(bonus){bump('duelWins',bonus/20);addXp(bonus);toast('Duel win bonus: +'+bonus+' XP');try{localStorage.setItem('sh_dc_'+U.id,JSON.stringify(cl.slice(-100)))}catch(e){}}
 function T(x){return x?'<div class="card"><table>'+x+'</table></div>':'<p class="mut">None right now.</p>'}
-el.innerHTML='<div class="sec"><h2>Friend duels</h2><p class="mut">You and a friend answer the same 5 questions, 15 seconds each. Faster correct answers score more. Play whenever you like. Results appear once both of you have played.</p>'
-+(U.friends.length?'<div class="card"><select id="dfr">'+U.friends.map(function(f){return '<option value="'+f.id+'">'+f.name+'</option>'}).join('')+'</select> <button class="btn" onclick="startDuel()">Challenge</button></div>':'<div class="card mut">Add friends on the Leaderboards page to duel them.</div>')
+el.innerHTML='<div class="sec"><h2>Friend duels</h2><p class="mut">You and a friend answer the same 5 questions, 15 seconds each. Faster correct answers score more. Live duel: you both play right now and your friend gets an invite pop-up. Send for later: you each play on your own time and the result appears when both have played.</p>'
++(U.friends.length?'<div class="card"><select id="dfr">'+U.friends.map(function(f){return '<option value="'+f.id+'">'+f.name+'</option>'}).join('')+'</select> <button class="btn" onclick="liveInvite()">Live duel now</button> <button class="btn ghost" onclick="startDuel()">Send for later</button></div>':'<div class="card mut">Add friends on the Leaderboards page to duel them.</div>')
 +'<h3 style="margin-top:22px">Challenges for you</h3>'+T(inc)+'<h3 style="margin-top:22px">Waiting on friends</h3>'+T(wait)+'<h3 style="margin-top:22px">Results</h3>'+T(fin)+'</div>'}
 function startDuel(){var id=$('dfr').value,f=U.friends.filter(function(x){return x.id==id})[0];if(!f)return;duelPlay({qids:ALLQ.map(function(x,i){return i}).sort(rnd).slice(0,5),opp:id,name:f.name,mode:'new'})}
 function acceptDuel(id){var d=DU[id];if(!d)return;var f=U.friends.filter(function(x){return x.id==d.challenger})[0];duelPlay({qids:d.qids,id:id,name:f?f.name:'a friend',mode:'ans'})}
@@ -264,6 +297,76 @@ function duelNext(ok,t){if(ok)DG.s+=10+Math.max(0,t);DG.i++;DG.t=15;DG.lock=fals
 async function duelEnd(){clearInterval(DG.iv);DG.lock=true;var d=DG.d,s=DG.s,g=$('game');if(!g)return;g.innerHTML='<div class="card res" style="margin-top:18px"><h2>Saving your result…</h2></div>';
 var r=d.mode=='new'?await sb.from('duels').insert({challenger:U.id,opponent:d.opp,qids:d.qids,c_score:s}):await sb.from('duels').update({o_score:s}).eq('id',d.id).is('o_score',null).select();
 if(r.error||(d.mode!='new'&&!(r.data&&r.data.length))){g.innerHTML='<div class="card res" style="margin-top:18px">Could not save the duel. Check your connection and that the duels SQL has been run.</div>';return}
-addXp(30);g.innerHTML='<div class="card res" style="margin-top:18px"><div class="eyebrow">Duel played</div><h2>Your score: '+s+'. +30 XP</h2><p class="mut">'+(d.mode=='new'?'Your friend will see the challenge on their Games page.':'See the results list below.')+'</p></div>';loadDuels()}
+bump('duels');addXp(30);g.innerHTML='<div class="card res" style="margin-top:18px"><div class="eyebrow">Duel played</div><h2>Your score: '+s+'. +30 XP</h2><p class="mut">'+(d.mode=='new'?'Your friend will see the challenge on their Games page.':'See the results list below.')+'</p></div>';loadDuels()}
+var stT=null;
+function saveSt(){clearTimeout(stT);stT=setTimeout(function(){if(U&&sb)sb.from('profiles').update({stats:U.st}).eq('id',U.id).then(function(){})},800)}
+function bump(k,n){U.st[k]=(U.st[k]||0)+(n||1);saveSt();chk()}
+function best(k,v){if(v>(U.st[k]||0)){U.st[k]=v;saveSt();chk()}}
+function addXpBig(n){while(n>0){var k=Math.min(n,100);addXp(k);n-=k}}
+var BL=null;
+function blStart(){var g=$('game');g.innerHTML='<div class="card" style="margin-top:18px"><div class="eyebrow" id="bhud"></div><h3 id="bq" style="min-height:52px;margin-top:8px"></h3><canvas id="bc" width="800" height="500" style="width:100%;max-width:800px;display:block;margin:auto;border:1px solid var(--line);border-radius:12px;background:var(--bg);cursor:crosshair;touch-action:none"></canvas><div id="bmsg" class="res"></div></div>';
+var cv=$('bc'),cs=getComputedStyle(document.documentElement),C=function(n){return cs.getPropertyValue(n).trim()||'#888'};
+var me=BL={round:1,total:0,pts:0,need:300,time:60,ph:'ready',T:[],B:[],ax:400,ay:200,cd:0,pool:[],last:0,cur:null,cv:cv,cx:cv.getContext('2d'),col:{card:C('--card'),pri:C('--pri'),pri2:C('--pri2'),ink:C('--ink'),ok:C('--ok'),bad:C('--bad'),line:C('--line')}};
+function pos(e){var r=cv.getBoundingClientRect();me.ax=(e.clientX-r.left)*800/r.width;me.ay=(e.clientY-r.top)*500/r.height}
+cv.onpointermove=pos;cv.onpointerdown=function(e){pos(e);blFire()};
+blMsg('Round 1','Hit the correct answer to score 100 points. A wrong hit costs 20. Reach <b>'+me.need+'</b> points within 60 seconds to advance. Aim with the mouse or your finger and click or tap to fire.','Start round');
+requestAnimationFrame(function f(t){if(BL!==me||$('bc')!==me.cv)return;blFrame(t);requestAnimationFrame(f)})}
+function blMsg(h,p,b){$('bmsg').innerHTML='<h3>'+h+'</h3><p class="mut">'+p+'</p><button class="btn" onclick="'+(b=='Play again'?'blStart()':'blBegin()')+'">'+b+'</button>'}
+function blBegin(){BL.ph='play';BL.time=60;BL.pts=0;BL.B=[];BL.last=performance.now();blQ();$('bmsg').innerHTML=''}
+function blQ(){if(!BL.pool.length)BL.pool=QUIZ.concat(PROMPT,MYTH).sort(rnd);BL.cur=BL.pool.pop();$('bq').textContent=BL.cur.q;var arr=[];
+BL.cur.o.forEach(function(t,i){var w=170,h=64,x,y,k=0;do{x=20+Math.random()*(760-w);y=20+Math.random()*(300-h);k++}while(k<40&&arr.some(function(a){return x<a.x+a.w+8&&x+w+8>a.x&&y<a.y+a.h+8&&y+h+8>a.y}));
+var sp=45+Math.random()*35,an=Math.random()*6.283;arr.push({x:x,y:y,w:w,h:h,vx:Math.cos(an)*sp,vy:Math.sin(an)*sp,t:t,ok:i==BL.cur.a,f:0,fc:null})});BL.T=arr}
+function blFire(){if(BL.ph!='play'||BL.cd>0)return;var a=Math.atan2(BL.ay-470,BL.ax-400);a=Math.min(-0.12,Math.max(-Math.PI+0.12,a));BL.B.push({x:400+Math.cos(a)*34,y:470+Math.sin(a)*34,vx:Math.cos(a)*750,vy:Math.sin(a)*750});BL.cd=0.25}
+function blFrame(t){var dt=Math.min(.05,((t-BL.last)/1000)||0);BL.last=t;
+if(BL.ph=='play'){BL.time-=dt;BL.cd-=dt;var T=BL.T;
+T.forEach(function(a){a.x+=a.vx*dt;a.y+=a.vy*dt;if(a.x<0){a.x=0;a.vx=Math.abs(a.vx)}if(a.x+a.w>800){a.x=800-a.w;a.vx=-Math.abs(a.vx)}if(a.y<0){a.y=0;a.vy=Math.abs(a.vy)}if(a.y+a.h>380){a.y=380-a.h;a.vy=-Math.abs(a.vy)}if(a.f>0)a.f-=dt});
+for(var i=0;i<T.length;i++)for(var j=i+1;j<T.length;j++){var a=T[i],b=T[j],ox=Math.min(a.x+a.w,b.x+b.w)-Math.max(a.x,b.x),oy=Math.min(a.y+a.h,b.y+b.h)-Math.max(a.y,b.y);
+if(ox>0&&oy>0){var tmp;if(ox<oy){if(a.x<b.x){a.x-=ox/2;b.x+=ox/2}else{a.x+=ox/2;b.x-=ox/2}tmp=a.vx;a.vx=b.vx;b.vx=tmp}else{if(a.y<b.y){a.y-=oy/2;b.y+=oy/2}else{a.y+=oy/2;b.y-=oy/2}tmp=a.vy;a.vy=b.vy;b.vy=tmp}}}
+var hit=null;BL.B=BL.B.filter(function(p){p.x+=p.vx*dt;p.y+=p.vy*dt;if(p.x<-10||p.x>810||p.y<-10||p.y>510)return false;if(!hit)for(var k=0;k<T.length;k++){var q=T[k];if(p.x>q.x-5&&p.x<q.x+q.w+5&&p.y>q.y-5&&p.y<q.y+q.h+5){hit=q;return false}}return true});
+if(hit){if(hit.ok){BL.pts+=100;if(BL.pts>=BL.need)blClear();else blQ()}else{BL.pts=Math.max(0,BL.pts-20);hit.f=.4;hit.fc=BL.col.bad}}
+if(BL.ph=='play'&&BL.time<=0)blOver()}
+blDraw()}
+function blClear(){var bonus=Math.round(BL.time)*2;BL.total+=BL.pts+bonus;best('blRounds',BL.round);BL.ph='between';BL.T=[];BL.round++;BL.need=200+100*BL.round;blMsg('Round cleared','Time bonus +'+bonus+'. Total so far: '+BL.total+'. Round '+BL.round+' needs <b>'+BL.need+'</b> points.','Start round '+BL.round)}
+function blOver(){BL.total+=BL.pts;BL.ph='over';BL.T=[];var xp=Math.min(150,Math.floor(BL.total/6));addXpBig(xp);bump('played');best('blBest',BL.total);$('bq').textContent='';$('bmsg').innerHTML='<div class="eyebrow">Time’s up</div><h2>Total score '+BL.total+'</h2><p class="mut">You needed '+BL.need+' in round '+BL.round+' and got '+BL.pts+'. You earned <b>+'+xp+' XP</b> (1 XP per 6 points, up to 150).</p><button class="btn" onclick="blStart()">Play again</button>'}
+function wrapT(cx,txt,w){var ws=txt.split(' '),l=[],c='';ws.forEach(function(x){var t=c?c+' '+x:x;if(cx.measureText(t).width>w&&c){l.push(c);c=x}else c=t});l.push(c);return l.slice(0,4)}
+function blDraw(){var cx=BL.cx,co=BL.col;cx.clearRect(0,0,800,500);
+var h=$('bhud');if(h)h.textContent='Round '+BL.round+' · Points '+BL.pts+' / '+BL.need+' · Time '+Math.max(0,Math.ceil(BL.time))+'s · Total '+BL.total;
+BL.T.forEach(function(a){cx.beginPath();if(cx.roundRect)cx.roundRect(a.x,a.y,a.w,a.h,12);else cx.rect(a.x,a.y,a.w,a.h);cx.fillStyle=a.f>0?a.fc:co.card;cx.fill();cx.lineWidth=2;cx.strokeStyle=co.pri2;cx.stroke();cx.fillStyle=a.f>0?'#fff':co.ink;cx.font='bold 12px sans-serif';cx.textAlign='center';cx.textBaseline='middle';var L=wrapT(cx,a.t,a.w-16);L.forEach(function(s,i){cx.fillText(s,a.x+a.w/2,a.y+a.h/2+(i-(L.length-1)/2)*15)})});
+var an=Math.min(-0.12,Math.max(-Math.PI+0.12,Math.atan2(BL.ay-470,BL.ax-400)));
+cx.strokeStyle=co.line;cx.setLineDash([4,6]);cx.beginPath();cx.moveTo(400,470);cx.lineTo(400+Math.cos(an)*300,470+Math.sin(an)*300);cx.stroke();cx.setLineDash([]);
+cx.save();cx.translate(400,470);cx.rotate(an);cx.fillStyle=co.pri;cx.fillRect(0,-7,36,14);cx.restore();cx.beginPath();cx.arc(400,480,24,0,6.283);cx.fillStyle=co.pri2;cx.fill();
+cx.fillStyle=co.ink;BL.B.forEach(function(p){cx.beginPath();cx.arc(p.x,p.y,5,0,6.283);cx.fill()})}
+var RT=null,INB=null;
+function startInbox(){try{if(INB)sb.removeChannel(INB);INB=sb.channel('inbox:'+U.id).on('broadcast',{event:'invite'},function(m){showInvite(m.payload)}).subscribe()}catch(e){}}
+async function showInvite(p){if(!p||!p.room||!p.fromId||p.fromId==U.id)return;var r=await sb.from('profiles').select('username').eq('id',p.fromId).maybeSingle();if(!r.data)return;
+var d=document.createElement('div');d.className='toast';d.style.cssText='top:16px;bottom:auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center;max-width:92vw';
+d.innerHTML=r.data.username+' invites you to a live duel <button class="btn">Accept</button><button class="btn ghost" style="color:var(--bg);border-color:var(--bg)">Decline</button>';
+var b=d.querySelectorAll('button');b[0].onclick=function(){d.remove();go('games');liveJoin(p.room,p.fromId,r.data.username)};b[1].onclick=function(){d.remove()};document.body.appendChild(d);setTimeout(function(){d.remove()},45000)}
+function liveOpen(onReady){var c=sb.channel('room:'+RT.room,{config:{broadcast:{self:false}}});RT.ch=c;
+c.on('broadcast',{event:'join'},function(){if(RT&&RT.role=='host'&&RT.state=='wait'){RT.state='play';c.send({type:'broadcast',event:'start',payload:{qids:RT.qids}});livePlay()}});
+c.on('broadcast',{event:'start'},function(m){var q=m.payload&&m.payload.qids;if(RT&&RT.role=='guest'&&RT.state=='wait'&&Array.isArray(q)&&q.length==5&&q.every(function(i){return Number.isInteger(i)&&i>=0&&i<ALLQ.length})){RT.qids=q;RT.state='play';livePlay()}});
+c.on('broadcast',{event:'next'},function(m){if(RT&&RT.role=='guest'&&RT.state=='play'&&m.payload.i>=0&&m.payload.i<5){RT.i=m.payload.i;RT.t=15;RT.lock=false;RT.opp.ans=false;liveDraw()}});
+c.on('broadcast',{event:'ans'},function(m){var p=m.payload;if(RT&&RT.state=='play'&&p.i==RT.i&&Number.isInteger(p.s)){RT.opp.s=p.s;RT.opp.ans=true;liveHud();liveCheck()}});
+c.on('broadcast',{event:'end'},function(m){if(RT&&RT.role=='guest'&&RT.state=='play'){RT.s=Number(m.payload.g)||0;RT.opp.s=Number(m.payload.h)||0;liveEnd()}});
+c.on('broadcast',{event:'bye'},function(){if(RT&&RT.state!='done'){var n=RT.opp.name;liveStop(1);var g=$('game');if(g)g.innerHTML='<div class="card res" style="margin-top:18px">'+n+' left the duel.</div>'}});
+c.subscribe(function(st){if(st=='SUBSCRIBED'&&RT&&RT.ch===c)onReady()})}
+function livePlay(){RT.iv=setInterval(liveTick,1000);liveDraw()}
+function liveTick(){if(!RT||RT.state!='play')return;if(!$('game')){liveStop();return}RT.t--;var e=$('dt');if(e)e.style.width=Math.max(0,RT.t/15*100)+'%';if(RT.t<=0){RT.lock=true;if(RT.role=='host'&&!RT.adv){RT.adv=true;liveAdvance()}}}
+function liveCheck(){if(RT.role=='host'&&RT.lock&&RT.opp.ans&&!RT.adv){RT.adv=true;setTimeout(liveAdvance,900)}}
+function liveAdvance(){if(!RT||RT.state!='play')return;RT.i++;RT.adv=false;if(RT.i>=5){RT.ch.send({type:'broadcast',event:'end',payload:{h:RT.s,g:RT.opp.s}});liveEnd();return}RT.t=15;RT.lock=false;RT.opp.ans=false;RT.ch.send({type:'broadcast',event:'next',payload:{i:RT.i}});liveDraw()}
+function liveDraw(){var g=$('game');if(!g||!RT)return;var q=ALLQ[RT.qids[RT.i]];g.innerHTML='<div class="card" style="margin-top:18px"><div class="eyebrow">Live duel vs '+RT.opp.name+' · Question '+(RT.i+1)+'/5</div><p id="lh" class="mut"></p><div class="bar"><i id="dt" style="width:100%;transition:width 1s linear"></i></div><h3 style="margin-top:16px">'+q.q+'</h3>'+q.o.map(function(o,i){return '<button class="opt" onclick="liveAns('+i+',this)">'+o+'</button>'}).join('')+'</div>';liveHud()}
+function liveHud(){var e=$('lh');if(e&&RT)e.textContent='You '+RT.s+' · '+RT.opp.name+' '+RT.opp.s+(RT.opp.ans?' · answered':'')}
+function liveAns(i,el){if(!RT||RT.lock||RT.state!='play')return;RT.lock=true;var ok=i==ALLQ[RT.qids[RT.i]].a;if(ok)RT.s+=10+Math.max(0,RT.t);el.classList.add(ok?'good':'no');RT.ch.send({type:'broadcast',event:'ans',payload:{i:RT.i,s:RT.s}});liveHud();liveCheck()}
+function liveEnd(){if(!RT||RT.state=='done')return;clearInterval(RT.iv);RT.state='done';var me=RT.s,op=RT.opp.s,n=RT.opp.name,win=me>op,xp=30+(win?20:0),g=$('game'),c=RT.ch;bump('duels');if(win)bump('duelWins');addXp(xp);
+if(g)g.innerHTML='<div class="card res" style="margin-top:18px"><div class="eyebrow">'+(win?'Victory':me<op?'Defeat':'Draw')+'</div><h2>You '+me+' – '+op+' '+n+'</h2><p class="mut">+'+xp+' XP</p></div>';setTimeout(function(){try{sb.removeChannel(c)}catch(e){}},1500);RT=null}
+function liveStop(q){if(!RT)return;clearInterval(RT.iv);var c=RT.ch;try{if(c){if(!q)c.send({type:'broadcast',event:'bye',payload:{}});setTimeout(function(){sb.removeChannel(c)},800)}}catch(e){}RT=null}
+function liveInvite(){var id=$('dfr').value,f=U.friends.filter(function(x){return x.id==id})[0];if(!f)return;if(RT)liveStop();
+RT={role:'host',room:Math.random().toString(36).slice(2,10),opp:{id:f.id,name:f.name,s:0,ans:false},i:0,s:0,t:15,lock:false,state:'wait',qids:ALLQ.map(function(x,i){return i}).sort(rnd).slice(0,5)};
+var g=$('game'),room=RT.room;g.innerHTML='<div class="card res" style="margin-top:18px"><h3>Waiting for '+f.name+' to accept…</h3><p class="mut">They get a pop-up if they’re logged in.</p><button class="btn ghost" onclick="liveStop();$(\'game\').innerHTML=\'\'">Cancel</button></div>';g.scrollIntoView({behavior:'smooth'});
+liveOpen(function(){var ch=sb.channel('inbox:'+f.id);ch.subscribe(function(st){if(st=='SUBSCRIBED'){ch.send({type:'broadcast',event:'invite',payload:{room:room,fromId:U.id}});setTimeout(function(){sb.removeChannel(ch)},1500)}})});
+setTimeout(function(){if(RT&&RT.room==room&&RT.state=='wait'){liveStop();var g2=$('game');if(g2)g2.innerHTML='<div class="card res" style="margin-top:18px">'+f.name+' didn’t join. They may be offline.</div>'}},45000)}
+function liveJoin(room,fid,name){if(RT)liveStop();RT={role:'guest',room:room,opp:{id:fid,name:name,s:0,ans:false},i:0,s:0,t:15,lock:false,state:'wait'};var g=$('game');if(g){g.innerHTML='<div class="card res" style="margin-top:18px"><h3>Joining duel with '+name+'…</h3></div>';g.scrollIntoView({behavior:'smooth'})}
+liveOpen(function(){RT.ch.send({type:'broadcast',event:'join',payload:{}})});
+setTimeout(function(){if(RT&&RT.room==room&&RT.state=='wait'){liveStop(1);var g2=$('game');if(g2)g2.innerHTML='<div class="card res" style="margin-top:18px">The invite expired or '+name+' left.</div>'}},12000)}
 init();
 </script></body></html>
