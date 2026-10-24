@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><title>Synapse High – Learn AI</title>
+<html lang="en"><head><meta charset="utf-8"><title>AxonEDU – Learn AI</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>
 :root{--bg:#f3f5fb;--bg2:#e8ecf7;--card:#fff;--ink:#0f1630;--mut:#5b6486;--pri:#4f46e5;--pri2:#0891b2;--ok:#13a36b;--bad:#e5484d;--line:#d9dfef;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -8,27 +8,27 @@
 body:before{content:"";position:fixed;inset:0;background:radial-gradient(900px 420px at 80% -10%,color-mix(in srgb,var(--pri) 25%,transparent),transparent),linear-gradient(var(--line) 1px,transparent 1px) 0 0/46px 46px,linear-gradient(90deg,var(--line) 1px,transparent 1px) 0 0/46px 46px;opacity:.55;z-index:-1}
 h1,h2,h3{margin:.2em 0;letter-spacing:-.02em}
 button{font:inherit;cursor:pointer}a{color:var(--pri2)}
-.top{background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:10px 22px;flex-wrap:wrap;position:sticky;top:0;z-index:20}
-.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:18px;letter-spacing:.02em;cursor:pointer}.logo em{font-style:normal;color:var(--pri2)}
-.nav{display:flex;gap:2px;flex-wrap:wrap;flex:1}
+.top{background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 22px 6px;position:sticky;top:0;z-index:20}#auth{position:absolute;right:22px;top:14px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:22px;letter-spacing:.01em;cursor:pointer}.logo em{font-style:normal;color:var(--pri2)}
+.nav{display:flex;justify-content:center;gap:2px;flex-wrap:wrap}
 .nav a,.sub a{padding:7px 13px;border-radius:8px;text-decoration:none;color:var(--mut);font-weight:600;font-size:14px;cursor:pointer}
 .nav a:hover,.sub a:hover{color:var(--ink);background:var(--bg2)}
 .nav a.on,.sub a.on{color:var(--ink);background:var(--bg2);box-shadow:inset 0 -2px 0 var(--pri2)}
-.sub{background:var(--bg2);border-bottom:1px solid var(--line);display:flex;gap:4px;padding:6px 22px;flex-wrap:wrap;align-items:center}
-.sub .me{margin-left:auto;color:var(--mut);font-weight:600;font-size:13px;display:flex;align-items:center;gap:8px}
+.sub{background:var(--bg2);border-bottom:1px solid var(--line);display:flex;justify-content:center;gap:4px;padding:6px 22px;flex-wrap:wrap;align-items:center;position:relative;min-height:46px}
+.sub .me{position:absolute;right:22px;top:50%;transform:translateY(-50%);color:var(--mut);font-weight:600;font-size:13px;display:flex;align-items:center;gap:8px}@media(max-width:900px){#auth{position:static}.sub .me{position:static;transform:none;width:100%;justify-content:center;margin-top:4px}}
 .btn{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff;border:0;border-radius:9px;padding:9px 20px;font-weight:700;transition:.15s}
 .btn:hover{filter:brightness(1.1);transform:translateY(-1px)}.btn.gold{background:var(--ink);color:var(--bg)}.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
 main{max-width:1060px;margin:0 auto;padding:26px 20px 60px}
 .hero{border:1px solid var(--line);background:linear-gradient(135deg,color-mix(in srgb,var(--pri) 28%,var(--card)),var(--card) 70%);border-radius:18px;padding:48px 36px;display:grid;grid-template-columns:1.4fr 1fr;gap:24px;align-items:center;overflow:hidden}
 .hero h1{font-size:clamp(30px,5vw,48px);line-height:1.08}.hero p{font-size:17px;color:var(--mut);max-width:520px}
 .eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--pri2);font-weight:700}
-@media(max-width:700px){.hero{grid-template-columns:1fr}.hero svg{display:none}}
+@media(max-width:700px){.hero{grid-template-columns:1fr}.hero img{display:none}}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-top:14px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;transition:.15s}
 .grid .card:hover{border-color:var(--pri2);transform:translateY(-2px)}.mut{color:var(--mut)}
 .chip{width:42px;height:42px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;font-family:Consolas,monospace;font-weight:700;font-size:15px;color:var(--pri2);border:1px solid var(--pri2);background:color-mix(in srgb,var(--pri2) 10%,transparent);margin-bottom:6px}
 .tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 9px;border-radius:5px;margin:2px 4px 2px 0;border:1px solid var(--line);color:var(--mut)}
-.tag.Easy{color:var(--ok);border-color:var(--ok)}.tag.Medium{color:#d99a1b;border-color:#d99a1b}.tag.Hard{color:var(--bad);border-color:var(--bad)}.tag.Essential{color:var(--pri);border-color:var(--pri)}.tag.First{color:var(--pri2);border-color:var(--pri2)}
+.tag{background:var(--bg2)}
 .bar{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:10px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--pri),var(--pri2));border-radius:99px;transition:width .4s}
 .big{font-size:36px;font-weight:800;font-family:Consolas,monospace;color:var(--pri2)}
 .sec{margin-top:40px}.sec>h2{font-size:24px}
@@ -48,12 +48,13 @@ table{width:100%;border-collapse:collapse}td,th{padding:11px 8px;text-align:left
 footer{text-align:center;color:var(--mut);padding:24px;font-size:12px}
 .xpm{display:inline-block;width:80px;height:6px;border-radius:9px;background:var(--line);overflow:hidden;margin:0 4px}.xpm i{display:block;height:100%;background:linear-gradient(90deg,var(--pri),var(--pri2))}.sub .me b{color:var(--ink)}
 textarea{border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);padding:10px;font:12px Consolas,monospace;margin:8px 0}
+select{padding:10px 12px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;min-width:180px}
 </style></head><body>
-<div class="top"><div class="logo" onclick="go('home')"><svg width="34" height="34" viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="none" stroke="#22d3ee" stroke-width="2"/><g stroke="#22d3ee" stroke-width="2.4" stroke-linecap="round"><path d="M12 22l8-9 8 9M12 22l8 6 8-6"/></g><g fill="#6d6bff"><circle cx="12" cy="22" r="3.5"/><circle cx="20" cy="13" r="3.5"/><circle cx="28" cy="22" r="3.5"/><circle cx="20" cy="28" r="3.5"/></g></svg>Synapse<em>High</em></div>
+<div class="top"><div class="logo" onclick="go('home')"><svg width="36" height="36" viewBox="0 0 40 40"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6d6bff"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs><rect width="40" height="40" rx="10" fill="url(#lg)"/><path d="M10 30L20 10L30 30M14.5 22h11" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="20" cy="10" r="3.2" fill="#fff"/></svg>Axon<em>EDU</em></div>
 <div class="nav" id="nav"></div><div id="auth"></div></div>
 <div class="sub" id="sub" hidden></div>
 <main id="main"></main><div id="modal"></div>
-<footer>Synapse High · a student project · practice data on leaderboards is simulated</footer>
+<footer>AxonEDU · a student project · practice data on leaderboards is simulated</footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
 var MODS=[
@@ -106,7 +107,7 @@ function toast(t){var d=document.createElement('div');d.className='toast';d.text
 function addXp(n){var before=lvl();U.xp+=n;sb.rpc('add_xp',{n:n}).then(fail);if(lvl()>before)toast('Level up. You are now level '+lvl());chk();save()}
 function badge(k){if(U.badges.indexOf(k)<0){U.badges.push(k);if(!QUIET)toast('New badge: '+BADGES.filter(function(b){return b[0]==k})[0][2])}}
 function chk(){var td=0,full=0;MODS.forEach(function(m){var n=(U.done[m.id]||[]).length;td+=n;if(n==m.L.length)full++});if(td>0)badge('first');if(full>0)badge('mod');if(lvl()>=3)badge('lvl3');if(full==MODS.length)badge('all');if(U.wins>0)badge('win')}
-function go(r){route=r;render();window.scrollTo(0,0);if(r=='lb'&&U)loadBoard()}
+function go(r){route=r;render();window.scrollTo(0,0);if(r=='lb'&&U)loadBoard();if(r=='games'&&U)loadDuels()}
 var PUB=[['home','Home'],['why','Why Learn AI'],['stats','Statistics'],['news','News']];
 var PRI=[['dash','Dashboard'],['lib','Library'],['games','Games'],['lb','Leaderboards'],['me','Profile']];
 function render(){
@@ -116,7 +117,7 @@ var s=$('sub');s.hidden=!U;if(U){s.innerHTML=PRI.map(function(p){return '<a clas
 var m=$('main');
 if(!U&&PRI.some(function(p){return p[0]==route}))route='home';
 var f={home:home,why:why,stats:stats,news:news,dash:dash,lib:lib,games:games,lb:board,me:me}[route];m.innerHTML=f()}
-function home(){return '<div class="hero"><div><div class="eyebrow">AI literacy for grades 9–12</div><h1>Understand AI. Use it well. Level up.</h1><p>Synapse High is a free learning portal for grades 9–12. Learn how AI works, try real tools, and earn XP while you do it.</p><button class="btn gold" onclick="'+(U?"go(\'dash\')":'loginBox()')+'" style="font-size:17px;padding:12px 26px">'+(U?'Continue learning':'Start learning')+'</button></div><svg viewBox="0 0 240 200" width="100%"><g stroke="#22d3ee" stroke-width="1.5" opacity=".6" fill="none"><path d="M30 100L90 40L150 90L210 40M30 100L90 160L150 90L210 160M90 40L90 160M150 90L210 100"/></g><g fill="#6d6bff"><circle cx="30" cy="100" r="9"/><circle cx="90" cy="40" r="9"/><circle cx="90" cy="160" r="9"/><circle cx="150" cy="90" r="11"/><circle cx="210" cy="40" r="9"/><circle cx="210" cy="160" r="9"/><circle cx="210" cy="100" r="9"/></g></svg></div>'+
+function home(){return '<div class="hero"><div><div class="eyebrow">AI literacy for grades 9–12</div><h1>Understand AI. Use it well. Level up.</h1><p>AxonEDU is a free learning portal for grades 9–12. Learn how AI works, try real tools, and earn XP while you do it.</p><button class="btn gold" onclick="'+(U?"go(\'dash\')":'loginBox()')+'" style="font-size:17px;padding:12px 26px">'+(U?'Continue learning':'Start learning')+'</button></div><img src="https://github.com/AK9099080/Website20262027/blob/main/img/hero.png?raw=true" alt="AxonEDU hero" style="width:100%;border-radius:14px;border:1px solid var(--line);display:block" onerror="this.style.display=\'none\'"></div>'+
 '<div class="sec"><h2>About us</h2><p>We’re students who think AI shouldn’t feel like a mystery or a shortcut. Our lessons are short, our games are fun, and everything is built around using AI honestly and smartly in school.</p></div>'+
 '<div class="sec"><h2>What sets us apart</h2><div class="grid">'+[['01','Learn by playing','Race classmates and earn XP, badges and avatars.'],['02','Easy to pick','Every lesson is tagged Easy, Hard, Essential or First.'],['03','Ethics built in','Not just how to use AI, but how to use it fairly.'],['04','Balanced news','Plain updates on advancements and concerns, no politics.']].map(function(c){return '<div class="card"><div class="chip">'+c[0]+'</div><h3>'+c[1]+'</h3><p class="mut">'+c[2]+'</p></div>'}).join('')+'</div></div>'+
 '<div class="sec"><h2>5 learning modules</h2><div class="grid">'+MODS.map(function(m){return '<div class="card"><div class="chip">'+m.ic+'</div><h3>'+m.t+'</h3><p class="mut">'+m.d+'</p>'+tags(m)+'</div>'}).join('')+'</div></div>'}
@@ -135,7 +136,6 @@ function openMod(id){var m=MODS.filter(function(x){return x.id==id})[0],d=U.done
 $('modal').innerHTML='<div class="modal" onclick="if(event.target==this)closeM()"><div class="box"><div class="eyebrow">Module '+m.ic+'</div><h2>'+m.t+'</h2><div class="bar"><i style="width:'+prog(m)+'%"></i></div>'+m.L.map(function(l,i){return '<div class="card" style="margin-top:12px"><h3>'+(d.indexOf(i)>=0?'✓ ':'')+(i+1)+'. '+l[0]+'</h3><p>'+l[1]+'</p>'+(d.indexOf(i)>=0?'':'<button class="btn" onclick="done(\''+id+'\','+i+')">Mark complete (+25 XP)</button>')+'</div>'}).join('')+'<p style="text-align:right"><button class="btn ghost" onclick="closeM()">Close</button></p></div></div>'}
 function done(id,i){var m=MODS.filter(function(x){return x.id==id})[0];U.done[id]=U.done[id]||[];if(U.done[id].indexOf(i)<0){U.done[id].push(i);addXp(25);if(U.done[id].length==m.L.length){addXp(50);toast('Module complete! +50 bonus XP')}}saveProg(id);openMod(id);render()}
 function closeM(){$('modal').innerHTML='';render()}
-function games(){return '<h1>Games</h1><p class="mut">Questions live in the QUIZ and MYTH lists in the code, so teachers can swap in their own.</p><div class="grid"><div class="card"><div class="chip">Q</div><h3>Quiz Race</h3><p class="mut">Answer correctly to move your racer. Beat the bots to the finish!</p><button class="btn" onclick="play(QUIZ,\'Quiz Race\',5)">Play</button></div><div class="card"><div class="chip">T/F</div><h3>Myth Buster</h3><p class="mut">Rapid true-or-false. Bust the AI myths before the bots do.</p><button class="btn" onclick="play(MYTH,\'Myth Buster\',5)">Play</button></div></div><div id="game"></div>'}
 function play(bank,name,n){var qs=bank.slice().sort(function(){return Math.random()-.5}).slice(0,n);G={name:name,qs:qs,i:0,n:n,bots:[0,0],lock:false,end:false};
 G.t=setInterval(function(){if(G.end)return;G.bots=G.bots.map(function(b,k){return Math.random()<(k?.35:.5)?b+1:b});if(G.bots.some(function(b){return b>=G.n}))finish(false);else draw()},2600);draw()}
 function draw(){var g=$('game');if(!g||!G)return;var q=G.qs[G.i];if(!q)return;
@@ -206,5 +206,64 @@ if(U.friends.some(function(f){return f.id==r.data.id})){toast('Already a friend'
 var i=await sb.from('friends').insert({user_id:U.id,friend_id:r.data.id});if(i.error){fail(i);return}
 U.friends.push({id:r.data.id,name:r.data.username,xp:r.data.xp,av:r.data.avatar});toast('Friend added');loadBoard()}
 async function rmFr(i){var f=U.friends[i];var r=await sb.from('friends').delete().eq('user_id',U.id).eq('friend_id',f.id);if(r.error){fail(r);return}U.friends.splice(i,1);loadBoard()}
+var TERMS=[['Machine learning','Software that learns patterns from examples instead of fixed rules'],['Training data','The examples an AI learns from'],['Hallucination','When AI confidently states something false or invented'],['Bias','Unfair patterns an AI picks up from its data'],['Prompt','The instruction or question you give an AI'],['Deepfake','An AI-made fake image, audio or video of a real person'],['Generative AI','AI that creates new text, images or audio'],['Iteration','Improving an answer through follow-up requests'],['Plagiarism','Passing off someone else’s or an AI’s work as your own'],['Privacy','Keeping personal information out of tools you don’t control']];
+var PROMPT=[
+{q:'Which prompt will give the best study help?',o:['Tell me about the Civil War','Explain the main causes of the Civil War in 5 bullets for a 10th grader','Civil War','Write everything about wars'],a:1},
+{q:'The AI’s first answer is too long. What should you do?',o:['Give up','Ask it to shorten the answer to 100 words','Retype the prompt in caps','Accept it'],a:1},
+{q:'Which prompt adds useful context?',o:['Fix my essay','Fix the grammar in my essay for 9th-grade English, keeping my ideas','Make it good','Essay help'],a:1},
+{q:'You want an example. Best follow-up?',o:['More','Give one real-world example of this idea','Why','Again'],a:1},
+{q:'Best way to use AI on a math problem?',o:['Copy the answer','Try it first, then ask AI to check your steps','Ask for the answer only','Skip the problem'],a:1},
+{q:'How do you test an AI’s claim?',o:['Trust it','Check a trusted source','Ask it twice','Ignore it'],a:1}];
+var ALLQ=QUIZ.concat(MYTH,PROMPT);
+function rnd(){return Math.random()-.5}
+function games(){function c(ch,t,d,f,l){return '<div class="card"><div class="chip">'+ch+'</div><h3>'+t+'</h3><p class="mut">'+d+'</p><button class="btn" onclick="'+f+'">'+(l||'Play')+'</button></div>'}
+return '<h1>Games</h1><p class="mut">Every round earns XP. Questions live in the QUIZ, MYTH, PROMPT and TERMS lists in the code, so you can swap in your own.</p><div class="grid">'
++c('Q','Quiz Race','Answer correctly to move your racer. Beat the bots to the finish.','play(QUIZ,\'Quiz Race\',5)')
++c('T/F','Myth Buster','Rapid true-or-false. Bust the AI myths before the bots do.','play(MYTH,\'Myth Buster\',5)')
++c('Rx','Prompt Doctor','Pick the prompt that gets the best answer. This skill improves every AI result.','play(PROMPT,\'Prompt Doctor\',5)')
++c('FC','Flashcard Sprint','Learn 10 key terms. Cards you miss come back soon, which helps them stick.','fcStart()')
++c('M','Match Up','Match terms to definitions. Finish under 60 seconds for bonus XP.','muStart()')
++c('VS','Friend Duels','Challenge a friend to the same 5 timed questions. Higher score wins bonus XP.','$(\'duels\').scrollIntoView({behavior:\'smooth\'})','Open')
++'</div><div id="game"></div><div id="duels"></div>'}
+var FC=null;
+function fcStart(){var q=TERMS.slice().sort(rnd);FC={q:q,n:q.length,show:false,miss:0};fcDraw()}
+function fcDraw(){var g=$('game');if(!g)return;
+if(!FC.q.length){addXp(20);g.innerHTML='<div class="card res" style="margin-top:18px"><div class="eyebrow">Deck cleared</div><h2>All '+FC.n+' terms learned. +20 XP</h2><p class="mut">Cards you needed again: '+FC.miss+'</p><button class="btn" onclick="fcStart()">Go again</button></div>';return}
+var c=FC.q[0];g.innerHTML='<div class="card" style="margin-top:18px"><div class="eyebrow">Flashcard Sprint · '+(FC.n-FC.q.length)+'/'+FC.n+' learned</div><div class="bar"><i style="width:'+((FC.n-FC.q.length)/FC.n*100)+'%"></i></div><h2 style="margin:18px 0">'+c[0]+'</h2>'+(FC.show?'<p>'+c[1]+'</p><button class="btn" onclick="fcNext(1)">Got it</button> <button class="btn ghost" onclick="fcNext(0)">Show again soon</button>':'<p class="mut">Say the definition in your head, then reveal it.</p><button class="btn" onclick="FC.show=true;fcDraw()">Reveal</button>')+'</div>'}
+function fcNext(k){var c=FC.q.shift();if(!k){FC.miss++;FC.q.splice(Math.min(2,FC.q.length),0,c)}FC.show=false;fcDraw()}
+var MU=null;
+function muStart(){var p=TERMS.slice().sort(rnd).slice(0,6),ix=p.map(function(x,i){return i});MU={p:p,t:ix.slice().sort(rnd),d:ix.slice().sort(rnd),sel:-1,done:{},t0:Date.now()};muDraw()}
+function muBtn(i,side){var dn=MU.done[i],sel=side=='t'&&MU.sel==i;return '<button class="opt" '+(dn?'disabled style="border-color:var(--ok);opacity:.6"':sel?'style="border-color:var(--pri2)"':'')+' onclick="muPick('+i+',\''+side+'\')">'+(side=='t'?MU.p[i][0]:MU.p[i][1])+'</button>'}
+function muDraw(){var g=$('game');if(!g)return;g.innerHTML='<div class="card" style="margin-top:18px"><div class="eyebrow">Match Up · '+Object.keys(MU.done).length+'/'+MU.p.length+' matched</div><p class="mut">Pick a term, then its definition.</p><div style="display:grid;grid-template-columns:1fr 1.6fr;gap:12px"><div>'+MU.t.map(function(i){return muBtn(i,'t')}).join('')+'</div><div>'+MU.d.map(function(i){return muBtn(i,'d')}).join('')+'</div></div></div>'}
+function muPick(i,side){if(side=='t'){MU.sel=i;muDraw();return}
+if(MU.sel<0){toast('Pick a term first');return}
+if(MU.sel==i){MU.done[i]=1;MU.sel=-1;if(Object.keys(MU.done).length==MU.p.length){var s=Math.round((Date.now()-MU.t0)/1000);addXp(s<60?40:25);$('game').innerHTML='<div class="card res" style="margin-top:18px"><div class="eyebrow">Complete</div><h2>Matched in '+s+' seconds. +'+(s<60?40:25)+' XP</h2><button class="btn" onclick="muStart()">Play again</button></div>';return}}
+else{MU.sel=-1;toast('Not a match')}muDraw()}
+var DU={},DG=null;
+async function loadDuels(){var el=$('duels');if(!el||!U)return;
+var r=await sb.from('duels').select('*').order('created_at',{ascending:false}).limit(20);
+if(r.error){el.innerHTML='<div class="sec"><h2>Friend duels</h2><p class="mut">Duels aren’t set up yet. Run the duels SQL in Supabase.</p></div>';return}
+var rows=r.data||[],ids={},m={};rows.forEach(function(d){ids[d.challenger]=1;ids[d.opponent]=1});
+var il=Object.keys(ids);if(il.length){var pr=await sb.from('profiles').select('id,username').in('id',il);(pr.data||[]).forEach(function(p){m[p.id]=p.username})}
+DU={};var inc='',wait='',fin='',bonus=0,cl=[];try{cl=JSON.parse(localStorage.getItem('sh_dc_'+U.id)||'[]')}catch(e){}
+rows.forEach(function(d){DU[d.id]=d;var mine=d.challenger==U.id,o=m[mine?d.opponent:d.challenger]||'Player';
+if(d.o_score==null){if(mine)wait+='<tr><td>'+o+'</td><td class="mut">Waiting for them to play</td><td></td></tr>';else inc+='<tr><td>'+o+'</td><td>challenged you</td><td><button class="btn" onclick="acceptDuel(\''+d.id+'\')">Play</button></td></tr>'}
+else{var a=mine?d.c_score:d.o_score,b=mine?d.o_score:d.c_score;if(a>b&&cl.indexOf(d.id)<0){cl.push(d.id);bonus+=20}fin+='<tr><td>'+o+'</td><td>'+a+' – '+b+'</td><td>'+(a>b?'Win':a<b?'Loss':'Tie')+'</td></tr>'}});
+if(bonus){addXp(bonus);toast('Duel win bonus: +'+bonus+' XP');try{localStorage.setItem('sh_dc_'+U.id,JSON.stringify(cl.slice(-100)))}catch(e){}}
+function T(x){return x?'<div class="card"><table>'+x+'</table></div>':'<p class="mut">None right now.</p>'}
+el.innerHTML='<div class="sec"><h2>Friend duels</h2><p class="mut">You and a friend answer the same 5 questions, 15 seconds each. Faster correct answers score more. Play whenever you like. Results appear once both of you have played.</p>'
++(U.friends.length?'<div class="card"><select id="dfr">'+U.friends.map(function(f){return '<option value="'+f.id+'">'+f.name+'</option>'}).join('')+'</select> <button class="btn" onclick="startDuel()">Challenge</button></div>':'<div class="card mut">Add friends on the Leaderboards page to duel them.</div>')
++'<h3 style="margin-top:22px">Challenges for you</h3>'+T(inc)+'<h3 style="margin-top:22px">Waiting on friends</h3>'+T(wait)+'<h3 style="margin-top:22px">Results</h3>'+T(fin)+'</div>'}
+function startDuel(){var id=$('dfr').value,f=U.friends.filter(function(x){return x.id==id})[0];if(!f)return;duelPlay({qids:ALLQ.map(function(x,i){return i}).sort(rnd).slice(0,5),opp:id,name:f.name,mode:'new'})}
+function acceptDuel(id){var d=DU[id];if(!d)return;var f=U.friends.filter(function(x){return x.id==d.challenger})[0];duelPlay({qids:d.qids,id:id,name:f?f.name:'a friend',mode:'ans'})}
+function duelPlay(d){if(DG)clearInterval(DG.iv);DG={d:d,i:0,s:0,t:15,lock:false};DG.iv=setInterval(duelTick,1000);duelDraw();$('game').scrollIntoView({behavior:'smooth'})}
+function duelTick(){if(!$('game')){clearInterval(DG.iv);return}if(DG.lock)return;DG.t--;var e=$('dt');if(e)e.style.width=(DG.t/15*100)+'%';if(DG.t<=0){DG.lock=true;duelNext(0,0)}}
+function duelDraw(){var g=$('game'),q=ALLQ[DG.d.qids[DG.i]];g.innerHTML='<div class="card" style="margin-top:18px"><div class="eyebrow">Duel vs '+DG.d.name+' · Question '+(DG.i+1)+'/5 · Score '+DG.s+'</div><div class="bar"><i id="dt" style="width:100%;transition:width 1s linear"></i></div><h3 style="margin-top:16px">'+q.q+'</h3>'+q.o.map(function(o,i){return '<button class="opt" onclick="duelAns('+i+',this)">'+o+'</button>'}).join('')+'</div>'}
+function duelAns(i,el){if(DG.lock)return;DG.lock=true;var ok=i==ALLQ[DG.d.qids[DG.i]].a,t=DG.t;el.classList.add(ok?'good':'no');setTimeout(function(){duelNext(ok,t)},600)}
+function duelNext(ok,t){if(ok)DG.s+=10+Math.max(0,t);DG.i++;DG.t=15;DG.lock=false;if(DG.i>=5)duelEnd();else duelDraw()}
+async function duelEnd(){clearInterval(DG.iv);DG.lock=true;var d=DG.d,s=DG.s,g=$('game');if(!g)return;g.innerHTML='<div class="card res" style="margin-top:18px"><h2>Saving your result…</h2></div>';
+var r=d.mode=='new'?await sb.from('duels').insert({challenger:U.id,opponent:d.opp,qids:d.qids,c_score:s}):await sb.from('duels').update({o_score:s}).eq('id',d.id).is('o_score',null).select();
+if(r.error||(d.mode!='new'&&!(r.data&&r.data.length))){g.innerHTML='<div class="card res" style="margin-top:18px">Could not save the duel. Check your connection and that the duels SQL has been run.</div>';return}
+addXp(30);g.innerHTML='<div class="card res" style="margin-top:18px"><div class="eyebrow">Duel played</div><h2>Your score: '+s+'. +30 XP</h2><p class="mut">'+(d.mode=='new'?'Your friend will see the challenge on their Games page.':'See the results list below.')+'</p></div>';loadDuels()}
 init();
 </script></body></html>
