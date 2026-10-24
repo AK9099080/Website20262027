@@ -1,22 +1,210 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Website is W</title>
-    <link rel="stylesheet" href="css.css"/>
-</head>
-<body>
-    <div id="main">
-        <div class="itemDiv">
-            <input id="userNameInput" placeholder="Username"/>
-        </div>
-        <div class="itemDiv">
-            <input type="password" placeholder="Password"/>
-        </div>
-        <div class="itemDiv">
-            <button>Sign Up</button>
-        </div>
-        <img id="bin" src="bin.png">
-    </div>
-<script src="js.js"></script>
-</body>
-</html>
+<html lang="en"><head><meta charset="utf-8"><title>Synapse High – Learn AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{--bg:#f3f5fb;--bg2:#e8ecf7;--card:#fff;--ink:#0f1630;--mut:#5b6486;--pri:#4f46e5;--pri2:#0891b2;--ok:#13a36b;--bad:#e5484d;--line:#d9dfef;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#080c1c;--bg2:#0d1330;--card:#111a3a;--ink:#e8ecff;--mut:#8d98c4;--pri:#6d6bff;--pri2:#22d3ee;--ok:#34d399;--bad:#fb7185;--line:#222d5c}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Segoe UI",Helvetica,Arial,sans-serif;line-height:1.55}
+body:before{content:"";position:fixed;inset:0;background:radial-gradient(900px 420px at 80% -10%,color-mix(in srgb,var(--pri) 25%,transparent),transparent),linear-gradient(var(--line) 1px,transparent 1px) 0 0/46px 46px,linear-gradient(90deg,var(--line) 1px,transparent 1px) 0 0/46px 46px;opacity:.55;z-index:-1}
+h1,h2,h3{margin:.2em 0;letter-spacing:-.02em}
+button{font:inherit;cursor:pointer}a{color:var(--pri2)}
+.top{background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:10px 22px;flex-wrap:wrap;position:sticky;top:0;z-index:20}
+.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:18px;letter-spacing:.02em;cursor:pointer}.logo em{font-style:normal;color:var(--pri2)}
+.nav{display:flex;gap:2px;flex-wrap:wrap;flex:1}
+.nav a,.sub a{padding:7px 13px;border-radius:8px;text-decoration:none;color:var(--mut);font-weight:600;font-size:14px;cursor:pointer}
+.nav a:hover,.sub a:hover{color:var(--ink);background:var(--bg2)}
+.nav a.on,.sub a.on{color:var(--ink);background:var(--bg2);box-shadow:inset 0 -2px 0 var(--pri2)}
+.sub{background:var(--bg2);border-bottom:1px solid var(--line);display:flex;gap:4px;padding:6px 22px;flex-wrap:wrap;align-items:center}
+.sub .me{margin-left:auto;color:var(--mut);font-weight:600;font-size:13px;display:flex;align-items:center;gap:8px}
+.btn{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff;border:0;border-radius:9px;padding:9px 20px;font-weight:700;transition:.15s}
+.btn:hover{filter:brightness(1.1);transform:translateY(-1px)}.btn.gold{background:var(--ink);color:var(--bg)}.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+main{max-width:1060px;margin:0 auto;padding:26px 20px 60px}
+.hero{border:1px solid var(--line);background:linear-gradient(135deg,color-mix(in srgb,var(--pri) 28%,var(--card)),var(--card) 70%);border-radius:18px;padding:48px 36px;display:grid;grid-template-columns:1.4fr 1fr;gap:24px;align-items:center;overflow:hidden}
+.hero h1{font-size:clamp(30px,5vw,48px);line-height:1.08}.hero p{font-size:17px;color:var(--mut);max-width:520px}
+.eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--pri2);font-weight:700}
+@media(max-width:700px){.hero{grid-template-columns:1fr}.hero svg{display:none}}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-top:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;transition:.15s}
+.grid .card:hover{border-color:var(--pri2);transform:translateY(-2px)}.mut{color:var(--mut)}
+.chip{width:42px;height:42px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;font-family:Consolas,monospace;font-weight:700;font-size:15px;color:var(--pri2);border:1px solid var(--pri2);background:color-mix(in srgb,var(--pri2) 10%,transparent);margin-bottom:6px}
+.tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 9px;border-radius:5px;margin:2px 4px 2px 0;border:1px solid var(--line);color:var(--mut)}
+.tag.Easy{color:var(--ok);border-color:var(--ok)}.tag.Medium{color:#d99a1b;border-color:#d99a1b}.tag.Hard{color:var(--bad);border-color:var(--bad)}.tag.Essential{color:var(--pri);border-color:var(--pri)}.tag.First{color:var(--pri2);border-color:var(--pri2)}
+.bar{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:10px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--pri),var(--pri2));border-radius:99px;transition:width .4s}
+.big{font-size:36px;font-weight:800;font-family:Consolas,monospace;color:var(--pri2)}
+.sec{margin-top:40px}.sec>h2{font-size:24px}
+.modal{position:fixed;inset:0;background:rgba(4,7,20,.7);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
+.box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px;max-width:540px;width:100%;max-height:90vh;overflow:auto}
+input[type=text],input[type=password]{width:100%;padding:12px 14px;border-radius:9px;border:1px solid var(--line);font:inherit;background:var(--bg);color:var(--ink);margin:12px 0}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.pill{border:1px solid var(--line);background:var(--card);color:var(--mut);border-radius:8px;padding:6px 14px;font-weight:600;font-size:13px;display:inline-flex;align-items:center;gap:8px}
+.pill.on{border-color:var(--pri2);color:var(--ink);box-shadow:0 0 0 1px var(--pri2)}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:13px 16px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-weight:600}
+.opt:hover{border-color:var(--pri2)}.opt.good{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 18%,var(--bg))}.opt.no{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 18%,var(--bg))}
+.lane{display:flex;align-items:center;gap:12px;margin:8px 0;font-weight:600;font-size:13px}.lane .bar{flex:1;height:10px;margin:0}.lane span:first-child{width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--mut)}
+table{width:100%;border-collapse:collapse}td,th{padding:11px 8px;text-align:left;border-bottom:1px solid var(--line)}th{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}tr.me td{background:color-mix(in srgb,var(--pri2) 12%,transparent);font-weight:700}
+.av{display:inline-flex;align-items:center;justify-content:center;border-radius:50%;color:#fff;font-weight:800;flex:none}
+.badge{display:inline-flex;flex-direction:column;align-items:center;width:100px;margin:8px;text-align:center;font-size:12px;font-weight:600}.badge b{width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:Consolas,monospace;font-size:18px;color:#fff;background:linear-gradient(135deg,var(--pri),var(--pri2));margin-bottom:6px}.badge.lock{opacity:.3;filter:grayscale(1)}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:11px 20px;border-radius:9px;font-weight:700;z-index:99;font-size:14px}
+.src{font-size:12px}.res{text-align:center;padding:10px}
+footer{text-align:center;color:var(--mut);padding:24px;font-size:12px}
+.xpm{display:inline-block;width:80px;height:6px;border-radius:9px;background:var(--line);overflow:hidden;margin:0 4px}.xpm i{display:block;height:100%;background:linear-gradient(90deg,var(--pri),var(--pri2))}.sub .me b{color:var(--ink)}
+textarea{border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);padding:10px;font:12px Consolas,monospace;margin:8px 0}
+</style></head><body>
+<div class="top"><div class="logo" onclick="go('home')"><svg width="34" height="34" viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="none" stroke="#22d3ee" stroke-width="2"/><g stroke="#22d3ee" stroke-width="2.4" stroke-linecap="round"><path d="M12 22l8-9 8 9M12 22l8 6 8-6"/></g><g fill="#6d6bff"><circle cx="12" cy="22" r="3.5"/><circle cx="20" cy="13" r="3.5"/><circle cx="28" cy="22" r="3.5"/><circle cx="20" cy="28" r="3.5"/></g></svg>Synapse<em>High</em></div>
+<div class="nav" id="nav"></div><div id="auth"></div></div>
+<div class="sub" id="sub" hidden></div>
+<main id="main"></main><div id="modal"></div>
+<footer>Synapse High · a student project · practice data on leaderboards is simulated</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+var MODS=[
+{id:'basics',t:'AI Basics',ic:'01',tags:['Easy','Essential','First'],d:'What AI really is, and what it isn’t.',L:[
+['What is AI?','Artificial intelligence is software that finds patterns in data so it can make predictions or decisions. It doesn’t “think” like a person; it calculates what is most likely.'],
+['Machine learning','Instead of writing every rule by hand, we show a computer thousands of examples and it learns the rules itself. Spam filters learn what spam looks like this way.'],
+['Training data','An AI is only as good as the data it learned from. Missing or lopsided data means the AI will be missing or lopsided too.']]},
+{id:'tools',t:'Practical AI Tools',ic:'02',tags:['Easy','Essential'],d:'Tools that can help with school work.',L:[
+['Chatbots & assistants','Chatbots can explain ideas, quiz you, and give feedback on drafts. Treat them like a tutor you double-check, not an answer machine.'],
+['Study helpers','AI can turn your notes into flashcards, summarize long readings, or explain a hard topic in simpler words. You still do the learning.'],
+['Checking the output','Always verify names, dates, and numbers against a trusted source. AI can sound confident and still be wrong.']]},
+{id:'ethics',t:'Ethical AI Use',ic:'03',tags:['Essential','Medium'],d:'Honesty, fairness and privacy.',L:[
+['Academic honesty','Know your school’s AI policy. If AI helped, say so. Submitting AI work as your own is plagiarism, even when it’s hard to detect.'],
+['Bias & fairness','AI learns from human data, so it can copy human unfairness. Ask: who might this tool work badly for?'],
+['Privacy','Never type passwords, addresses, or classmates’ personal details into an AI tool. Assume what you type may be stored.']]},
+{id:'gen',t:'Generative AI',ic:'04',tags:['Medium'],d:'How AI writes, draws and composes.',L:[
+['How it generates','Generative models learn patterns from huge amounts of text or images, then produce new content one piece at a time by predicting what comes next.'],
+['Hallucinations','Sometimes a model invents facts, quotes, or sources that look real. This is called a hallucination, and it’s why you verify.'],
+['Deepfakes & media','AI can make fake images, audio and video. Check the source, look for odd details, and pause before sharing.']]},
+{id:'opt',t:'Optimizing Your AI Use',ic:'05',tags:['Hard'],d:'Get better results with smarter habits.',L:[
+['Write better prompts','Give context, a goal, and a format: “Explain photosynthesis to a 9th grader in 5 bullet points.” Clear asks get clearer answers.'],
+['Iterate','Your first answer is a draft. Follow up: “make it shorter,” “give an example,” “what’s the counterargument?”'],
+['Think first, AI second','Try the problem yourself, then use AI to check or stretch your thinking. You’ll learn more and trust the result more.']]}];
+var QUIZ=[
+{q:'What does machine learning use to learn?',o:['Examples (data)','Magic','Only hand-written rules','Random guessing'],a:0},
+{q:'An AI keeps giving a fake source that looks real. This is called…',o:['Debugging','A hallucination','Encryption','Training'],a:1},
+{q:'Which is safe to type into an AI tool?',o:['Your password','Your home address','A general homework question','A friend’s phone number'],a:2},
+{q:'Why can AI be biased?',o:['It has feelings','It learns from human data','It is always random','It is too fast'],a:1},
+{q:'Best way to get a better AI answer?',o:['Be vague','Give context and a goal','Use all caps','Ask once and stop'],a:1},
+{q:'Before submitting AI-assisted work you should…',o:['Hide it','Check your school’s policy','Delete the draft','Nothing'],a:1},
+{q:'Generative AI mostly works by…',o:['Predicting what comes next','Searching the internet live','Copying one file','Reading your mind'],a:0}];
+var MYTH=[
+{q:'AI always tells the truth.',o:['True','False'],a:1},{q:'Training data can make an AI unfair.',o:['True','False'],a:0},
+{q:'You should fact-check AI answers.',o:['True','False'],a:0},{q:'AI understands things exactly like humans do.',o:['True','False'],a:1},
+{q:'Deepfakes can be made with AI.',o:['True','False'],a:0},{q:'Prompts with more context usually work better.',o:['True','False'],a:0},
+{q:'It’s fine to share passwords with a chatbot.',o:['True','False'],a:1}];
+var BADGES=[['first','I','First Lesson'],['mod','II','Module Master'],['win','III','Race Winner'],['lvl3','IV','Level 3'],['all','V','AI Scholar']];
+var AVS=[['#6d6bff,#22d3ee','Aurora',1],['#f43f5e,#fb923c','Ember',1],['#10b981,#22d3ee','Mint',2],['#8b5cf6,#ec4899','Nebula',3],['#f59e0b,#ef4444','Solar',4],['#0ea5e9,#1e3a8a','Deep',5],['#9ca3af,#4b5563','Chrome',6]];
+function av(sz,u){u=u||U;var i=typeof u.av==='number'?u.av:0;return '<span class="av" style="width:'+sz+'px;height:'+sz+'px;font-size:'+Math.round(sz*.45)+'px;background:linear-gradient(135deg,'+AVS[i][0]+')">'+u.name.charAt(0).toUpperCase()+'</span>'}
+var FAKE=['Maya R.','Jordan T.','Priya S.','Leo M.','Sofia G.','Dev K.','Ava L.','Noah B.','Zoe C.','Eli W.'];
+var STATS=[['65%','of teens say they’ve used an AI chatbot or tool','Pew Research Center, 2025 (approx.)'],['1 in 4','students report using AI for schoolwork','Teen surveys, 2024–25 (approx.)'],['40%','of jobs worldwide expected to be affected by AI','IMF, 2024 (approx.)'],['≈50%','of teachers say they want AI training','Education surveys, 2024–25 (approx.)']];
+var NEWS=[['Models get better at reasoning','Newer AI systems can work through multi-step math and science problems, showing their steps along the way.','Advancement'],['Schools write AI policies','Districts are publishing guidelines on when AI help is allowed, and many ask students to cite it.','Education'],['AI helps spot disease earlier','Researchers are testing image-analysis tools that flag possible problems for doctors to review.','Science'],['Concerns: errors and over-reliance','Teachers note AI can be wrong and that leaning on it can weaken practice with writing and problem-solving.','Caution'],['Open and small models grow','Smaller models are now able to run on laptops and phones, making AI more widely available.','Advancement'],['Calls for clearer labels','Some groups want AI-made images and text to be clearly marked so people aren’t misled.','Caution']];
+var U=null,DB={},route='home',filt='All',lb='friends',G=null;
+function load(){}
+function save(){}
+function $(i){return document.getElementById(i)}
+function lvl(){return Math.floor(U.xp/100)+1}
+function prog(m){return Math.round(((U.done[m.id]||[]).length/m.L.length)*100)}
+function toast(t){var d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(function(){d.remove()},2400)}
+function addXp(n){var before=lvl();U.xp+=n;sb.rpc('add_xp',{n:n}).then(fail);if(lvl()>before)toast('Level up. You are now level '+lvl());chk();save()}
+function badge(k){if(U.badges.indexOf(k)<0){U.badges.push(k);if(!QUIET)toast('New badge: '+BADGES.filter(function(b){return b[0]==k})[0][2])}}
+function chk(){var td=0,full=0;MODS.forEach(function(m){var n=(U.done[m.id]||[]).length;td+=n;if(n==m.L.length)full++});if(td>0)badge('first');if(full>0)badge('mod');if(lvl()>=3)badge('lvl3');if(full==MODS.length)badge('all');if(U.wins>0)badge('win')}
+function go(r){route=r;render();window.scrollTo(0,0);if(r=='lb'&&U)loadBoard()}
+var PUB=[['home','Home'],['why','Why Learn AI'],['stats','Statistics'],['news','News']];
+var PRI=[['dash','Dashboard'],['lib','Library'],['games','Games'],['lb','Leaderboards'],['me','Profile']];
+function render(){
+$('nav').innerHTML=PUB.map(function(p){return '<a class="'+(route==p[0]?'on':'')+'" onclick="go(\''+p[0]+'\')">'+p[1]+'</a>'}).join('');
+$('auth').innerHTML=U?'<button class="btn ghost" onclick="logout()">Log out</button>':'<button class="btn gold" onclick="loginBox()">Log in</button>';
+var s=$('sub');s.hidden=!U;if(U){s.innerHTML=PRI.map(function(p){return '<a class="'+(route==p[0]?'on':'')+'" onclick="go(\''+p[0]+'\')">'+p[1]+'</a>'}).join('')+'<span class="me">'+meHtml()+'</span>'}
+var m=$('main');
+if(!U&&PRI.some(function(p){return p[0]==route}))route='home';
+var f={home:home,why:why,stats:stats,news:news,dash:dash,lib:lib,games:games,lb:board,me:me}[route];m.innerHTML=f()}
+function home(){return '<div class="hero"><div><div class="eyebrow">AI literacy for grades 9–12</div><h1>Understand AI. Use it well. Level up.</h1><p>Synapse High is a free learning portal for grades 9–12. Learn how AI works, try real tools, and earn XP while you do it.</p><button class="btn gold" onclick="'+(U?"go(\'dash\')":'loginBox()')+'" style="font-size:17px;padding:12px 26px">'+(U?'Continue learning':'Start learning')+'</button></div><svg viewBox="0 0 240 200" width="100%"><g stroke="#22d3ee" stroke-width="1.5" opacity=".6" fill="none"><path d="M30 100L90 40L150 90L210 40M30 100L90 160L150 90L210 160M90 40L90 160M150 90L210 100"/></g><g fill="#6d6bff"><circle cx="30" cy="100" r="9"/><circle cx="90" cy="40" r="9"/><circle cx="90" cy="160" r="9"/><circle cx="150" cy="90" r="11"/><circle cx="210" cy="40" r="9"/><circle cx="210" cy="160" r="9"/><circle cx="210" cy="100" r="9"/></g></svg></div>'+
+'<div class="sec"><h2>About us</h2><p>We’re students who think AI shouldn’t feel like a mystery or a shortcut. Our lessons are short, our games are fun, and everything is built around using AI honestly and smartly in school.</p></div>'+
+'<div class="sec"><h2>What sets us apart</h2><div class="grid">'+[['01','Learn by playing','Race classmates and earn XP, badges and avatars.'],['02','Easy to pick','Every lesson is tagged Easy, Hard, Essential or First.'],['03','Ethics built in','Not just how to use AI, but how to use it fairly.'],['04','Balanced news','Plain updates on advancements and concerns, no politics.']].map(function(c){return '<div class="card"><div class="chip">'+c[0]+'</div><h3>'+c[1]+'</h3><p class="mut">'+c[2]+'</p></div>'}).join('')+'</div></div>'+
+'<div class="sec"><h2>5 learning modules</h2><div class="grid">'+MODS.map(function(m){return '<div class="card"><div class="chip">'+m.ic+'</div><h3>'+m.t+'</h3><p class="mut">'+m.d+'</p>'+tags(m)+'</div>'}).join('')+'</div></div>'}
+function tags(m){return m.tags.map(function(t){return '<span class="tag '+t+'">'+t+'</span>'}).join('')}
+function why(){return '<h1>Why learning AI matters</h1><div class="grid">'+[['01','It’s part of your future job','Many careers already use AI for writing, analysis and design. Knowing how it works puts you ahead.'],['02','It sharpens critical thinking','Spotting mistakes, bias and fake media is a skill you’ll use everywhere.'],['03','It keeps you safe','Understanding scams, deepfakes and privacy risks helps you protect yourself.'],['04','It makes studying better','Used well, AI is a patient tutor that explains things your way.']].map(function(c){return '<div class="card"><div class="chip">'+c[0]+'</div><h3>'+c[1]+'</h3><p class="mut">'+c[2]+'</p></div>'}).join('')+'</div>'}
+function stats(){return '<h1>Statistics on AI & education</h1><p class="mut">Approximate figures from published surveys; check the original sources for exact, current numbers.</p><div class="grid">'+STATS.map(function(s){return '<div class="card"><div class="big">'+s[0]+'</div><p>'+s[1]+'</p><div class="src mut">Source: '+s[2]+'</div></div>'}).join('')+'</div>'}
+function news(){return '<h1>AI News Blog</h1><p class="mut">Advancements and cautions, in plain language.</p><div class="grid">'+NEWS.map(function(n){return '<div class="card"><span class="tag '+(n[2]=='Caution'?'Hard':'Easy')+'">'+n[2]+'</span><h3>'+n[0]+'</h3><p class="mut">'+n[1]+'</p></div>'}).join('')+'</div>'}
+function dash(){var p=lvl(),pct=U.xp%100,started=MODS.filter(function(m){return(U.done[m.id]||[]).length});
+return '<h1>Welcome back, '+U.name+'</h1><div class="grid"><div class="card"><div class="mut">Level</div><div class="big">'+p+'</div><div class="bar"><i style="width:'+pct+'%"></i></div><div class="src mut">'+(100-pct)+' XP to next level</div></div><div class="card"><div class="mut">Total XP</div><div class="big">'+U.xp+'</div></div><div class="card"><div class="mut">Badges</div><div class="big">'+U.badges.length+'/'+BADGES.length+'</div></div></div>'+
+'<div class="sec"><h2>Continue where you left off</h2><div class="grid">'+(started.length?started.map(mcard).join(''):'<div class="card">Nothing started yet. <a onclick="go(\'lib\')">Open the library</a>.</div>')+'</div></div>'}
+function mcard(m){var p=prog(m);return '<div class="card"><div class="chip">'+m.ic+'</div><h3>'+m.t+'</h3><p class="mut">'+m.d+'</p>'+tags(m)+'<div class="bar"><i style="width:'+p+'%"></i></div><div class="src mut">'+p+'% complete</div><button class="btn" style="margin-top:10px" onclick="openMod(\''+m.id+'\')">'+(p==100?'Review':p?'Continue':'Start')+'</button></div>'}
+function lib(){var all=['All','Easy','Medium','Hard','Essential','First'];var list=MODS.filter(function(m){return filt=='All'||m.tags.indexOf(filt)>=0});var st=MODS.filter(function(m){return(U.done[m.id]||[]).length&&prog(m)<100});
+return '<h1>Library</h1><div class="pills">'+all.map(function(t){return '<button class="pill '+(filt==t?'on':'')+'" onclick="filt=\''+t+'\';render()">'+t+'</button>'}).join('')+'</div>'+
+(st.length?'<h2>In progress</h2><div class="grid">'+st.map(mcard).join('')+'</div>':'')+'<div class="sec"><h2>All modules</h2><div class="grid">'+list.map(mcard).join('')+'</div></div>'}
+function openMod(id){var m=MODS.filter(function(x){return x.id==id})[0],d=U.done[id]||[];
+$('modal').innerHTML='<div class="modal" onclick="if(event.target==this)closeM()"><div class="box"><div class="eyebrow">Module '+m.ic+'</div><h2>'+m.t+'</h2><div class="bar"><i style="width:'+prog(m)+'%"></i></div>'+m.L.map(function(l,i){return '<div class="card" style="margin-top:12px"><h3>'+(d.indexOf(i)>=0?'✓ ':'')+(i+1)+'. '+l[0]+'</h3><p>'+l[1]+'</p>'+(d.indexOf(i)>=0?'':'<button class="btn" onclick="done(\''+id+'\','+i+')">Mark complete (+25 XP)</button>')+'</div>'}).join('')+'<p style="text-align:right"><button class="btn ghost" onclick="closeM()">Close</button></p></div></div>'}
+function done(id,i){var m=MODS.filter(function(x){return x.id==id})[0];U.done[id]=U.done[id]||[];if(U.done[id].indexOf(i)<0){U.done[id].push(i);addXp(25);if(U.done[id].length==m.L.length){addXp(50);toast('Module complete! +50 bonus XP')}}saveProg(id);openMod(id);render()}
+function closeM(){$('modal').innerHTML='';render()}
+function games(){return '<h1>Games</h1><p class="mut">Questions live in the QUIZ and MYTH lists in the code, so teachers can swap in their own.</p><div class="grid"><div class="card"><div class="chip">Q</div><h3>Quiz Race</h3><p class="mut">Answer correctly to move your racer. Beat the bots to the finish!</p><button class="btn" onclick="play(QUIZ,\'Quiz Race\',5)">Play</button></div><div class="card"><div class="chip">T/F</div><h3>Myth Buster</h3><p class="mut">Rapid true-or-false. Bust the AI myths before the bots do.</p><button class="btn" onclick="play(MYTH,\'Myth Buster\',5)">Play</button></div></div><div id="game"></div>'}
+function play(bank,name,n){var qs=bank.slice().sort(function(){return Math.random()-.5}).slice(0,n);G={name:name,qs:qs,i:0,n:n,bots:[0,0],lock:false,end:false};
+G.t=setInterval(function(){if(G.end)return;G.bots=G.bots.map(function(b,k){return Math.random()<(k?.35:.5)?b+1:b});if(G.bots.some(function(b){return b>=G.n}))finish(false);else draw()},2600);draw()}
+function draw(){var g=$('game');if(!g||!G)return;var q=G.qs[G.i];if(!q)return;
+function lane(nm,v){return '<div class="lane"><span>'+nm+'</span><div class="bar"><i style="width:'+Math.min(100,v/G.n*100)+'%"></i></div></div>'}
+g.innerHTML='<div class="card" style="margin-top:18px"><h2>'+G.name+'</h2>'+lane(U.name,G.i)+lane('Bot Byte',G.bots[0])+lane('Bot Bit',G.bots[1])+'<h3 style="margin-top:16px">'+q.q+'</h3>'+q.o.map(function(o,i){return '<button class="opt" onclick="ans('+i+',this)">'+o+'</button>'}).join('')+'</div>'}
+function ans(i,el){if(G.lock||G.end)return;var q=G.qs[G.i];G.lock=true;if(i==q.a){el.classList.add('good');setTimeout(function(){G.i++;G.lock=false;if(G.i>=G.n)finish(true);else draw()},500)}else{el.classList.add('no');setTimeout(function(){G.lock=false;draw()},700)}}
+function finish(win){G.end=true;clearInterval(G.t);if(win){U.wins++;locW();addXp(50)}else addXp(20);chk();save();
+$('game').innerHTML='<div class="card res" style="margin-top:18px"><div class="eyebrow">'+(win?'Victory':'Race over')+'</div><h2>'+(win?'You won! +50 XP':'A bot got there first. +20 XP')+'</h2><button class="btn" onclick="go(\'games\')">Play again</button></div>';render0()}
+function board(){var tabs=[['friends','Friends'],['class','Class'],['school','School'],['world','World']],extra='';
+if(lb=='friends')extra='<div class="card" style="margin-top:14px"><h3>Add a friend</h3><input type="text" id="fr" maxlength="16" placeholder="Their exact username"><button class="btn" onclick="addFr()">Add</button></div>';
+var body=LB.loading?'<p class="mut">Loading…</p>':LB.rows.length?'<table><tr><th>#</th><th>Player</th><th>XP</th><th></th></tr>'+LB.rows.map(function(r,i){return '<tr class="'+(r.me?'me':'')+'"><td>'+(i+1)+'</td><td><span style="display:inline-flex;align-items:center;gap:10px">'+av(28,r.u)+r.n+(r.me?' (you)':'')+'</span></td><td>'+r.x+'</td><td>'+(r.fi>=0?'<a style="cursor:pointer" onclick="rmFr('+r.fi+')">remove</a>':'')+'</td></tr>'}).join('')+'</table>':'<p class="mut">'+(LB.note||'Nobody here yet.')+'</p>';
+return '<h1>Leaderboards</h1><div class="pills">'+tabs.map(function(t){return '<button class="pill '+(lb==t[0]?'on':'')+'" onclick="lb=\''+t[0]+'\';loadBoard()">'+t[1]+'</button>'}).join('')+'</div><div class="card">'+body+'</div>'+(LB.note&&LB.rows.length?'<p class="src mut">'+LB.note+'</p>':'')+extra}
+function me0(){return '<h1>Your profile</h1><div class="card">'+av(72)+'<h2>'+U.name+'</h2><p class="mut">Level '+lvl()+' · '+U.xp+' XP</p></div><div class="sec"><h2>Choose your avatar</h2><div class="pills">'+AVS.map(function(a,i){var ok=lvl()>=a[2];return '<button class="pill '+(U.av==i?'on':'')+'" '+(ok?'onclick="setAv('+i+')"':'disabled style="opacity:.4"')+'><span class="av" style="width:22px;height:22px;background:linear-gradient(135deg,'+a[0]+')"></span>'+a[1]+(ok?'':' · Lv '+a[2])+'</button>'}).join('')+'</div></div><div class="sec"><h2>Badges</h2><div class="card">'+BADGES.map(function(b){return '<div class="badge '+(U.badges.indexOf(b[0])<0?'lock':'')+'"><b>'+b[1]+'</b>'+b[2]+'</div>'}).join('')+'</div></div>'}
+function render0(){var m=$('sub').querySelector('.me');if(m)m.innerHTML=meHtml()}
+function meHtml(){return av(28)+'<b>'+U.name+'</b> Level '+lvl()+'<span class="xpm"><i style="width:'+(U.xp%100)+'%"></i></span>'+U.xp+' XP'}
+var SB_URL='https://rytzhadculmofsblaxju.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ5dHpoYWRjdWxtb2ZzYmxheGp1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4Mjg3MDIsImV4cCI6MjEwODQwNDcwMn0.d74dfDYWQGKGAmeYS43Bw24PSsdQF1WLHKQGQq7S4CU';
+var sb=null,LB={rows:[],note:'',loading:false},QUIET=false;
+try{sb=supabase.createClient(SB_URL,SB_KEY)}catch(e){}
+function clean(t){return String(t==null?'':t).replace(/[<>&"'`]/g,'').trim().toUpperCase().slice(0,30)}
+function fail(r){if(r&&r.error)toast('Could not save. Check your connection.')}
+async function loadUser(id){
+var p=await sb.from('profiles').select('*').eq('id',id).single();
+if(p.error||!p.data){await sb.auth.signOut();U=null;return false}
+var pr=await sb.from('progress').select('module_id,lessons').eq('user_id',id);
+var fr=await sb.from('friends').select('friend_id').eq('user_id',id);
+U={id:id,name:p.data.username,xp:p.data.xp,av:Math.min(p.data.avatar||0,AVS.length-1),school:p.data.school||'',cls:p.data.class_code||'',done:{},badges:[],wins:0,friends:[]};
+(pr.data||[]).forEach(function(r){U.done[r.module_id]=r.lessons});
+try{U.wins=parseInt(localStorage.getItem('sh_w_'+id))||0}catch(e){}
+var ids=(fr.data||[]).map(function(r){return r.friend_id});
+if(ids.length){var f=await sb.from('profiles').select('id,username,xp,avatar').in('id',ids);U.friends=(f.data||[]).map(function(x){return{id:x.id,name:x.username,xp:x.xp,av:x.avatar}})}
+QUIET=true;chk();QUIET=false;return true}
+async function init(){if(sb){try{var r=await sb.auth.getSession();if(r.data.session)await loadUser(r.data.session.user.id)}catch(e){}}render()}
+function loginBox(){$('modal').innerHTML='<div class="modal" onclick="if(event.target==this)$(\'modal\').innerHTML=\'\'"><div class="box"><h2>Log in or sign up</h2><p class="mut">Pick a username (3–16 letters, numbers or _) and a 6-digit PIN. New username? We’ll create your account. Existing one? Enter your PIN to continue. Don’t use your real name.</p><input type="text" id="un" maxlength="16" placeholder="Username" autocomplete="off"><input type="password" id="pin" inputmode="numeric" maxlength="6" placeholder="6-digit PIN" onkeydown="if(event.key==\'Enter\')doLogin()"><button class="btn" id="lgbtn" onclick="doLogin()">Let’s go</button> <button class="btn ghost" onclick="$(\'modal\').innerHTML=\'\'">Cancel</button></div></div>';$('un').focus()}
+async function doLogin(){var v=$('un').value.trim(),pin=$('pin').value.trim();
+if(!/^[A-Za-z0-9_]{3,16}$/.test(v)){toast('Username: 3–16 letters, numbers or _');return}
+if(!/^\d{6}$/.test(pin)){toast('PIN must be exactly 6 digits');return}
+if(!sb){toast('Could not reach the cloud service');return}
+var b=$('lgbtn');b.disabled=true;var em=v.toLowerCase()+'@synapse.app',r=await sb.auth.signInWithPassword({email:em,password:pin});
+if(r.error){var s=await sb.auth.signUp({email:em,password:pin});
+if(s.error||!s.data.user){b.disabled=false;toast(s.error&&/registered|already/i.test(s.error.message)?'Wrong PIN for that username':'Sign-up failed. Try again.');return}
+if(!s.data.session){b.disabled=false;toast('Sign-up needs "Confirm email" turned off in Supabase');return}
+var ins=await sb.from('profiles').insert({id:s.data.user.id,username:v});
+if(ins.error){await sb.auth.signOut();b.disabled=false;toast('That username is already taken');return}
+r={data:{user:s.data.user}}}
+await loadUser(r.data.user.id);$('modal').innerHTML='';toast('Welcome, '+U.name+'!');go('dash')}
+async function logout(){try{await sb.auth.signOut()}catch(e){}U=null;go('home')}
+function saveProg(id){sb.from('progress').upsert({user_id:U.id,module_id:id,lessons:U.done[id]}).then(fail)}
+function setAv(i){U.av=i;sb.from('profiles').update({avatar:i}).eq('id',U.id).then(fail);render()}
+function locW(){try{localStorage.setItem('sh_w_'+U.id,U.wins)}catch(e){}}
+function saveSet(){U.school=clean($('sch').value);U.cls=clean($('cls').value);sb.from('profiles').update({school:U.school||null,class_code:U.cls||null}).eq('id',U.id).then(function(r){fail(r);if(!r.error)toast('Saved')})}
+function settings(){return '<div class="sec"><h2>Class and school</h2><div class="card"><p class="mut">Enter the same school name and class code as your classmates to appear on the same leaderboard. Spelling must match.</p><input type="text" id="sch" maxlength="30" placeholder="School name" value="'+U.school+'"><input type="text" id="cls" maxlength="30" placeholder="Class code" value="'+U.cls+'"><button class="btn" onclick="saveSet()">Save</button></div><p class="src mut" style="margin-top:14px">Your progress is saved to your account online, so you can log in from any device with your username and PIN.</p></div>'}
+function me(){return me0()+settings()}
+async function loadBoard(){LB={rows:[],note:'',loading:true};render();
+var cols='id,username,xp,avatar',q;
+if(lb=='friends'){var ids=U.friends.map(function(f){return f.id}).concat(U.id);q=sb.from('profiles').select(cols).in('id',ids).order('xp',{ascending:false})}
+else if(lb=='world')q=sb.from('profiles').select(cols).order('xp',{ascending:false}).limit(20);
+else{var school=lb=='school',val=school?U.school:U.cls;
+if(!val){LB={rows:[],note:'Set your '+(school?'school':'class code')+' on the Profile page to see this board.',loading:false};render();return}
+q=sb.from('profiles').select(cols).eq(school?'school':'class_code',val).order('xp',{ascending:false}).limit(20)}
+var r=await q;LB.loading=false;if(r.error)LB.note='Could not load the board. Check your connection.';
+LB.rows=(r.data||[]).map(function(x){var fi=-1;U.friends.forEach(function(f,j){if(f.id==x.id)fi=j});return{n:x.username,x:x.xp,u:{name:x.username,av:x.avatar},me:x.id==U.id,fi:fi}});render()}
+async function addFr(){var v=$('fr').value.trim();if(!v)return;
+var r=await sb.from('profiles').select('id,username,xp,avatar').eq('username',v).maybeSingle();
+if(!r.data){toast('No player with that exact username');return}
+if(r.data.id==U.id){toast('That’s you!');return}
+if(U.friends.some(function(f){return f.id==r.data.id})){toast('Already a friend');return}
+var i=await sb.from('friends').insert({user_id:U.id,friend_id:r.data.id});if(i.error){fail(i);return}
+U.friends.push({id:r.data.id,name:r.data.username,xp:r.data.xp,av:r.data.avatar});toast('Friend added');loadBoard()}
+async function rmFr(i){var f=U.friends[i];var r=await sb.from('friends').delete().eq('user_id',U.id).eq('friend_id',f.id);if(r.error){fail(r);return}U.friends.splice(i,1);loadBoard()}
+init();
+</script></body></html>
