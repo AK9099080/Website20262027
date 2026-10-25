@@ -55,6 +55,7 @@ select{padding:10px 12px;border-radius:9px;border:1px solid var(--line);backgrou
 .gem i{position:absolute;inset:11%;background:linear-gradient(135deg,var(--c),color-mix(in srgb,var(--c) 50%,#000));transition:transform .2s,opacity .25s}
 .t0 i{border-radius:50%}.t1 i{border-radius:9px}.t2 i{clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}.t3 i{clip-path:polygon(50% 4%,100% 96%,0 96%)}.t4 i{clip-path:polygon(25% 4%,75% 4%,100% 50%,75% 96%,25% 96%,0 50%)}.t5 i{clip-path:polygon(50% 0,63% 36%,100% 38%,71% 60%,81% 100%,50% 77%,19% 100%,29% 60%,0 38%,37% 36%)}
 .gem.sel i{transform:scale(1.18);filter:brightness(1.3)}.gem.pop i{transform:scale(0);opacity:0}
+.plink{cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}.plink:hover{color:var(--pri2)}
 </style></head><body>
 <div class="top"><div class="logo" onclick="go('home')"><svg width="36" height="36" viewBox="0 0 40 40"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6d6bff"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs><rect width="40" height="40" rx="10" fill="url(#lg)"/><path d="M10 30L20 10L30 30M14.5 22h11" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="20" cy="10" r="3.2" fill="#fff"/></svg>Axon<em>EDU</em></div>
 <div class="nav" id="nav"></div><div id="auth"></div></div>
@@ -306,7 +307,7 @@ function av(sz,u){u=u||U;var i=typeof u.av==='number'?u.av:0;return '<span class
 var FAKE=['Maya R.','Jordan T.','Priya S.','Leo M.','Sofia G.','Dev K.','Ava L.','Noah B.','Zoe C.','Eli W.'];
 var STATS=[['65%','of teens say they’ve used an AI chatbot or tool','Pew Research Center, 2025 (approx.)'],['1 in 4','students report using AI for schoolwork','Teen surveys, 2024–25 (approx.)'],['40%','of jobs worldwide expected to be affected by AI','IMF, 2024 (approx.)'],['≈50%','of teachers say they want AI training','Education surveys, 2024–25 (approx.)']];
 var NEWS=[['Models get better at reasoning','Newer AI systems can work through multi-step math and science problems, showing their steps along the way.','Advancement'],['Schools write AI policies','Districts are publishing guidelines on when AI help is allowed, and many ask students to cite it.','Education'],['AI helps spot disease earlier','Researchers are testing image-analysis tools that flag possible problems for doctors to review.','Science'],['Concerns: errors and over-reliance','Teachers note AI can be wrong and that leaning on it can weaken practice with writing and problem-solving.','Caution'],['Open and small models grow','Smaller models are now able to run on laptops and phones, making AI more widely available.','Advancement'],['Calls for clearer labels','Some groups want AI-made images and text to be clearly marked so people aren’t misled.','Caution']];
-var U=null,DB={},route='home',filt='All',lb='friends',G=null;
+var U=null,DB={},route='home',filt='All',lb='world',G=null;
 function load(){}
 function save(){}
 function $(i){return document.getElementById(i)}
@@ -322,7 +323,7 @@ var PRI=[['dash','Dashboard'],['lib','Library'],['games','Games'],['lb','Leaderb
 function render(){
 $('nav').innerHTML=PUB.map(function(p){return '<a class="'+(route==p[0]?'on':'')+'" onclick="go(\''+p[0]+'\')">'+p[1]+'</a>'}).join('');
 $('auth').innerHTML=U?'<button class="btn ghost" onclick="logout()">Log out</button>':'<button class="btn gold" onclick="loginBox()">Log in</button>';
-var s=$('sub');s.hidden=!U;if(U){s.innerHTML=PRI.map(function(p){return '<a class="'+(route==p[0]?'on':'')+'" onclick="go(\''+p[0]+'\')">'+p[1]+'</a>'}).join('')+'<span class="me">'+meHtml()+'</span>'}
+var s=$('sub');s.hidden=!U;if(U){s.innerHTML=PRI.map(function(p){return '<a class="'+(route==p[0]?'on':'')+'" onclick="go(\''+p[0]+'\')">'+p[1]+(p[0]=='lb'&&U.reqIn&&U.reqIn.length?' ('+U.reqIn.length+')':'')+'</a>'}).join('')+'<span class="me">'+meHtml()+'</span>'}
 var m=$('main');
 if(!U&&PRI.some(function(p){return p[0]==route}))route='home';
 var f={home:home,why:why,stats:stats,news:news,dash:dash,lib:lib,games:games,lb:board,me:me}[route];m.innerHTML=f()}
@@ -363,12 +364,15 @@ function draw(){var g=$('game');if(!g||!G)return;var q=G.qs[G.i];if(!q)return;
 function lane(nm,v){return '<div class="lane"><span>'+nm+'</span><div class="bar"><i style="width:'+Math.min(100,v/G.n*100)+'%"></i></div></div>'}
 g.innerHTML='<div class="card" style="margin-top:18px"><h2>'+G.name+'</h2>'+lane(U.name,G.i)+lane('Bot Byte',G.bots[0])+lane('Bot Bit',G.bots[1])+'<h3 style="margin-top:16px">'+q.q+'</h3>'+q.o.map(function(o,i){return '<button class="opt" onclick="ans('+i+',this)">'+o+'</button>'}).join('')+'</div>'}
 function ans(i,el){if(G.lock||G.end)return;var q=G.qs[G.i];G.lock=true;if(i==q.a){el.classList.add('good');setTimeout(function(){G.i++;G.lock=false;if(G.i>=G.n)finish(true);else draw()},500)}else{el.classList.add('no');setTimeout(function(){G.lock=false;draw()},700)}}
-function finish(win){bump('played');G.end=true;clearInterval(G.t);if(win){U.wins++;locW();if(G.name=='Prompt Doctor')bump('docWins');addXp(50)}else addXp(20);chk();save();
+function finish(win){bump('played');var sg='q_'+G.name.replace(/ /g,'');bump(sg+'_p');if(win)bump(sg+'_w');G.end=true;clearInterval(G.t);if(win){U.wins++;locW();if(G.name=='Prompt Doctor')bump('docWins');addXp(50)}else addXp(20);chk();save();
 $('game').innerHTML='<div class="card res" style="margin-top:18px"><div class="eyebrow">'+(win?'Victory':'Race over')+'</div><h2>'+(win?'You won! +50 XP':'A bot got there first. +20 XP')+'</h2><button class="btn" onclick="go(\'games\')">Play again</button></div>';render0()}
-function board(){var tabs=[['friends','Friends'],['class','Class'],['school','School'],['world','World']],extra='';
-if(lb=='friends')extra='<div class="card" style="margin-top:14px"><h3>Add a friend</h3><input type="text" id="fr" maxlength="16" placeholder="Their exact username"><button class="btn" onclick="addFr()">Add</button></div>';
-var body=LB.loading?'<p class="mut">Loading…</p>':LB.rows.length?'<table><tr><th>#</th><th>Player</th><th>XP</th><th></th></tr>'+LB.rows.map(function(r,i){return '<tr class="'+(r.me?'me':'')+'"><td>'+(i+1)+'</td><td><span style="display:inline-flex;align-items:center;gap:10px">'+av(28,r.u)+r.n+(r.me?' (you)':'')+'</span></td><td>'+r.x+'</td><td>'+(r.fi>=0?'<a style="cursor:pointer" onclick="rmFr('+r.fi+')">remove</a>':'')+'</td></tr>'}).join('')+'</table>':'<p class="mut">'+(LB.note||'Nobody here yet.')+'</p>';
-return '<h1>Leaderboards</h1><div class="pills">'+tabs.map(function(t){return '<button class="pill '+(lb==t[0]?'on':'')+'" onclick="lb=\''+t[0]+'\';loadBoard()">'+t[1]+'</button>'}).join('')+'</div><div class="card">'+body+'</div>'+(LB.note&&LB.rows.length?'<p class="src mut">'+LB.note+'</p>':'')+extra}
+function board(){var tabs=[['world','World'],['school','School'],['class','Class'],['friends','Friends']],extra='',req='';
+if(lb=='friends'){var inc=(U.reqIn||[]).map(function(r){return '<tr><td><a class="plink" onclick="viewProfile(\''+r.id+'\')">'+r.name+'</a> wants to be friends</td><td style="text-align:right"><button class="btn" onclick="acceptReq(\''+r.id+'\')">Accept</button> <button class="btn ghost" onclick="declineReq(\''+r.id+'\')">Decline</button></td></tr>'}).join(''),
+out=(U.reqOut||[]).map(function(r){return '<tr><td>Request sent to <a class="plink" onclick="viewProfile(\''+r.id+'\')">'+r.name+'</a>, waiting for them to accept</td><td style="text-align:right"><button class="btn ghost" onclick="declineReq(\''+r.id+'\',1)">Cancel</button></td></tr>'}).join('');
+req=(inc||out)?'<div class="card" style="margin-bottom:14px"><h3>Friend requests</h3><table>'+inc+out+'</table></div>':'';
+extra='<div class="card" style="margin-top:14px"><h3>Add a friend</h3><p class="mut">Send a request. They need to accept it before you appear on each other’s Friends board.</p><input type="text" id="fr" maxlength="16" placeholder="Their exact username"><button class="btn" onclick="addFr()">Send request</button></div>'}
+var body=LB.loading?'<p class="mut">Loading…</p>':LB.rows.length?'<table><tr><th>#</th><th>Player</th><th>XP</th><th></th></tr>'+LB.rows.map(function(r,i){return '<tr class="'+(r.me?'me':'')+'"><td>'+(i+1)+'</td><td><span style="display:inline-flex;align-items:center;gap:10px">'+av(28,r.u)+'<a class="plink" onclick="viewProfile(\''+r.id+'\')">'+r.n+'</a>'+(r.me?' (you)':'')+'</span></td><td>'+r.x+'</td><td>'+(r.fi>=0?'<a style="cursor:pointer" onclick="rmFr('+r.fi+')">remove</a>':'')+'</td></tr>'}).join('')+'</table>':'<p class="mut">'+(LB.note||'Nobody here yet.')+'</p>';
+return '<h1>Leaderboards</h1><div class="pills">'+tabs.map(function(t){return '<button class="pill '+(lb==t[0]?'on':'')+'" onclick="lb=\''+t[0]+'\';loadBoard()">'+t[1]+'</button>'}).join('')+'</div>'+req+'<div class="card">'+body+'</div>'+(LB.note&&LB.rows.length?'<p class="src mut">'+LB.note+'</p>':'')+extra}
 function me0(){return '<h1>Your profile</h1><div class="card">'+av(72)+'<h2>'+U.name+'</h2><p class="mut">Level '+lvl()+' · '+U.xp+' XP</p></div><div class="sec"><h2>Choose your avatar</h2><div class="pills">'+AVS.map(function(a,i){var ok=lvl()>=a[2];return '<button class="pill '+(U.av==i?'on':'')+'" '+(ok?'onclick="setAv('+i+')"':'disabled style="opacity:.4"')+'><span class="av" style="width:22px;height:22px;background:linear-gradient(135deg,'+a[0]+')"></span>'+a[1]+(ok?'':' · Lv '+a[2])+'</button>'}).join('')+'</div></div><div class="sec"><h2>Achievements ('+U.badges.length+'/'+BADGES.length+')</h2><div class="card">'+BADGES.map(function(b){return '<div class="badge '+(U.badges.indexOf(b[0])<0?'lock':'')+'" title="'+b[3]+'"><b>'+b[1]+'</b>'+b[2]+'<span class="src mut" style="font-weight:400">'+b[3]+'</span></div>'}).join('')+'</div></div>'}
 function render0(){var m=$('sub').querySelector('.me');if(m)m.innerHTML=meHtml()}
 function meHtml(){return av(28)+'<b>'+U.name+'</b> Level '+lvl()+'<span class="xpm"><i style="width:'+(U.xp%100)+'%"></i></span>'+U.xp+' XP'}
@@ -382,12 +386,10 @@ async function loadUser(id){
 var p=await sb.from('profiles').select('*').eq('id',id).single();
 if(p.error||!p.data){await sb.auth.signOut();U=null;return false}
 var pr=await sb.from('progress').select('module_id,lessons').eq('user_id',id);
-var fr=await sb.from('friends').select('friend_id').eq('user_id',id);
-U={id:id,name:p.data.username,xp:p.data.xp,av:Math.min(p.data.avatar||0,AVS.length-1),school:p.data.school||'',cls:p.data.class_code||'',done:{},badges:[],wins:0,st:(p.data.stats&&typeof p.data.stats=='object'?p.data.stats:{}),friends:[]};
+U={id:id,name:p.data.username,xp:p.data.xp,av:Math.min(p.data.avatar||0,AVS.length-1),school:p.data.school||'',cls:p.data.class_code||'',done:{},badges:[],wins:0,st:(p.data.stats&&typeof p.data.stats=='object'?p.data.stats:{}),friends:[],reqIn:[],reqOut:[]};
 (pr.data||[]).forEach(function(r){U.done[r.module_id]=r.lessons});
 U.wins=U.st.raceWins||0;
-var ids=(fr.data||[]).map(function(r){return r.friend_id});
-if(ids.length){var f=await sb.from('profiles').select('id,username,xp,avatar').in('id',ids);U.friends=(f.data||[]).map(function(x){return{id:x.id,name:x.username,xp:x.xp,av:x.avatar}})}
+await loadFriends();
 QUIET=true;chk();QUIET=false;startInbox();return true}
 async function init(){if(sb){try{var r=await sb.auth.getSession();if(r.data.session)await loadUser(r.data.session.user.id)}catch(e){}}render()}
 function loginBox(){$('modal').innerHTML='<div class="modal" onclick="if(event.target==this)$(\'modal\').innerHTML=\'\'"><div class="box"><h2>Log in or sign up</h2><p class="mut">Pick a username (3–16 letters, numbers or _) and a 6-digit PIN. New username? We’ll create your account. Existing one? Enter your PIN to continue. Don’t use your real name.</p><input type="text" id="un" maxlength="16" placeholder="Username" autocomplete="off"><input type="password" id="pin" inputmode="numeric" maxlength="6" placeholder="6-digit PIN" onkeydown="if(event.key==\'Enter\')doLogin()"><button class="btn" id="lgbtn" onclick="doLogin()">Let’s go</button> <button class="btn ghost" onclick="$(\'modal\').innerHTML=\'\'">Cancel</button></div></div>';$('un').focus()}
@@ -418,15 +420,39 @@ else{var school=lb=='school',val=school?U.school:U.cls;
 if(!val){LB={rows:[],note:'Set your '+(school?'school':'class code')+' on the Profile page to see this board.',loading:false};render();return}
 q=sb.from('profiles').select(cols).eq(school?'school':'class_code',val).order('xp',{ascending:false}).limit(20)}
 var r=await q;LB.loading=false;if(r.error)LB.note='Could not load the board. Check your connection.';
-LB.rows=(r.data||[]).map(function(x){var fi=-1;U.friends.forEach(function(f,j){if(f.id==x.id)fi=j});return{n:x.username,x:x.xp,u:{name:x.username,av:x.avatar},me:x.id==U.id,fi:fi}});render()}
-async function addFr(){var v=$('fr').value.trim();if(!v)return;
-var r=await sb.from('profiles').select('id,username,xp,avatar').eq('username',v).maybeSingle();
-if(!r.data){toast('No player with that exact username');return}
-if(r.data.id==U.id){toast('That’s you!');return}
-if(U.friends.some(function(f){return f.id==r.data.id})){toast('Already a friend');return}
-var i=await sb.from('friends').insert({user_id:U.id,friend_id:r.data.id});if(i.error){fail(i);return}
-U.friends.push({id:r.data.id,name:r.data.username,xp:r.data.xp,av:r.data.avatar});toast('Friend added');chk();loadBoard()}
-async function rmFr(i){var f=U.friends[i];var r=await sb.from('friends').delete().eq('user_id',U.id).eq('friend_id',f.id);if(r.error){fail(r);return}U.friends.splice(i,1);loadBoard()}
+LB.rows=(r.data||[]).map(function(x){var fi=-1;U.friends.forEach(function(f,j){if(f.id==x.id)fi=j});return{n:x.username,x:x.xp,u:{name:x.username,av:x.avatar},me:x.id==U.id,fi:fi,id:x.id}});render()}
+async function loadFriends(){var r=await sb.from('friendships').select('requester,addressee,status'),rows=r.data||[],ids={},m={};
+rows.forEach(function(x){ids[x.requester==U.id?x.addressee:x.requester]=1});var il=Object.keys(ids);
+if(il.length){var p=await sb.from('profiles').select('id,username,xp,avatar').in('id',il);(p.data||[]).forEach(function(x){m[x.id]=x})}
+var F=[],I=[],O=[];rows.forEach(function(x){var o=x.requester==U.id?x.addressee:x.requester,pr=m[o];if(!pr)return;
+if(x.status=='accepted')F.push({id:o,name:pr.username,xp:pr.xp,av:pr.avatar});else if(x.addressee==U.id)I.push({id:o,name:pr.username});else O.push({id:o,name:pr.username})});
+if(!r.error){U.friends=F;U.reqIn=I;U.reqOut=O}}
+function ping(id,ev){try{var ch=sb.channel('inbox:'+id);ch.subscribe(function(st){if(st=='SUBSCRIBED'){ch.send({type:'broadcast',event:ev,payload:{}});setTimeout(function(){sb.removeChannel(ch)},1500)}})}catch(e){}}
+function onFriendEvt(msg){toast(msg);loadFriends().then(function(){chk();render();if(route=='lb')loadBoard()})}
+async function addFr(){var v=$('fr').value.trim();if(!v)return;var r=await sb.from('profiles').select('id,username').eq('username',v).maybeSingle();if(!r.data){toast('No player with that exact username');return}await sendReq(r.data.id,r.data.username);var e=$('fr');if(e)e.value=''}
+async function sendReq(id,name){if(id==U.id){toast('That’s you!');return}
+if(U.friends.some(function(f){return f.id==id})){toast('You’re already friends');return}
+if(U.reqOut.some(function(f){return f.id==id})){toast('Request already sent');return}
+if(U.reqIn.some(function(f){return f.id==id})){await acceptReq(id);return}
+var i=await sb.from('friendships').insert({requester:U.id,addressee:id});if(i.error){fail(i);return}
+toast('Friend request sent to '+name);ping(id,'friendreq');await loadFriends();render();if(route=='lb')loadBoard()}
+async function acceptReq(id){var r=await sb.from('friendships').update({status:'accepted'}).eq('requester',id).eq('addressee',U.id).eq('status','pending').select();
+if(r.error||!(r.data&&r.data.length)){toast('Could not accept that request');return}
+toast('You’re now friends!');ping(id,'friendacc');await loadFriends();chk();render();if(route=='lb')loadBoard()}
+async function declineReq(id,cancel){var q=sb.from('friendships').delete();q=cancel?q.eq('requester',U.id).eq('addressee',id):q.eq('requester',id).eq('addressee',U.id);var r=await q;if(r.error){fail(r);return}await loadFriends();render();if(route=='lb')loadBoard()}
+async function rmFr(i){var f=U.friends[i];if(!f)return;var r=await sb.from('friendships').delete().or('and(requester.eq.'+U.id+',addressee.eq.'+f.id+'),and(requester.eq.'+f.id+',addressee.eq.'+U.id+')');if(r.error){fail(r);return}U.friends.splice(i,1);render();loadBoard()}
+async function viewProfile(id){var M=$('modal');M.innerHTML='<div class="modal" onclick="if(event.target==this)closeM()"><div class="box" style="max-width:640px"><p class="mut">Loading…</p></div></div>';
+var p=await sb.from('profiles').select('id,username,xp,avatar,stats').eq('id',id).maybeSingle();
+if(!p.data){M.innerHTML='<div class="modal" onclick="closeM()"><div class="box">Could not load this profile.</div></div>';return}
+var pr=await sb.from('progress').select('module_id,lessons').eq('user_id',id),dn={};(pr.data||[]).forEach(function(r){dn[r.module_id]=Array.isArray(r.lessons)?r.lessons:[]});
+var d=p.data,st=(d.stats&&typeof d.stats=='object')?d.stats:{},N=function(k){return Number(st[k])||0},lv=Math.floor(d.xp/100)+1,
+W=function(g){return N('q_'+g+'_w')+' wins / '+N('q_'+g+'_p')+' played'},
+rows=[['Quiz Race',W('QuizRace')],['Myth Buster',W('MythBuster')],['Prompt Doctor',W('PromptDoctor')],['Flashcard Sprint',N('fcDone')+' decks cleared'],['Match Up',N('matchBest')?'Best time '+N('matchBest')+' seconds':'Not played yet'],['Quiz Blaster','Best score '+N('blBest')+' · best run '+N('blRounds')+' rounds cleared'],['Gem Match','Best score '+N('gemBest')+' · '+N('gemQ')+' questions answered right'],['Friend duels',N('duelWins')+' wins / '+N('duels')+' played']],
+rel=id==U.id?'':U.friends.some(function(f){return f.id==id})?'<span class="tag">Friends</span>':U.reqOut.some(function(f){return f.id==id})?'<span class="tag">Request sent</span>':U.reqIn.some(function(f){return f.id==id})?'<button class="btn" onclick="acceptReq(\''+id+'\').then(function(){viewProfile(\''+id+'\')})">Accept friend request</button>':'<button class="btn" onclick="sendReq(\''+id+'\',\''+d.username+'\').then(function(){viewProfile(\''+id+'\')})">Add friend</button>';
+var mods=MODS.map(function(m){var ds=(dn[m.id]||[]).filter(function(i){return Number.isInteger(i)&&i>=0&&i<m.L.length}),n=ds.length,full=n==m.L.length;
+return '<div class="card" style="margin-top:10px"><div style="display:flex;justify-content:space-between;gap:8px"><h3>'+m.t+'</h3><span class="tag">'+(full?'Completed':n?'In progress':'Not started')+'</span></div><div class="bar"><i style="width:'+(n/m.L.length*100)+'%"></i></div><p class="src mut" style="margin-bottom:0">'+n+' of '+m.L.length+' lessons'+(n?' done: '+ds.sort(function(a,b){return a-b}).map(function(i){return m.L[i][0]}).join(', '):'')+'</p></div>'}).join('');
+M.innerHTML='<div class="modal" onclick="if(event.target==this)closeM()"><div class="box" style="max-width:660px"><div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">'+av(64,{name:d.username,av:d.avatar})+'<div style="flex:1"><h2>'+d.username+'</h2><div class="mut">Level '+lv+' · '+d.xp+' XP</div><div class="bar"><i style="width:'+(d.xp%100)+'%"></i></div></div>'+rel+'</div>'
++'<h3 style="margin-top:22px">Personal bests</h3><div class="card"><table>'+rows.map(function(r){return '<tr><td>'+r[0]+'</td><td class="mut">'+r[1]+'</td></tr>'}).join('')+'</table></div><h3 style="margin-top:22px">Lessons</h3>'+mods+'<p style="text-align:right;margin-top:16px"><button class="btn ghost" onclick="closeM()">Close</button></p></div></div>'}
 function rnd(){return Math.random()-.5}
 function games(){function c(ch,t,d,f,l){return '<div class="card"><div class="chip">'+ch+'</div><h3>'+t+'</h3><p class="mut">'+d+'</p><button class="btn" onclick="'+f+'">'+(l||'Play')+'</button></div>'}
 return '<h1>Games</h1><p class="mut">Every round earns XP. Questions live in the QUIZ, MYTH, PROMPT and TERMS lists in the code, so you can swap in your own.</p><div class="grid">'
@@ -449,7 +475,7 @@ function muBtn(i,side){var dn=MU.done[i],sel=side=='t'&&MU.sel==i;return '<butto
 function muDraw(){var g=$('game');if(!g)return;g.innerHTML='<div class="card" style="margin-top:18px"><div class="eyebrow">Match Up · '+Object.keys(MU.done).length+'/'+MU.p.length+' matched</div><p class="mut">Pick a term, then its definition.</p><div style="display:grid;grid-template-columns:1fr 1.6fr;gap:12px"><div>'+MU.t.map(function(i){return muBtn(i,'t')}).join('')+'</div><div>'+MU.d.map(function(i){return muBtn(i,'d')}).join('')+'</div></div></div>'}
 function muPick(i,side){if(side=='t'){MU.sel=i;muDraw();return}
 if(MU.sel<0){toast('Pick a term first');return}
-if(MU.sel==i){MU.done[i]=1;MU.sel=-1;if(Object.keys(MU.done).length==MU.p.length){var s=Math.round((Date.now()-MU.t0)/1000);addXp(s<60?40:25);bump('played');if(s<60)bump('matchFast');$('game').innerHTML='<div class="card res" style="margin-top:18px"><div class="eyebrow">Complete</div><h2>Matched in '+s+' seconds. +'+(s<60?40:25)+' XP</h2><button class="btn" onclick="muStart()">Play again</button></div>';return}}
+if(MU.sel==i){MU.done[i]=1;MU.sel=-1;if(Object.keys(MU.done).length==MU.p.length){var s=Math.round((Date.now()-MU.t0)/1000);addXp(s<60?40:25);bump('played');if(s<60)bump('matchFast');if(!U.st.matchBest||s<U.st.matchBest){U.st.matchBest=s;saveSt()}$('game').innerHTML='<div class="card res" style="margin-top:18px"><div class="eyebrow">Complete</div><h2>Matched in '+s+' seconds. +'+(s<60?40:25)+' XP</h2><button class="btn" onclick="muStart()">Play again</button></div>';return}}
 else{MU.sel=-1;toast('Not a match')}muDraw()}
 var DU={},DG=null;
 async function loadDuels(){var el=$('duels');if(!el||!U)return;
@@ -518,7 +544,7 @@ cx.strokeStyle=co.line;cx.setLineDash([4,6]);cx.beginPath();cx.moveTo(400,470);c
 cx.save();cx.translate(400,470);cx.rotate(an);cx.fillStyle=co.pri;cx.fillRect(0,-7,36,14);cx.restore();cx.beginPath();cx.arc(400,480,24,0,6.283);cx.fillStyle=co.pri2;cx.fill();
 cx.fillStyle=co.ink;BL.B.forEach(function(p){cx.beginPath();cx.arc(p.x,p.y,5,0,6.283);cx.fill()})}
 var RT=null,INB=null;
-function startInbox(){try{if(INB)sb.removeChannel(INB);INB=sb.channel('inbox:'+U.id).on('broadcast',{event:'invite'},function(m){showInvite(m.payload)}).subscribe()}catch(e){}}
+function startInbox(){try{if(INB)sb.removeChannel(INB);INB=sb.channel('inbox:'+U.id).on('broadcast',{event:'invite'},function(m){showInvite(m.payload)}).on('broadcast',{event:'friendreq'},function(){onFriendEvt('You have a new friend request')}).on('broadcast',{event:'friendacc'},function(){onFriendEvt('Your friend request was accepted')}).subscribe()}catch(e){}}
 async function showInvite(p){if(!p||!p.room||!p.fromId||p.fromId==U.id)return;var r=await sb.from('profiles').select('username').eq('id',p.fromId).maybeSingle();if(!r.data)return;
 var d=document.createElement('div');d.className='toast';d.style.cssText='top:16px;bottom:auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center;max-width:92vw';
 d.innerHTML=r.data.username+' invites you to a live duel <button class="btn">Accept</button><button class="btn ghost" style="color:var(--bg);border-color:var(--bg)">Decline</button>';
