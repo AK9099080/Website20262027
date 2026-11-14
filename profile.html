@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile | AxonEDU</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  .prof-grid{display:grid;grid-template-columns:260px 1fr;gap:22px;margin-top:18px}
+  .badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .friends{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .fr-card{border:1px solid var(--line);border-radius:12px;padding:8px 12px;display:flex;align-items:center;gap:10px}
+  .addrow{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .req{font-size:13px;color:var(--mut);margin:6px 0}
+</style>
+</head>
+<body>
+<div id="nav-root"></div>
+<main style="max-width:1000px;margin:0 auto;padding:30px 20px 60px">
+  <h1 style="font-size:34px">Profile</h1>
+  <p class="mut" style="font-size:17px">Your avatar, badges, friends, and stats.</p>
+
+  <div class="prof-grid">
+    <div class="card">
+      <div style="text-align:center;margin-bottom:14px" id="prof-av"></div>
+      <div style="text-align:center"><b id="prof-name"></b><div class="mut" style="font-size:13px">Level <span id="prof-lvl"></span> · XP <span id="prof-xp"></span></div></div>
+      <div class="mut" style="font-size:13px;margin-top:10px">School: <span id="prof-sch">—</span> &nbsp;·&nbsp; Class: <span id="prof-cls">—</span></div>
+      <div style="margin-top:14px">
+        <div class="addrow">
+          <input type="text" id="fr-name" placeholder="Friend's name">
+          <button class="btn" onclick="addFrUI()">Add friend</button>
+        </div>
+        <div id="reqs-root"></div>
+      </div>
+    </div>
+    <div class="card" style="grid-column:2/-1">
+      <h3 style="margin-top:0">Badges <span class="mut" style="font-weight:400;font-size:14px">(unlock by playing)</span></h3>
+      <div id="badges-root" class="badges"></div>
+    </div>
+    <div class="card" style="grid-column:2/-1">
+      <h3 style="margin-top:0">Friends <span class="mut" style="font-weight:400;font-size:14px">(log in to add friends)</span></h3>
+      <div id="friends-root"></div>
+    </div>
+    <div class="card" style="grid-column:1/-1">
+      <h3 style="margin-top:0">Stats</h3>
+      <div class="lane"><span>Games played</span><span id="stat-played">0</span></div>
+      <div class="lane"><span>Lessons done</span><span id="stat-lessons">0</span></div>
+      <div class="lane"><span>Wins</span><span id="stat-wins">0</span></div>
+    </div>
+  </div>
+</main>
+<div id="footer-root"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/umd/supabase.min.js"></script>
+<script src="shared.js"></script>
+<script>
+function renderProfile(){
+  document.getElementById('prof-av').innerHTML=av(80);
+  document.getElementById('prof-name').textContent=clean(U.name||'You');
+  document.getElementById('prof-lvl').textContent=lvl();
+  document.getElementById('prof-xp').textContent=U.xp;
+  document.getElementById('prof-sch').textContent=U.school||'—';
+  document.getElementById('prof-cls').textContent=U.cls||'—';
+  document.getElementById('stat-played').textContent=stGet('played');
+  document.getElementById('stat-lessons').textContent=U.done.length;
+  document.getElementById('stat-wins').textContent=U.wins;
+  // badges
+  var out='';
+  BADGES.forEach(function(b){
+    var unlocked=badge(b[0]);
+    out+='<div class="badge'+(unlocked?'':' lock')+'" title="'+b[2]+'"><b>'+b[1]+'</b><div>'+b[2]+'</div><div class="src" style="font-size:10px">'+b[3]+'</div></div>';
+  });
+  document.getElementById('badges-root').innerHTML=out||'<p class="mut">No badges yet.</p>';
+  // friends
+  var freaks='';
+  U.friends.forEach(function(fid){
+    freaks+='<div class="fr-card">'+av(26,{id:fid,name:'Friend'})+'<span class="mut">Friend</span> <button class="btn ghost" onclick="rmFr(\''+fid+'\')">Remove</button></div>';
+  });
+  document.getElementById('friends-root').innerHTML=freaks||'<p class="mut">No friends yet. Add someone!</p>';
+  // requests
+  var reqs='';
+  U.reqIn.forEach(function(rid){
+    reqs+='<div class="req">Friend request from <b>User</b> <button class="btn" style="padding:4px 10px;font-size:12px" onclick="acceptReq(\''+rid+'\')">Accept</button> <button class="btn ghost" style="padding:4px 10px;font-size:12px" onclick="declineReq(\''+rid+'\')">Decline</button></div>';
+  });
+  document.getElementById('reqs-root').innerHTML=reqs;
+}
+function addFrUI(){
+  var name=document.getElementById('fr-name').value;if(!name)return;
+  addFr(name);document.getElementById('fr-name').value='';
+}
+renderProfile();
+if(U.id)loadFriends(renderProfile);
+init();
+</script>
+</body>
+</html>
