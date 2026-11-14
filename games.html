@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Games | AxonEDU</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  .game-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;margin-top:18px}
+  .gcard{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;cursor:pointer;transition:.2s}
+  .gcard:hover{border-color:var(--pri2);transform:translateY(-4px)}
+  .gcard h3{margin-top:0}
+  .gcat{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--pri2);font-weight:700;margin-bottom:6px}
+  #game-popup .game-box{max-width:900px;padding:40px}
+  .catrow{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 18px}
+  .qscreen{text-align:center}
+  .qtext{font-size:22px;font-weight:700;margin:0 0 18px;color:var(--ink)}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  .opt.btn{width:100;text-align:left;padding:14px 16px}
+  .hud{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;font-size:13px;font-weight:600;color:var(--mut)}
+  .tip{background:color-mix(in srgb,var(--pri2) 10%,var(--bg));border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-top:16px;font-size:14px;color:var(--ink);text-align:left;display:none}
+  .tip.show{display:block}
+  .end{text-align:center}
+  .end .big{font-size:40px;font-weight:800;color:var(--pri2)}
+  canvas#blaster{width:100%;height:320px;background:var(--bg2);border-radius:16px;border:1px solid var(--line);display:block;margin:10px auto}
+  .gemgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;max-width:560px;margin:0 auto}
+  .gem{width:52px;height:52px;border-radius:10px;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer}
+  .duel-row{display:flex;gap:10px;margin:10px 0;align-items:center}
+  .duel-me,.duel-opp{flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);text-align:center}
+</style>
+</head>
+<body>
+<div id="nav-root"></div>
+<main style="max-width:1100px;margin:0 auto;padding:30px 20px 60px">
+  <h1 style="font-size:34px">Games</h1>
+  <p class="mut" style="font-size:17px">Pick a class, pick a category, then play. Every round teaches something — and every right answer earns XP.</p>
+
+  <div class="catrow" style="justify-content:center">
+    <div class="pill on" onclick="setCat(this,'ALL')">All</div>
+    <div class="pill" onclick="setCat(this,'QUIZ')">Quiz</div>
+    <div class="pill" onclick="setCat(this,'MYTH')">Myth</div>
+    <div class="pill" onclick="setCat(this,'PROMPT')">Prompt</div>
+    <div class="pill" onclick="setCat(this,'TERMS')">Terms</div>
+    <div class="pill" onclick="setCat(this,'LESSONS')">Lessons</div>
+  </div>
+
+  <div id="games-root" class="game-grid"></div>
+
+  <!-- Full-screen game popup -->
+  <div id="game-popup" class="modal" style="display:none">
+    <button class="close-popup" onclick="closeGame()">&times;</button>
+    <div class="game-box">
+      <div class="hud"><span id="g-cls">Class: —</span><span id="g-cat">Category: —</span><span id="g-xp">XP +0</span></div>
+      <div class="game-title" id="g-title">Game</div>
+      <div class="game-sub" id="g-sub">Pick your options below</div>
+      <div id="g-setup" style="text-align:center;margin:18px 0">
+        <div style="font-weight:600;margin-bottom:8px">Class / subject</div>
+        <div class="catrow" style="justify-content:center" id="g-cls-row"></div>
+        <div style="font-weight:600;margin:16px 0 8px">Category</div>
+        <div class="catrow" style="justify-content:center" id="g-cat-row"></div>
+        <button class="btn" id="g-start" style="margin-top:14px">Start round</button>
+      </div>
+      <div id="g-play" style="display:none"></div>
+      <div id="g-end" style="display:none;text-align:center"></div>
+    </div>
+  </div>
+</main>
+<div id="footer-root"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/umd/supabase.min.js"></script>
+<script src="shared.js"></script>
+<script>
+var GAMES=[
+{id:'race',t:'Quiz Race',cat:'QUIZ',d:'Answer quiz questions faster than the bots. First to 10 right wins.',ic:'🏁'},
+{id:'myth',t:'Myth Buster',cat:'MYTH',d:'True or false? Spot the AI myths and separate fact from fiction.',ic:'🧪'},
+{id:'fc',t:'Flashcard Sprint',cat:'LESSONS',d:'Race through flashcards from the lessons. How fast can you clear the deck?',ic:'🃏'},
+{id:'match',t:'Match Up',cat:'TERMS',d:'Match each term to its definition before time runs out.',ic:'🔗'},
+{id:'blast',t:'Quiz Blaster',cat:'QUIZ',d:'Blaster shooter: answer correctly to fire. Clear rounds to level up.',ic:'🎯'},
+{id:'gem',t:'Gem Match',cat:'ALL',d:'Match-3 puzzle: swap gems, answer questions to score. Reach 1,000 points.',ic:'💎'},
+{id:'duel',t:'Friend Duel',cat:'ALL',d:'Challenge a friend to a live question duel. Highest score wins.',ic:'⚔️'}
+];
+var CATS=['ALL','QUIZ','MYTH','PROMPT','TERMS','LESSONS'];
+var curCat='ALL';
+var curGame=null;
+var clsList=MODS.map(function(m){return m.id;});
+var curCls='basics';
+
+function setCat(el,c){
+  CATS.forEach(function(){});
+  document.querySelectorAll('#games-root .pill,.catrow .pill').forEach(function(p){p.classList.remove('on','sel');});
+  if(el)el.classList.add('on');
+  curCat=c;
+}
+function buildGames(){
+  var out='';
+  GAMES.forEach(function(g){
+    var allowed = (curCat==='ALL'||curCat===g.cat||curCat==='LESSONS'&&g.cat==='LESSONS'||curCat===g.cat);
+    out+='<div class="gcard" onclick="openGame(\''+g.id+\')" style="'+(allowed?'':'opacity:.5;pointer-events:none')+'"><div class="gcat">'+g.cat+'</div><h3>'+g.ic+' '+g.t+'</h3><p style="font-size:14px;color:var(--mut)">'+g.d+'</p></div>';
+  });
+  document.getElementById('games-root').innerHTML=out;
+}
+function setupClsRow(){
+  var row=document.getElementById('g-cls-row');row.innerHTML='';
+  clsList.forEach(function(c){
+    var m=MODS.find(function(x){return x.id===c;});
+    var el=document.createElement('div');el.className='pill'+(curCls===c?' on':'');el.textContent=m.t;el.onclick=function(){clsList.forEach(function(){});document.querySelectorAll('#g-cls-row .pill').forEach(function(p){p.classList.remove('on');});el.classList.add('on');curCls=c;};
+    row.appendChild(el);
+  });
+}
+function setupCatRow(){
+  var row=document.getElementById('g-cat-row');row.innerHTML='';
+  CATS.forEach(function(c){
+    var el=document.createElement('div');el.className='pill'+(curCat===c?' on':'');el.textContent=c;el.onclick=function(){document.querySelectorAll('#g-cat-row .pill').forEach(function(p){p.classList.remove('on');});el.classList.add('on');curCat=c;};
+    row.appendChild(el);
+  });
+}
+function openGame(id){
+  curGame=GAMES.find(function(g){return g.id===id;});
+  var popup=document.getElementById('game-popup');
+  document.getElementById('g-title').textContent=curGame.t;
+  document.getElementById('g-sub').textContent=curGame.d;
+  document.getElementById('g-cls').textContent='Class: '+(MODS.find(function(m){return m.id===curCls;}).t||curCls);
+  document.getElementById('g-cat').textContent='Category: '+curCat;
+  document.getElementById('g-xp').textContent='XP +0';
+  document.getElementById('g-play').style.display='none';
+  document.getElementById('g-end').style.display='none';
+  document.getElementById('g-setup').style.display='block';
+  setupClsRow();setupCatRow();
+  popup.style.display='flex';
+  document.body.style.overflow='hidden';
+}
+function closeGame(){
+  document.getElementById('game-popup').style.display='none';
+  document.body.style.overflow='';
+}
+document.getElementById('g-start').onclick=function(){startRound();};
+
+/* ---------- Question rendering ---------- */
+function bankFor(cat){
+  if(cat==='QUIZ')return QUIZ;if(cat==='MYTH')return MYTH;if(cat==='PROMPT')return PROMPT;if(cat==='TERMS')return TERMS;return ALLQ;
+}
+function qFor(cat){
+  var b=bankFor(cat);
+  var q=b[Math.floor(Math.random()*b.length)];
+  if(cat==='TERMS')return{q:q[0],o:[q[1],'Wrong def A','Wrong def B'],a:0,def:q[1],cat:'TERMS'};
+  if(cat==='LESSONS'){
+    var m=MODS[Math.floor(Math.random()*MODS.length)];
+    var l=m.L[Math.floor(Math.random()*m.L.length)];
+    var qq=l[2][Math.floor(Math.random()*l[2].length)];
+    return{q:qq.q,o:qq.o,a:qq.a,cat:m.t+' lesson'};
+  }
+  return{q:q.q,o:q.o,a:q.a,cat:cat};
+}
+function renderQ(q){
+  var play=document.getElementById('g-play');play.style.display='block';
+  play.innerHTML='<div class="hud"><span id="q-idx"></span><span id="q-score">Score 0</span><span id="q-xp">+0 XP</span></div>'+
+    '<div class="qscreen"><div class="qtext" id="q-text">'+q.q+'</div><div id="q-tip" class="tip"></div><div class="opts" id="q-opts"></div></div>';
+  var opts=document.getElementById('q-opts');opts.innerHTML='';
+  q.o.forEach(function(o,i){
+    var b=document.createElement('button');b.className='opt btn';b.textContent=o;b.onclick=function(){ans(q,i,b);};
+    opts.appendChild(b);
+  });
+  document.getElementById('q-idx').textContent='Question';
+  document.getElementById('q-tip').classList.remove('show');
+}
+var GQ=null,GXP=0,GSCORE=0,GIDX=0;
+function ans(q,i,btn){
+  var opts=document.getElementById('q-opts').children;
+  for(var k=0;k<opts.length;k++){opts[k].disabled=true;opts[k].classList.remove('good','no');}
+  var correct=(i===q.a);
+  if(correct){btn.classList.add('good');GSCORE++;GXP+=10;addXp(10);}else{btn.classList.add('no');opts[q.a].classList.add('good');GXP-=10;U.xp=Math.max(0,U.xp-10);saveSt();toast('-10 XP');}
+  document.getElementById('q-score').textContent='Score '+GSCORE;
+  document.getElementById('q-xp').textContent='+'+GXP+' XP';
+  var tip=document.getElementById('q-tip');tip.textContent=eduTip(q);tip.classList.add('show');
+  GIDX++;
+  setTimeout(function(){
+    if(GIDX>=10){endRound();}else{renderQ(qFor(curCat));}
+  },1400);
+}
+function startRound(){
+  GSCORE=0;GXP=0;GIDX=0;GQ=null;
+  document.getElementById('g-setup').style.display='none';
+  document.getElementById('g-end').style.display='none';
+  document.getElementById('g-play').style.display='block';
+  document.getElementById('g-xp').textContent='XP +0';
+  renderQ(qFor(curCat));
+}
+function endRound(){
+  document.getElementById('g-play').style.display='none';
+  var end=document.getElementById('g-end');end.style.display='block';
+  var played=stGet(curGame.id+'_played')||0,best=stGet(curGame.id+'_best')||0;
+  played++;if(GSCORE>best)best=GSCORE;
+  stSet(curGame.id+'_played',played);stSet(curGame.id+'_best',best);stInc('played',1);
+  if(GSCORE>=6){addXp(20,'win');U.wins++;saveSt();}
+  chk();
+  end.innerHTML='<div class="game-title">Round complete</div><div class="big">'+GSCORE+' / 10</div><p style="margin-top:10px">You earned <b>'+GXP+' XP</b>.</p><p class="mut">Best: '+best+' &nbsp;·&nbsp; Plays: '+played+'</p><button class="btn" onclick="startRound()" style="margin-top:14px">Play again</button>&nbsp;<button class="btn ghost" onclick="closeGame()">Close</button>';
+}
+/* ---------- Gem Match (mini) ---------- */
+function gemGame(){
+  // simplified: match grid, each match asks a question
+}
+buildGames();
+init();
+</script>
+</body>
+</html>
