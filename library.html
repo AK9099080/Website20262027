@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Library | AxonEDU</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  .les-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-top:18px}
+  .les-card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px}
+  .les-card h3{margin-top:0}
+  .les-done{opacity:.6}
+  .modal{display:none}
+  #lesson-popup{position:fixed;inset:0;background:var(--bg);z-index:80;display:none;padding:24px;overflow:auto}
+  #lesson-popup .game-box{max-width:700px}
+  .les-content{margin:12px 0}
+  .les-content p{white-space:pre-wrap}
+</style>
+</head>
+<body>
+<div id="nav-root"></div>
+<main style="max-width:1100px;margin:0 auto;padding:30px 20px 60px">
+  <h1 style="font-size:34px">Library</h1>
+  <p class="mut" style="font-size:17px">Lessons and quizzes. Finish a lesson to mark it done and earn XP.</p>
+  <div id="library-root" class="les-grid"></div>
+</main>
+<div id="footer-root"></div>
+
+<!-- Lesson popup -->
+<div id="lesson-popup" class="modal">
+  <button class="close-popup" onclick="closeLesson()">&times;</button>
+  <div class="game-box">
+    <div class="game-title" id="lp-title"></div>
+    <div class="game-sub" id="lp-sub"></div>
+    <div id="lp-body"></div>
+    <div id="lp-actions" style="margin-top:18px;text-align:center"></div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/umd/supabase.min.js"></script>
+<script src="shared.js"></script>
+<script>
+function buildLibrary(){
+  var out='';
+  MODS.forEach(function(m){
+    var done=m.L.filter(function(l){return U&&U.done.indexOf(m.id+':'+l[0])>=0}).length;
+    var pct=Math.round((done/m.L.length)*100);
+    var allDone=done===m.L.length;
+    out+='<div class="les-card'+(allDone?' les-done':'')+'">'+
+      '<h3>'+m.ic+' '+m.t+'</h3>'+
+      '<p style="font-size:14px;color:var(--mut);margin:6px 0 10px">'+m.d+'</p>'+
+      '<div class="bar"><i style="width:'+pct+'%"></i></div>'+
+      '<div style="font-size:12px;color:var(--mut);margin-top:6px">'+done+' / '+m.L.length+' lessons</div>'+
+      '<button class="btn full" style="margin-top:10px" onclick="openMod(\''+m.id+'\')">'+(allDone?'Completed':'Open module')+'</button>'+
+      '</div>';
+  });
+  document.getElementById('library-root').innerHTML=out;
+}
+function openMod(mid){
+  var m=MODS.find(function(x){return x.id===mid;});
+  var popup=document.getElementById('lesson-popup');
+  document.getElementById('lp-title').textContent=m.t;
+  document.getElementById('lp-sub').textContent=m.d;
+  var li=0;
+  function show(){
+    var l=m.L[li];
+    var done=U&&U.done.indexOf(m.id+':'+l[0])>=0;
+    document.getElementById('lp-body').innerHTML='<div class="les-content">'+
+      '<h3 style="margin-top:0">'+l[0]+'</h3>'+
+      '<p>'+l[1].join('<br><br>')+'</p>'+
+      '</div>';
+    document.getElementById('lp-actions').innerHTML=
+      (done?'<span class="mut">Completed ✓</span>':'')+
+      '<button class="btn" onclick="markDone(\''+mid+'\','+li+')">'+(done?'Mark not done':'Mark complete + XP')+'</button>'+
+      '<button class="btn ghost" onclick="quizLesson(\''+mid+'\','+li+')">Quiz</button>'+
+      '<div style="margin-top:8px"><button class="btn ghost" onclick="navLes('+(li>0?-1:0)+')">'+(li>0?'« Prev':'')+'</button>'+
+      '&nbsp;<button class="btn ghost" onclick="navLes('+(li<m.L.length-1?1:0)+')">'+(li<m.L.length-1?'Next »':'')+'</button></div>';
+  }
+  function navLes(d){li=Math.max(0,Math.min(m.L.length-1,li+d));show();}
+  window.navLes=navLes;
+  popup.style.display='flex';show();
+}
+function closeLesson(){document.getElementById('lesson-popup').style.display='none';}
+function markDone(mid,li){
+  var key=mid+':'+MODS.find(function(m){return m.id===mid;}).L[li][0];
+  if(U.done.indexOf(key)<0){U.done.push(key);addXp(15,'lesson');saveSt();chk();toast('+15 XP');}
+  openMod(mid);
+  buildLibrary();
+}
+function quizLesson(mid,li){
+  var m=MODS.find(function(x){return x.id===mid;});
+  var qs=m.L[li][2];
+  if(!qs||!qs.length){toast('No quiz for this lesson');return;}
+  closeLesson();
+  // start a mini quiz in a popup
+  var popup=document.getElementById('lesson-popup');
+  document.getElementById('lp-title').textContent=m.t+' — Quiz';
+  document.getElementById('lp-sub').textContent='Answer the questions for lesson "'+m.L[li][0]+'"';
+  var qi=0,score=0;
+  function qshow(){
+    var q=qs[qi];
+    document.getElementById('lp-body').innerHTML='<div class="qscreen">'+
+      '<div class="qtext">'+q.q+'</div><div class="opts" id="q-opts"></div>'+
+      '</div>';
+    var opts=document.getElementById('q-opts');opts.innerHTML='';
+    q.o.forEach(function(o,i){
+      var b=document.createElement('button');b.className='opt btn';b.textContent=o;b.onclick=function(){qans(q,i);};
+      opts.appendChild(b);
+    });
+    document.getElementById('lp-actions').innerHTML='';
+  }
+  function qans(q,i){
+    var correct=i===q.a;
+    if(correct){score++;addXp(5,'quiz');}
+    else{U.xp=Math.max(0,U.xp-5);toast('-5 XP');}
+    saveSt();
+    qi++;
+    if(qi<qs.length)qshow();
+    else{finishQuiz(m,li,score,qs.length);}
+  }
+  function finishQuiz(m,li,score,total){
+    var key=mid+':'+m.L[li][0];
+    if(score===total&&U.done.indexOf(key)<0){U.done.push(key);addXp(10,'perfect');toast('Perfect score! +10 XP');chk();}
+    saveSt();buildLibrary();
+    document.getElementById('lp-body').innerHTML='<div class="end"><div class="big">'+score+' / '+total+'</div><p>Lesson '+(score===total?'mastered':'review it again')+'</p></div>';
+    document.getElementById('lp-actions').innerHTML='<button class="btn" onclick="openMod(\''+mid+'\')">Back to module</button>';
+    chk();
+  }
+  popup.style.display='flex';qshow();
+}
+buildLibrary();
+init();
+</script>
+</body>
+</html>

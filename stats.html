@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statistics | AxonEDU</title>
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div id="nav-root"></div>
+<main style="max-width:900px;margin:0 auto;padding:30px 20px 60px">
+  <h1 style="font-size:34px">AI by the numbers</h1>
+  <p class="mut" style="font-size:17px">Figures to help you see how big AI really is — and where the uncertainty is.</p>
+
+  <section class="sec">
+    <h2>Key stats</h2>
+    <div id="stats-root" class="grid"></div>
+  </section>
+
+  <section class="sec">
+    <h2>Read these critically</h2>
+    <div class="card">
+      <p>Most of these numbers are estimates from a single report or survey, and they change quickly. AI moves faster than research can measure it. Treat each figure as a starting point, not a final answer — and check the source if a number matters to you.</p>
+      <p class="mut">Sources are listed on the References page.</p>
+    </div>
+  </section>
+</main>
+<div id="footer-root"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/umd/supabase.min.js"></script>
+<script src="shared.js"></script>
+<script>
+(function(){
+  var out='';
+  STATS.forEach(function(s){
+    out+='<div class="card"><div class="tag">Stat</div><div style="font-size:34px;font-weight:800;color:var(--pri2);margin:8px 0">'+s[0]+'</div><p style="font-size:16px;color:var(--ink)"><b>'+s[1]+'</b></p><div class="src">'+s[2]+'</div></div>';
+  });
+  document.getElementById('stats-root').innerHTML=out;
+})();
+init();
+</script>
+</body>
+</html>
