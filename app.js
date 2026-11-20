@@ -1,4 +1,6 @@
 /* AxonEDU shared app.js — multi-page */
+function Q(q,right,w1,w2,w3){var o=[right,w1,w2,w3].filter(Boolean).sort(function(){return Math.random()-.5});return{q:q,o:o,a:o.indexOf(right)}}
+function TF(q,isTrue){return{q:q,o:['True','False'],a:isTrue?0:1}}
 
 var MYTH=[
 TF('AI always tells the truth.',false),TF('Training data can make an AI unfair.',true),TF('You should fact-check AI answers.',true),
