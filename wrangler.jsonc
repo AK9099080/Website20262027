@@ -1,38 +1,9 @@
-// wrangler.jsonc — configure Cloudflare Workers to deploy static site assets
+// wrangler.jsonc — deploy static site assets via Cloudflare Workers
 {
-  // Must match your existing Worker name in Cloudflare
   "name": "tsa-web",
-
-  // Entry point (static HTML served directly)
-  "main": "index.html",
-
-  // Compatibility date for the Workers runtime
   "compatibility_date": "2026-11-20",
-
-  // Deploy all static files in the repo root as assets
+  "main": "worker.js",
   "assets": {
-    "directory": "./",
-    "include": [
-      "index.html",
-      "about.html",
-      "references.html",
-      "stats.html",
-      "news.html",
-      "dash.html",
-      "lib.html",
-      "games.html",
-      "lb.html",
-      "me.html",
-      "404.html",
-      "style.css",
-      "app.js",
-      "img/**"
-    ],
-    "exclude": [
-      "node_modules/**",
-      ".git/**",
-      ".gitignore",
-      "wrangler.jsonc"
-    ]
+    "directory": "./"
   }
 }
