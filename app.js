@@ -231,7 +231,8 @@ U={id:id,name:p.data.username,xp:p.data.xp,av:Math.min(p.data.avatar||0,AVS.leng
 U.wins=U.st.raceWins||0;
 await loadFriends();
 QUIET=true;chk();QUIET=false;startInbox();return true}
-async function init(){if(sb){try{var r=await sb.auth.getSession();if(r.data.session)await loadUser(r.data.session.user.id)}catch(e){}}renderPage()}
+async function init(){if(sb){try{var r=await sb.auth.getSession();if(r.data.session)await loadUser(r.data.session.user.id)}catch(e){}}renderPage();}
+function safeRender(){try{renderPage()}catch(e){var m=$('main');if(m)m.innerHTML='<div class="card" style="padding:26px"><h2>Something went wrong</h2><p class="mut">Reload the page. If it keeps happening, open the browser console (F12) and share the error.</p></div>';console.error(e)}}
 function loginBox(){$('modal').innerHTML='<div class="modal" onclick="if(event.target==this)$(\'modal\').innerHTML=\'\'"><div class="box"><h2>Log in or sign up</h2><p class="mut">Pick a username (3–16 letters, numbers or _) and a 6-digit PIN. New username? We’ll create your account. Existing one? Enter your PIN to continue. Don’t use your real name.</p><input type="text" id="un" maxlength="16" placeholder="Username" autocomplete="off"><input type="password" id="pin" inputmode="numeric" maxlength="6" placeholder="6-digit PIN" onkeydown="if(event.key==\'Enter\')doLogin()"><button class="btn" id="lgbtn" onclick="doLogin()">Let’s go</button> <button class="btn ghost" onclick="$(\'modal\').innerHTML=\'\'">Cancel</button></div></div>';$('un').focus()}
 async function doLogin(){var v=$('un').value.trim(),pin=$('pin').value.trim();
 if(!/^[A-Za-z0-9_]{3,16}$/.test(v)){toast('Username: 3–16 letters, numbers or _');return}
@@ -754,5 +755,6 @@ return shell(
  '</div>'
 );
 }
-window.addEventListener('popstate',renderPage);
+window.addEventListener('popstate',safeRender);
+safeRender();
 init();

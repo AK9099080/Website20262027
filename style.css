@@ -11,28 +11,28 @@
   --c-pri3:  #4F5D75;  /* tertiary brand (muted blue-gray) */
   --c-light: #FBE9EE;  /* background (light pink) */
 
-  /* Derived UI colors */
+  /* Derived UI colors — all from your five brand colors */
   --bg:          var(--c-light);
-  --bg2:         #f4e2ea;
+  --bg2:         color-mix(in srgb, var(--c-light) 85%, var(--c-pri));
   --card:        #ffffff;
   --ink:         var(--c-dark);
   --mut:         var(--c-pri3);
   --pri:         var(--c-pri);
   --pri2:        var(--c-pri2);
   --pri3:        var(--c-pri3);
-  --line:        #e2c9d2;
+  --line:        color-mix(in srgb, var(--c-pri3) 35%, transparent);
   --ok:          #13a36b;
   --bad:         #e5484d;
 
   /* Level 10 custom gradient — pick any two colors from a color wheel */
   --lvl10:       linear-gradient(135deg, #7b2cbf, #4f46e5);
 
-  /* Bubble design tokens */
-  --radius:      26px;
-  --radius-sm:   12px;
-  --shadow:      0 20px 40px -8px color-mix(in srgb, var(--c-pri) 22%, transparent);
-  --shadow-sm:   0 8px 20px -4px color-mix(in srgb, var(--c-pri) 12%, transparent);
-  --font:        "Fredoka", "Segoe UI", Helvetica, Arial, sans-serif;
+  /* Design tokens — cleaner, less glow */
+  --radius:      16px;
+  --radius-sm:   10px;
+  --shadow:      0 12px 28px -6px color-mix(in srgb, var(--c-pri) 14%, transparent);
+  --shadow-sm:   0 4px 12px -3px color-mix(in srgb, var(--c-pri) 8%, transparent);
+  --font:        "Inter", "Segoe UI", Helvetica, Arial, sans-serif;
 
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
@@ -69,10 +69,10 @@ body:before {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(900px 420px at 80% -10%, color-mix(in srgb, var(--pri) 18%, transparent), transparent),
-    linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 46px 46px,
-    linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 46px 46px;
-  opacity: 0.45;
+    radial-gradient(900px 420px at 80% -10%, color-mix(in srgb, var(--pri) 10%, transparent), transparent),
+    linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 64px 64px,
+    linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 64px 64px;
+  opacity: 0.3;
   z-index: -1;
   pointer-events: none;
 }
