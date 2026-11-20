@@ -464,7 +464,7 @@ function showInvite(){}
 
 function goPage(r){route=r;history.pushState(null,'',r==='home'?'/':'/'+r);renderPage()}
 function renderPage(){
-var p=window.location.pathname.replace(/^\/+/,'').replace(/\/$/,'');
+var p=window.location.pathname.replace(/^\/+/,'').replace(/\/$/,'').replace(/\.html$/,'');
 var map={'':'home','about':'why','stats':'stats','news':'news','dash':'dash','lib':'lib','games':'games','lb':'lb','me':'me','references':'refs','ref':'refs'};
 if(!route||route==='home')route=map[p]||'home';
 var m=$('main');if(!m)return;
