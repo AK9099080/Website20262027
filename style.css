@@ -28,8 +28,8 @@
   --lvl10:       linear-gradient(135deg, #7b2cbf, #4f46e5);
 
   /* Design tokens — cleaner, less glow */
-  --radius:      16px;
-  --radius-sm:   10px;
+  --radius:      24px;
+  --radius-sm:   14px;
   --shadow:      0 12px 28px -6px color-mix(in srgb, var(--c-pri) 14%, transparent);
   --shadow-sm:   0 4px 12px -3px color-mix(in srgb, var(--c-pri) 8%, transparent);
   --font:        "Inter", "Segoe UI", Helvetica, Arial, sans-serif;
@@ -80,6 +80,7 @@ button { font: inherit; cursor: pointer; border: 0; background: transparent; }
   position: sticky;
   top: 0;
   z-index: 60;
+  width: 100%;
   background: color-mix(in srgb, var(--card) 82%, transparent);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--line);
@@ -172,7 +173,7 @@ button { font: inherit; cursor: pointer; border: 0; background: transparent; }
   background: var(--pri);
   color: #fff;
   border-radius: 999px;
-  padding: 10px 24px;
+  padding: 12px 28px;
   font-weight: 800;
   font-size: 15px;
   transition: all 0.15s;
@@ -334,7 +335,7 @@ main {
 }
 .hero img {
   width: 100%;
-  border-radius: var(--radius);
+  border-radius: 30px;
   border: 1px solid var(--line);
   display: block;
   box-shadow: var(--shadow);
@@ -362,6 +363,7 @@ main {
    ===================================================================== */
 footer {
   margin-top: auto;
+  width: 100%;
   padding: 40px 20px 60px;
   text-align: center;
   color: var(--mut);
@@ -404,7 +406,7 @@ footer {
 .box {
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: 30px;
   padding: 32px;
   max-width: 640px;
   width: 100%;
@@ -415,11 +417,11 @@ footer {
   box-shadow: var(--shadow);
 }
 .close-popup { position: absolute; }
-.box .close-popup { right: 14px; top: 14px; }
+.box .close-popup { right: 18px; top: 18px; width: 34px; height: 34px; border-radius: 50%; font-size: 24px; text-align: center; line-height: 34px; }
 input[type=text], input[type=password], textarea, select {
   width: 100%;
-  padding: 13px 15px;
-  border-radius: 14px;
+  padding: 14px 16px;
+  border-radius: 18px;
   border: 1px solid var(--line);
   font: inherit;
   background: var(--bg);
@@ -453,7 +455,7 @@ input[type=text], input[type=password], textarea, select {
   text-align: left;
   margin: 10px 0;
   padding: 16px 18px;
-  border-radius: 16px;
+  border-radius: 20px;
   border: 1px solid var(--line);
   background: var(--bg);
   color: var(--ink);
@@ -516,20 +518,21 @@ input[type=text], input[type=password], textarea, select {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 24px;
+  padding: 20px 28px;
   border-bottom: 1px solid var(--line);
   background: var(--card);
 }
-.game-popup .game-header h2 { margin: 0; font-size: 20px; }
-.game-popup .game-body { flex: 1; overflow: auto; padding: 24px; }
+.game-popup .game-header h2 { margin: 0; font-size: 22px; }
+.game-popup .game-body { flex: 1; overflow: auto; padding: 28px; }
 .game-popup .game-footer {
-  padding: 16px 24px;
+  padding: 20px 28px;
   border-top: 1px solid var(--line);
   background: var(--card);
   display: flex;
-  gap: 10px;
+  gap: 12px;
   justify-content: center;
 }
+.game-popup .close-popup { width: 34px; height: 34px; border-radius: 50%; font-size: 24px; text-align: center; line-height: 34px; top: 18px; right: 22px; }
 #game { width: 100%; }
 
 /* =====================================================================

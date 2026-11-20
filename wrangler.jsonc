@@ -1,9 +1,0 @@
-// wrangler.jsonc — deploy static site assets via Cloudflare Workers
-{
-  "name": "tsa-web",
-  "compatibility_date": "2026-11-20",
-  "main": "worker.js",
-  "assets": {
-    "directory": "./"
-  }
-}

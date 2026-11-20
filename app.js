@@ -250,13 +250,7 @@ var FAKE=['Maya R.','Jordan T.','Priya S.','Leo M.','Sofia G.','Dev K.','Ava L.'
 var STATS=[['64%','of U.S. teens use AI chatbots','Pew Research Center, Feb 2026'],['26%','used ChatGPT for schoolwork (2024)','Pew Research Center, Jan 2025'],['38%','of global employment exposed to AI','IMF Blog, Jan 2024'],['13%','used ChatGPT for schoolwork (2023)','Pew Research Center, Jan 2025']];
 var NEWS=[['Models get better at reasoning','Newer AI systems can work through multi-step math and science problems, showing their steps along the way.','Advancement'],['Schools write AI policies','Districts are publishing guidelines on when AI help is allowed, and many ask students to cite it.','Education'],['AI helps spot disease earlier','Researchers are testing image-analysis tools that flag possible problems for doctors to review.','Science'],['Concerns: errors and over-reliance','Teachers note AI can be wrong and that leaning on it can weaken practice with writing and problem-solving.','Caution'],['Open and small models grow','Smaller models are now able to run on laptops and phones, making AI more widely available.','Advancement'],['Calls for clearer labels','Some groups want AI-made images and text to be clearly marked so people aren’t misled.','Caution']];
 
-var REFS=[
-['Pew Research Center (2026)','How Teens Use and View AI','https://www.pewresearch.org/internet/2026/02/24/how-teens-use-and-view-ai/','64% of U.S. teens use AI chatbots; about 3 in 10 use them daily; 54% used chatbots for schoolwork.'],
-['Sidoti & Park, Pew Research Center (2025)','About a Quarter of U.S. Teens Have Used ChatGPT for Schoolwork','https://www.pewresearch.org/short-reads/2025/01/15/about-a-quarter-of-us-teens-have-used-chatgpt-for-schoolwork-double-the-share-in-2023/','26% in 2024, up from 13% in 2023.'],
-['Georgieva, IMF Blog (2024)','AI Will Transform the Global Economy','https://www.imf.org/en/blogs/articles/2024/01/14/ai-will-transform-the-global-economy-lets-make-sure-it-benefits-humanity','Almost 40% of global employment is exposed to AI.'],
-['Dunlosky et al. (2013)','Improving Students’ Learning With Effective Learning Techniques','https://doi.org/10.1177/1529100612453266','Practice testing and distributed practice rated high utility for student learning.'],
-['Buolamwini & Gebru (2018)','Gender Shades','http://proceedings.mlr.press/v81/buolamwini18a.html','Found face-analysis systems made more mistakes on darker-skinned women, partly due to training data.'],
-['U.S. Copyright Office (2025)','Copyright and AI, Part 2: Copyrightability','https://www.copyright.gov/ai/Copyright-and-Artificial-Intelligence-Part-2-Copyrightability-Report.pdf','Copyright protection generally requires human authorship.']];
+var REFS=[];
 
 var U=null, route='home', filt='All', lb='world', G=null, FC=null, MU=null, BL=null, GM=null, DG=null, RT=null, INB=null, LQ=null, LT=null, DU={};
 var SB_URL='https://rytzhadculmofsblaxju.supabase.co';
@@ -270,13 +264,7 @@ function toast(t){var d=document.createElement('div');d.className='toast';d.text
 function clean(t){return String(t==null?'':t).replace(/[<>&"'`]/g,'').trim().toUpperCase().slice(0,30)}
 function fail(r){if(r&&r.error)toast('Could not save. Check your connection.')}
 function fd(t){try{return new Date(t).toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'})}catch(e){return ''}}
-function av(sz,u){u=u||U;var i=typeof u.av==='number'?u.av:0;
-if(i===7 && u.avc){
- var m=u.avc.match(/^#([0-9a-f]{6}),#([0-9a-f]{6})$/i);
- if(m)return '<span class="av" style="width:'+sz+'px;height:'+sz+'px;font-size:'+Math.round(sz*.45)+'px;background:linear-gradient(135deg,#'+m[1]+',#'+m[2]+')">'+u.name.charAt(0).toUpperCase()+'</span>';
-}
-return '<span class="av" style="width:'+sz+'px;height:'+sz+'px;font-size:'+Math.round(sz*.45)+'px;background:linear-gradient(135deg,'+AVS[i][0]+')">'+u.name.charAt(0).toUpperCase()+'</span>';
-}
+function av(sz,u){u=u||U;var i=typeof u.av==='number'?u.av:0;return '<span class="av" style="width:'+sz+'px;height:'+sz+'px;font-size:'+Math.round(sz*.45)+'px;background:linear-gradient(135deg,'+AVS[i][0]+')">'+u.name.charAt(0).toUpperCase()+'</span>';}
 function tags(m){return m.tags.map(function(t){return '<span class="tag">'+t+'</span>'}).join('')}
 function closeM(){$('modal').innerHTML='';}
 
@@ -284,7 +272,7 @@ async function loadUser(id){
 var p=await sb.from('profiles').select('*').eq('id',id).single();
 if(p.error||!p.data){await sb.auth.signOut();U=null;return false}
 var pr=await sb.from('progress').select('module_id,lessons').eq('user_id',id);
-U={id:id,name:p.data.username,xp:p.data.xp,av:Math.min(p.data.avatar||0,AVS.length-1),school:p.data.school||'',cls:p.data.class_code||'',done:{},badges:[],created:p.data.created_at,wins:0,st:(p.data.stats&&typeof p.data.stats=='object'?p.data.stats:{}),friends:[],reqIn:[],reqOut:[],avc:p.data.avc||null};
+U={id:id,name:p.data.username,xp:p.data.xp,av:Math.min(p.data.avatar||0,AVS.length-1),school:p.data.school||'',cls:p.data.class_code||'',done:{},badges:[],created:p.data.created_at,wins:0,st:(p.data.stats&&typeof p.data.stats=='object'?p.data.stats:{}),friends:[],reqIn:[],reqOut:[]};
 (pr.data||[]).forEach(function(r){U.done[r.module_id]=r.lessons});
 U.wins=U.st.raceWins||0;
 await loadFriends();
@@ -317,8 +305,6 @@ function saveProg(id){sb.from('progress').upsert({user_id:U.id,module_id:id,less
 function badge(k){if(U.badges.indexOf(k)<0){U.badges.push(k);if(!QUIET)toast('New badge: '+BADGES.filter(function(b){return b[0]==k})[0][2])}}
 function chk(){var c={les:0,tot:0,mods:0,md:{},lv:lvl(),xp:U.xp,st:U.st||{},fr:U.friends?U.friends.length:0,sch:U.school,cls:U.cls};MODS.forEach(function(m){var n=(U.done[m.id]||[]).length;c.les+=n;c.tot+=m.L.length;if(n==m.L.length){c.mods++;c.md[m.id]=1}});ACH.forEach(function(a){if(a[4](c))badge(a[0])})}
 function setAv(i){U.av=i;sb.from('profiles').update({avatar:i}).eq('id',U.id).then(fail);renderPage()}
-function setAvColor(c1,c2){if(!/^#[0-9a-f]{6}$/i.test(c1)||!/^#[0-9a-f]{6}$/i.test(c2)){toast('Pick two valid colors');return}
-U.av=7;U.avc=c1+','+c2;sb.from('profiles').update({avatar:7,avc:c1+','+c2}).eq('id',U.id).then(function(r){fail(r);if(!r.error){toast('Custom gradient saved');renderPage()}})}
 function saveSet(){U.school=clean($('sch').value);U.cls=clean($('cls').value);chk();sb.from('profiles').update({school:U.school||null,class_code:U.cls||null}).eq('id',U.id).then(function(r){fail(r);if(!r.error)toast('Saved')})}
 
 function quizStart(){
@@ -450,8 +436,8 @@ var fr=await sb.from('friends').select('*').or('user_id.eq.'+U.id+',friend_id.eq
 var ids=[];(fr.data||[]).forEach(function(r){if(r.user_id!==U.id)ids.push(r.user_id);if(r.friend_id!==U.id)ids.push(r.friend_id)});
 ids=ids.filter(function(v,i,a){return a.indexOf(v)===i});
 var profs={};
-if(ids.length){var pr=await sb.from('profiles').select('id,username,xp,avatar,avc,school,class_code,stats').in('id',ids);(pr.data||[]).forEach(function(p){profs[p.id]=p})}
-U.friends=ids.map(function(id){var p=profs[id]||{};return{id:id,name:p.username||'?',xp:p.xp||0,av:Math.min(p.avatar||0,AVS.length-1),avc:p.avc||null}});
+if(ids.length){var pr=await sb.from('profiles').select('id,username,xp,avatar,school,class_code,stats').in('id',ids);(pr.data||[]).forEach(function(p){profs[p.id]=p})}
+U.friends=ids.map(function(id){var p=profs[id]||{};return{id:id,name:p.username||'?',xp:p.xp||0,av:Math.min(p.avatar||0,AVS.length-1)}});
 var ri=await sb.from('friend_req').select('*').eq('to_id',U.id).eq('status','pending');
 U.reqIn=(ri.data||[]).map(function(r){return{id:r.id,from:r.from_id,name:r.from_name||'?',created:r.created_at}});
 var ro=await sb.from('friend_req').select('*').eq('from_id',U.id).eq('status','pending');
@@ -509,8 +495,8 @@ async function viewProfile(id){}
 
 async function loadBoard(){
 if(LB.loading)return;LB.loading=true;
-var pr=await sb.from('profiles').select('id,username,xp,avatar,avc,school,class_code,stats').order('xp',{ascending:false}).limit(30);
-LB.rows=(pr.data||[]).map(function(p,i){return{pos:i+1,id:p.id,name:p.username,xp:p.xp||0,av:Math.min(p.avatar||0,AVS.length-1),avc:p.avc||null,school:p.school||'',cls:p.class_code||''}});
+var pr=await sb.from('profiles').select('id,username,xp,avatar,school,class_code,stats').order('xp',{ascending:false}).limit(30);
+LB.rows=(pr.data||[]).map(function(p,i){return{pos:i+1,id:p.id,name:p.username,xp:p.xp||0,av:Math.min(p.avatar||0,AVS.length-1),school:p.school||'',cls:p.class_code||''}});
 LB.loading=false;renderPage();
 }
 async function loadFriendsBoard(){}
@@ -526,19 +512,20 @@ function renderPage(){
 var p=window.location.pathname.replace(/^\/+/,'').replace(/\/$/,'').replace(/\.html$/,'');
 var map={'':'home','about':'why','stats':'stats','news':'news','dash':'dash','lib':'lib','games':'games','lb':'lb','me':'me','references':'refs','ref':'refs'};
 if(!route||route==='home')route=map[p]||'home';
-var m=$('main');if(!m)return;
+var body='';
 switch(route){
- case 'home':m.innerHTML=homeHTML();break;
- case 'why':m.innerHTML=aboutHTML();break;
- case 'refs':m.innerHTML=refsHTML();break;
- case 'stats':m.innerHTML=statsHTML();break;
- case 'news':m.innerHTML=newsHTML();break;
- case 'dash':m.innerHTML=dashHTML();break;
- case 'lib':m.innerHTML=libHTML();break;
- case 'games':m.innerHTML=gamesHTML();break;
- case 'lb':m.innerHTML=lbHTML();break;
- case 'me':m.innerHTML=meHTML();break;
+ case 'home':body=homeHTML();break;
+ case 'why':body=aboutHTML();break;
+ case 'refs':body=refsHTML();break;
+ case 'stats':body=statsHTML();break;
+ case 'news':body=newsHTML();break;
+ case 'dash':body=dashHTML();break;
+ case 'lib':body=libHTML();break;
+ case 'games':body=gamesHTML();break;
+ case 'lb':body=lbHTML();break;
+ case 'me':body=meHTML();break;
 }
+document.body.innerHTML='<div id="modal"></div>'+shell(body);
 }
 function shell(body){
 return headerHTML()+'<main id="main">'+body+'</main>'+footerHTML();
@@ -646,16 +633,9 @@ return shell(
 );
 }
 function refsHTML(){
-var rows='';REFS.forEach(function(r){
-rows+='<tr><td style="width:34%"><strong>'+r[0]+'</strong><br><span class="mut">'+r[1]+'</span></td>'+
- '<td><a href="'+r[2]+'" target="_blank" rel="noopener">'+r[2]+'</a></td>'+
- '<td class="mut">'+r[3]+'</td></tr>';
-});
 return shell(
  '<h2>References</h2>'+
- '<p class="mut">Every statistic and research claim on this site, with links to the original source.</p>'+
- '<table><thead><tr><th>Source</th><th>Link</th><th>What it says</th></tr></thead><tbody>'+rows+'</tbody></table>'+
- '<p class="mut" style="margin-top:14px">Pew Research Center data is from their teen AI-use surveys. IMF estimates global AI exposure. Dunlosky et al. reviewed learning techniques. Buolamwini & Gebru studied face-analysis bias. The U.S. Copyright Office addresses AI authorship.</p>'
+ '<p class="mut">Add your references here in refsHTML().</p>'
 );
 }
 
@@ -781,8 +761,7 @@ return shell(
 }
 function meHTML(){
 if(!U){loginBox();return ''}
-var grad='';if(U.av===7 && U.avc){var m=U.avc.match(/^#([0-9a-f]{6}),#([0-9a-f]{6})$/i);if(m)grad='background:linear-gradient(135deg,#'+m[1]+',#'+m[2]+')'}
-var badgeHtml='';BADGES.forEach(function(b){var got=U.badges.indexOf(b[0])>=0;badgeHtml+='<div class="badge '+(got?'':'lock')+'"><b style="'+(got&&b[0]==='lvl10'?'background:var(--lvl10)!important':grad||'')+'">'+b[1]+'</b>'+b[2]+(got?' <span style="color:var(--ok)">✓</span>':'')+'</div>'});
+var badgeHtml='';BADGES.forEach(function(b){var got=U.badges.indexOf(b[0])>=0;badgeHtml+='<div class="badge '+(got?'':'lock')+'"><b style="'+(got&&b[0]==='lvl10'?'background:var(--lvl10)!important':'')+'">'+b[1]+'</b>'+b[2]+(got?' <span style="color:var(--ok)">✓</span>':'')+'</div>'});
 return shell(
  '<h2>Me</h2>'+
  '<div class="grid">'+
@@ -794,9 +773,8 @@ return shell(
   '</div>'+
   '<div class="card" style="text-align:center">'+
    '<h3>Avatar</h3>'+
-   '<p class="mut" style="margin-bottom:10px">Pick a gradient. Level 10 unlocks a custom two-color wheel.</p>'+
+   '<p class="mut" style="margin-bottom:10px">Pick your avatar.</p>'+
    AVS.map(function(a,i){var sel=i===U.av;return'<div class="pill '+(sel?'on':'')+'" style="'+(i===7?'':'background:linear-gradient(135deg,'+a[0]+')')+'" onclick="setAv('+i+')">'+a[1]+' (L'+a[2]+')'+(sel?' ✓':'')+'</div>'}).join('')+
-   (lvl()>=10?('<div style="margin-top:14px"><input type="text" id="c1" placeholder="#HEX1"> <input type="text" id="c2" placeholder="#HEX2"> <button class="btn" onclick="setAvColor($(\'c1\').value,$(\'c2\').value)">Custom gradient</button></div>'):'<p class="mut" style="font-size:12px">Reach level 10 for a custom color wheel.</p>')+
   '</div>'+
  '</div>'+
  '<h3 style="margin-top:26px">Badges</h3><div class="grid">'+badgeHtml+'</div>'+
