@@ -327,14 +327,17 @@ function updateAuthUI(){
   }
 }
 async function loadUser(id){
-  var p=await sb.from('profiles').select('*').eq('id',id).single();
-  if(p.error||!p.data){await sb.auth.signOut();U=null;return false}
-  var pr=await sb.from('progress').select('module_id,lessons').eq('user_id',id);
-  U={id:id,name:p.data.username,xp:p.data.xp,av:Math.min(p.data.avatar||0,AVS.length-1),school:p.data.school||'',cls:p.data.class_code||'',done:{},badges:[],created:p.data.created_at,wins:0,st:(p.data.stats&&typeof p.data.stats=='object'?p.data.stats:{}),friends:[],reqIn:[],reqOut:[]};
-  (pr.data||[]).forEach(function(r){U.done[r.module_id]=r.lessons});
-  U.wins=U.st.raceWins||0;
-  await loadFriends();
-  QUIET=true;chk();QUIET=false;startInbox();return true}
+  try{
+    var p=await sb.from('profiles').select('*').eq('id',id).single();
+    if(p.error||!p.data){await sb.auth.signOut();U=null;return false}
+    var pr=await sb.from('progress').select('module_id,lessons').eq('user_id',id);
+    U={id:id,name:p.data.username,xp:p.data.xp,av:Math.min(p.data.avatar||0,AVS.length-1),school:p.data.school||'',cls:p.data.class_code||'',done:{},badges:[],created:p.data.created_at,wins:0,st:(p.data.stats&&typeof p.data.stats=='object'?p.data.stats:{}),friends:[],reqIn:[],reqOut:[]};
+    (pr.data||[]).forEach(function(r){U.done[r.module_id]=r.lessons});
+    U.wins=U.st.raceWins||0;
+    await loadFriends();
+    QUIET=true;chk();QUIET=false;startInbox();return true
+  }catch(e){U=null;return false}
+}
 async function init(){
   if(sb){
     try{var r=await sb.auth.getSession();if(r.data.session)await loadUser(r.data.session.user.id)}catch(e){}}
@@ -348,14 +351,18 @@ async function doLogin(){
   if(!/^[A-Za-z0-9_]{3,16}$/.test(v)){toast('Username: 3–16 letters, numbers or _');return}
   if(!/^\d{6}$/.test(pin)){toast('PIN must be exactly 6 digits');return}
   if(!sb){toast('Could not reach the cloud service');return}
-  var b=$('lgbtn');b.disabled=true;var em=v.toLowerCase()+'@synapse.app',r=await sb.auth.signInWithPassword({email:em,password:pin});
-  if(r.error){var s=await sb.auth.signUp({email:em,password:pin});
-    if(s.error||!s.data.user){b.disabled=false;toast(s.error&&/registered|already/i.test(s.error.message)?'Wrong PIN for that username':'Sign-up failed. Try again.');return}
-    if(!s.data.session){b.disabled=false;toast('Sign-up needs "Confirm email" turned off in Supabase');return}
-    var ins=await sb.from('profiles').insert({id:s.data.user.id,username:v});
-    if(ins.error){await sb.auth.signOut();b.disabled=false;toast('That username is already taken');return}
-    r={data:{user:s.data.user}}}
-  await loadUser(r.data.user.id);$('modal').innerHTML='';toast('Welcome, '+U.name+'!');go('dash')}
+  var b=$('lgbtn');b.disabled=true;var em=v.toLowerCase()+'@synapse.app';
+  try{
+    var r=await sb.auth.signInWithPassword({email:em,password:pin});
+    if(r.error){var s=await sb.auth.signUp({email:em,password:pin});
+      if(s.error||!s.data.user){b.disabled=false;toast(s.error&&/registered|already/i.test(s.error.message)?'Wrong PIN for that username':'Sign-up failed. Try again.');return}
+      if(!s.data.session){b.disabled=false;toast('Sign-up needs "Confirm email" turned off in Supabase');return}
+      var ins=await sb.from('profiles').insert({id:s.data.user.id,username:v});
+      if(ins.error){await sb.auth.signOut();b.disabled=false;toast('That username is already taken');return}
+      r={data:{user:s.data.user}}}
+    await loadUser(r.data.user.id);$('modal').innerHTML='';toast('Welcome, '+U.name+'!');go('dash')}
+  catch(e){b.disabled=false;toast('Login failed: '+(e&&e.message?e.message:'Check your connection'));}
+}
 async function logout(){
   try{if(INB)sb.removeChannel(INB)}catch(e){}
   if(RT)liveStop();

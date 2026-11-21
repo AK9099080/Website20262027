@@ -114,14 +114,15 @@ button { font: inherit; cursor: pointer; border: 0; background: transparent; }
 }
 
 .auth-center {
-  grid-column: 2;
-  justify-self: center;
+  grid-column: 3;
+  justify-self: end;
   display: flex;
   justify-content: center;
+  gap: 10px;
 }
 
 .main-nav {
-  grid-column: 3;
+  grid-column: 2;
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
@@ -528,6 +529,14 @@ input[type=text], input[type=password], textarea, select {
 }
 .game-popup .close-popup { width: 34px; height: 34px; border-radius: 50%; font-size: 24px; text-align: center; line-height: 34px; top: 18px; right: 22px; }
 #game { width: 100%; }
+
+/* Gem Match board */
+.gmg { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin: 16px 0; }
+.gem { width: 0; padding-bottom: 100%; border: none; border-radius: 50%; background: var(--c); position: relative; cursor: pointer; aspect-ratio: 1; }
+.gem i { position: absolute; inset: 22%; border-radius: 50%; background: color-mix(in srgb, var(--c) 70%, transparent); }
+.gem.sel { outline: 4px solid var(--ink); outline-offset: -2px; }
+.gem.pop { animation: gemPop 0.3s ease; }
+@keyframes gemPop { 0% { transform: scale(1); } 50% { transform: scale(1.25); } 100% { transform: scale(1); } }
 
 /* =====================================================================
    Misc

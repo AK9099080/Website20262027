@@ -72,9 +72,13 @@ async function doLogin(){
   if(!/^[A-Za-z0-9_]{3,16}$/.test(v)){toast('Username: 3–16 letters, numbers or _');return}
   if(!/^\d{6}$/.test(pin)){toast('PIN must be exactly 6 digits');return}
   if(!sb){toast('Could not reach the cloud service');return}
-  var b=$('lgbtn');b.disabled=true;var em=v.toLowerCase()+'@synapse.app',r=await sb.auth.signInWithPassword({email:em,password:pin});
-  if(r.error){var s=await sb.auth.signUp({email:em,password:pin});if(s.error||!s.data.user){b.disabled=false;toast('Sign-up failed. Try again.');return}if(!s.data.session){b.disabled=false;toast('Sign-up needs "Confirm email" turned off in Supabase');return}var ins=await sb.from('profiles').insert({id:s.data.user.id,username:v});if(ins.error){await sb.auth.signOut();b.disabled=false;toast('That username is already taken');return}r={data:{user:s.data.user}}}
-  U={id:r.data.user.id,name:v,xp:0,av:0,school:'',cls:''};$('modal').innerHTML='';updateAuthUI();toast('Welcome, '+v+'!');}
+  var b=$('lgbtn');b.disabled=true;var em=v.toLowerCase()+'@synapse.app';
+  try{
+    var r=await sb.auth.signInWithPassword({email:em,password:pin});
+    if(r.error){var s=await sb.auth.signUp({email:em,password:pin});if(s.error||!s.data.user){b.disabled=false;toast('Sign-up failed. Try again.');return}if(!s.data.session){b.disabled=false;toast('Sign-up needs "Confirm email" turned off in Supabase');return}var ins=await sb.from('profiles').insert({id:s.data.user.id,username:v});if(ins.error){await sb.auth.signOut();b.disabled=false;toast('That username is already taken');return}r={data:{user:s.data.user}}}
+    U={id:r.data.user.id,name:v,xp:0,av:0,school:'',cls:''};$('modal').innerHTML='';updateAuthUI();toast('Welcome, '+v+'!');}
+  catch(e){b.disabled=false;toast('Login failed: '+(e&&e.message?e.message:'Check your connection'));}
+}
 function toast(t){var d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(function(){d.remove()},2400)}
 function logout(){try{await sb.auth.signOut()}catch(e){}U=null;updateAuthUI();location.href='index.html'}
 init();

@@ -332,14 +332,18 @@ async function doLogin(){
   if(!/^[A-Za-z0-9_]{3,16}$/.test(v)){toast('Username: 3–16 letters, numbers or _');return}
   if(!/^\d{6}$/.test(pin)){toast('PIN must be exactly 6 digits');return}
   if(!sb){toast('Could not reach the cloud service');return}
-  var b=$('lgbtn');b.disabled=true;var em=v.toLowerCase()+'@synapse.app',r=await sb.auth.signInWithPassword({email:em,password:pin});
-  if(r.error){var s=await sb.auth.signUp({email:em,password:pin});
-    if(s.error||!s.data.user){b.disabled=false;toast(s.error&&/registered|already/i.test(s.error.message)?'Wrong PIN for that username':'Sign-up failed. Try again.');return}
-    if(!s.data.session){b.disabled=false;toast('Sign-up needs "Confirm email" turned off in Supabase');return}
-    var ins=await sb.from('profiles').insert({id:s.data.user.id,username:v});
-    if(ins.error){await sb.auth.signOut();b.disabled=false;toast('That username is already taken');return}
-    r={data:{user:s.data.user}}}
-  await loadUser(r.data.user.id);$('modal').innerHTML='';toast('Welcome, '+U.name+'!');go('dash')}
+  var b=$('lgbtn');b.disabled=true;var em=v.toLowerCase()+'@synapse.app';
+  try{
+    var r=await sb.auth.signInWithPassword({email:em,password:pin});
+    if(r.error){var s=await sb.auth.signUp({email:em,password:pin});
+      if(s.error||!s.data.user){b.disabled=false;toast(s.error&&/registered|already/i.test(s.error.message)?'Wrong PIN for that username':'Sign-up failed. Try again.');return}
+      if(!s.data.session){b.disabled=false;toast('Sign-up needs "Confirm email" turned off in Supabase');return}
+      var ins=await sb.from('profiles').insert({id:s.data.user.id,username:v});
+      if(ins.error){await sb.auth.signOut();b.disabled=false;toast('That username is already taken');return}
+      r={data:{user:s.data.user}}}
+    await loadUser(r.data.user.id);$('modal').innerHTML='';toast('Welcome, '+U.name+'!');go('dash')}
+  catch(e){b.disabled=false;toast('Login failed: '+(e&&e.message?e.message:'Check your connection'));}
+}
 async function logout(){
   try{if(INB)sb.removeChannel(INB)}catch(e){}
   if(RT)liveStop();
