@@ -71,7 +71,7 @@ a { color: var(--pri2); text-decoration: none; }
 button { font: inherit; cursor: pointer; border: 0; background: transparent; }
 
 /* =====================================================================
-   Header — logo on the left, login centered, nav below
+   Header — single centered bar: brand left, all nav centered, auth right
    ===================================================================== */
 .top {
   position: sticky;
@@ -81,11 +81,12 @@ button { font: inherit; cursor: pointer; border: 0; background: transparent; }
   background: color-mix(in srgb, var(--card) 82%, transparent);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--line);
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+  display: flex;
   align-items: center;
-  gap: 14px;
+  justify-content: space-between;
   padding: 14px 26px;
+  gap: 14px;
+  flex-wrap: wrap;
 }
 
 .brand {
@@ -93,7 +94,7 @@ button { font: inherit; cursor: pointer; border: 0; background: transparent; }
   align-items: center;
   gap: 12px;
   cursor: pointer;
-  grid-column: 1;
+  flex-shrink: 0;
 }
 .brand img.logo {
   width: 44px;
@@ -113,35 +114,25 @@ button { font: inherit; cursor: pointer; border: 0; background: transparent; }
   color: var(--pri2);
 }
 
-.auth-center {
-  grid-column: 3;
-  justify-self: end;
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-}
-
+/* all nav links centered in one bar */
 .main-nav {
-  grid-column: 2;
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: center;
+  flex: 1;
+  max-width: 700px;
 }
 
-/* sub nav — centered tab bar just under the header */
-.sub {
+.auth-center {
   display: flex;
   justify-content: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  padding: 10px 26px;
-  border-bottom: 1px solid var(--line);
-  background: var(--bg2);
-  z-index: 55;
-  position: sticky;
-  top: 64px; /* matches header height approx */
+  gap: 10px;
+  flex-shrink: 0;
 }
+
+/* sub nav — kept hidden; all links now live in .top */
+.sub { display: none !important; }
 
 .nav a, .sub a {
   padding: 10px 18px;
@@ -532,7 +523,7 @@ input[type=text], input[type=password], textarea, select {
 
 /* Gem Match board */
 .gmg { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin: 16px 0; }
-.gem { width: 0; padding-bottom: 100%; border: none; border-radius: 50%; background: var(--c); position: relative; cursor: pointer; aspect-ratio: 1; }
+.gem { width: 100%; aspect-ratio: 1; border: none; border-radius: 50%; background: var(--c); position: relative; cursor: pointer; }
 .gem i { position: absolute; inset: 22%; border-radius: 50%; background: color-mix(in srgb, var(--c) 70%, transparent); }
 .gem.sel { outline: 4px solid var(--ink); outline-offset: -2px; }
 .gem.pop { animation: gemPop 0.3s ease; }

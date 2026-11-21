@@ -15,26 +15,22 @@
     <img src="https://github.com/AK9099080/Website20262027/blob/main/img/logo-home.png?raw=true" class="logo" alt="AxonEDU logo" onerror="this.style.display='none'">
     <span class="wordmark">Axon<em>EDU</em></span>
   </div>
-  <div class="auth-center">
-    <button id="authBtn" class="btn gold" onclick="loginBox()">Log in</button>
-    <button id="logoutBtn" class="btn ghost" onclick="logout()" style="display:none">Log out</button>
-    <span id="userChip" style="display:none;margin-left:10px"></span>
-  </div>
   <nav class="main-nav">
     <a href="index.html" class="nav-link">Home</a>
     <a href="about.html" class="nav-link">Why Learn AI</a>
     <a href="stats.html" class="nav-link">Statistics</a>
     <a href="news.html" class="nav-link">News</a>
+    <a href="dash.html" class="nav-link">Dashboard</a>
+    <a href="lib.html" class="nav-link on">Library</a>
+    <a href="games.html" class="nav-link">Games</a>
+    <a href="lb.html" class="nav-link">Leaderboards</a>
   </nav>
+  <div class="auth-center">
+    <button id="authBtn" class="btn gold" onclick="loginBox()">Log in</button>
+    <button id="logoutBtn" class="btn ghost" onclick="logout()" style="display:none">Log out</button>
+    <span id="userChip" style="display:none;margin-left:10px"></span>
+  </div>
 </header>
-
-<nav class="sub" id="subNav" style="display:none">
-  <a href="dash.html" class="sub-link">Dashboard</a>
-  <a href="lib.html" class="sub-link">Library</a>
-  <a href="games.html" class="sub-link">Games</a>
-  <a href="lb.html" class="sub-link">Leaderboards</a>
-  <a href="me.html" class="sub-link">Profile</a>
-</nav>
 
 <main id="main"></main>
 
@@ -301,12 +297,12 @@ function chk(){if(!U)return;var c={les:0,tot:0,mods:0,md:{},lv:lvl(),xp:U.xp,st:
 function save(){if(U&&sb)sb.from('profiles').update({stats:U.st}).eq('id',U.id).then(function(){})}
 function go(r){var m={home:'index.html',why:'about.html',stats:'stats.html',news:'news.html',dash:'dash.html',lib:'lib.html',games:'games.html',lb:'lb.html',me:'me.html'};if(m[r])location.href=m[r];}
 function updateAuthUI(){
-  var ab=$('authBtn'),lb=$('logoutBtn'),uc=$('userChip'),sn=$('subNav');
+  var ab=$('authBtn'),lb=$('logoutBtn'),uc=$('userChip');
   if(U){
-    ab.style.display='none';lb.style.display='inline-block';uc.style.display='inline-block';sn.style.display='block';
+    ab.style.display='none';lb.style.display='inline-block';uc.style.display='inline-block';
     uc.innerHTML=av(28)+'<b>'+U.name+'</b> Lv'+lvl();
   } else {
-    ab.style.display='inline-block';lb.style.display='none';uc.style.display='none';sn.style.display='none';
+    ab.style.display='inline-block';lb.style.display='none';uc.style.display='none';
   }
 }
 async function loadUser(id){
@@ -352,7 +348,7 @@ function libPage(){
   var g=MODS.map(function(m){var d=U.done[m.id]||[];return '<div class="card"><h3>'+m.t+'</h3><p class="mut">'+m.d+'</p>'+tags(m)+'<div class="mut">'+d.length+'/'+m.L.length+' lessons done</div>'+m.L.map(function(l,i){return '<div style="margin-top:8px;border-bottom:1px dashed #eef;padding-bottom:6px"><h4>'+l[0]+'</h4><p class="mut" style="margin-top:4px">'+l[1].slice(0,1).join(' ')+'</p><button class="btn" style="margin-top:6px" onclick="openLesson(\''+m.id+'\','+i+')">'+(d.indexOf(i)>=0?'Review':'Read')+'</button></div>'}).join('')+'</div>'}).join('');
   return '<h1>Library</h1><p class="mut">Browse every lesson in every module. Tap a lesson to read it, then take its short quiz on the Dashboard.</p>'+g;
 }
-function openLesson(id,i){clearInterval(LT);var m=MODS.filter(function(x){return x.id==id})[0],l=m.L[i],dn=(U.done[id]||[]).indexOf(i)>=0;LQ={id:id,i:i,t0:Date.now(),a:[]};if(!dn)LT=setInterval(function(){var b=$('qb');if(!b||!LQ){clearInterval(LT);return}var r=15-Math.floor((Date.now()-LQ.t0)/1000);if(r<=0){b.disabled=false;b.textContent='Take the quiz';clearInterval(LT)}else b.textContent='Quiz unlocks in '+r+'s'},500)}function lessonQuiz(){var m=MODS.filter(function(x){return x.id==LQ.id})[0],l=m.L[LQ.i];LQ.a=[];var qs=l[2];$('modal').innerHTML='<div class="modal" onclick="if(event.target==this)closeM()"><div class="box" style="max-width:720px"><h2>'+l[0]+'</h2><div id="qs">'+qs.map(function(q,qi){return '<div style="margin-top:14px"><h4>'+q.q+'</h4>'+q.o.map(function(o,k){return '<button class="opt" id="o'+qi+'_'+k+'" onclick="lqPick('+qi+','+k+')">'+o+'</button>'}).join('')+'</div>'}).join('')+'</div><div style="margin-top:16px;display:flex;gap:10px"><button id="qb" class="btn" disabled onkeydown="if(event.key==\'Enter\')lqSubmit()">Quiz unlocks in 15s</button> <button class="btn ghost" onclick="closeM()">Cancel</button></div></div></div>'}function lqPick(qi,oi){if(LQ.done)return;LQ.a[qi]=oi;var q=MODS.filter(function(x){return x.id==LQ.id})[0].L[LQ.i][2][qi];q.o.forEach(function(o,k){var b=$('o'+qi+'_'+k);if(b)b.className='opt'+(k==oi?' sel':'')})}function lqSubmit(){var m=MODS.filter(function(x){return x.id==LQ.id})[0],qs=m.L[LQ.i][2],n=0;for(var k=0;k<qs.length;k++)if(LQ.a[k]==null){toast('Answer every question first');return}LQ.done=true;qs.forEach(function(q,qi){if(LQ.a[qi]==q.a)n++;q.o.forEach(function(o,k){var b=$('o'+qi+'_'+k);if(b)b.className='opt'+(k==q.a?' good':(k==LQ.a[qi]?' no':''))})});var pass=n>=2,s=$('qs');s.outerHTML='<div class="res" style="width:100%"><h3>'+n+' / '+qs.length+(pass?' · Passed':' · Not yet')+'</h3><p class="mut">'+(pass?'Nice work.':'Green shows the correct answers. Re-read the lesson and try again.')+'</p></div>';if(pass){done(LQ.id,LQ.i,n==qs.length);}else{done(LQ.id,LQ.i,false);}}function done(id,i,perfect){var m=MODS.filter(function(x){return x.id==id})[0];U.done[id]=U.done[id]||[];if(U.done[id].indexOf(i)<0){U.done[id].push(i);addXp(25);if(perfect){addXp(10);bump('perfect')}if(U.done[id].length==m.L.length){addXp(50);toast('Module complete! +50 bonus XP')}saveProg(id)}render()}function closeM(){$('modal').innerHTML='';$('main').innerHTML=libPage()}function saveProg(id){sb.from('progress').upsert({user_id:U.id,module_id:id,lessons:U.done[id]}).then(fail)}function bump(k,n){U.st[k]=(U.st[k]||0)+(n||1);saveSt();chk()}function saveSt(){clearTimeout(window._stt);window._stt=setTimeout(function(){if(U&&sb)sb.from('profiles').update({stats:U.st}).eq('id',U.id).then(function(){})},800)}
+function openLesson(id,i){clearInterval(LT);var m=MODS.filter(function(x){return x.id==id})[0],l=m.L[i],dn=(U.done[id]||[]).indexOf(i)>=0;LQ={id:id,i:i,t0:Date.now(),a:[]};var txt=l[1].map(function(p){return '<p>'+p+'</p>'}).join('');$('main').innerHTML='<h2>'+l[0]+'</h2><div class="mut" style="line-height:1.7;margin:16px 0">'+txt+'</div>'+(dn?'<p class="mut" style="margin-top:12px">You’ve completed this lesson.</p>':'')+'<div style="margin-top:20px"><button id="qb" class="btn" '+(dn?'':'disabled')+' onclick="lessonQuiz()">'+(dn?'Review':'Quiz unlocks in 15s')+'</button> <button class="btn ghost" onclick="$(\'main\').innerHTML=libPage()">Back to library</button></div>';if(!dn)LT=setInterval(function(){var b=$('qb');if(!b||!LQ){clearInterval(LT);return}var r=15-Math.floor((Date.now()-LQ.t0)/1000);if(r<=0){b.disabled=false;b.textContent='Take the quiz';clearInterval(LT)}else b.textContent='Quiz unlocks in '+r+'s'},500)}function lessonQuiz(){var m=MODS.filter(function(x){return x.id==LQ.id})[0],l=m.L[LQ.i];LQ.a=[];var qs=l[2];$('modal').innerHTML='<div class="modal" onclick="if(event.target==this)closeM()"><div class="box" style="max-width:720px"><h2>'+l[0]+'</h2><div id="qs">'+qs.map(function(q,qi){return '<div style="margin-top:14px"><h4>'+q.q+'</h4>'+q.o.map(function(o,k){return '<button class="opt" id="o'+qi+'_'+k+'" onclick="lqPick('+qi+','+k+')">'+o+'</button>'}).join('')+'</div>'}).join('')+'</div><div style="margin-top:16px;display:flex;gap:10px"><button id="qb" class="btn" disabled onkeydown="if(event.key==\'Enter\')lqSubmit()">Quiz unlocks in 15s</button> <button class="btn ghost" onclick="closeM()">Cancel</button></div></div></div>'}function lqPick(qi,oi){if(LQ.done)return;LQ.a[qi]=oi;var q=MODS.filter(function(x){return x.id==LQ.id})[0].L[LQ.i][2][qi];q.o.forEach(function(o,k){var b=$('o'+qi+'_'+k);if(b)b.className='opt'+(k==oi?' sel':'')})}function lqSubmit(){var m=MODS.filter(function(x){return x.id==LQ.id})[0],qs=m.L[LQ.i][2],n=0;for(var k=0;k<qs.length;k++)if(LQ.a[k]==null){toast('Answer every question first');return}LQ.done=true;qs.forEach(function(q,qi){if(LQ.a[qi]==q.a)n++;q.o.forEach(function(o,k){var b=$('o'+qi+'_'+k);if(b)b.className='opt'+(k==q.a?' good':(k==LQ.a[qi]?' no':''))})});var pass=n>=2,s=$('qs');s.outerHTML='<div class="res" style="width:100%"><h3>'+n+' / '+qs.length+(pass?' · Passed':' · Not yet')+'</h3><p class="mut">'+(pass?'Nice work.':'Green shows the correct answers. Re-read the lesson and try again.')+'</p></div>';if(pass){done(LQ.id,LQ.i,n==qs.length);}else{done(LQ.id,LQ.i,false);}}function done(id,i,perfect){var m=MODS.filter(function(x){return x.id==id})[0];U.done[id]=U.done[id]||[];if(U.done[id].indexOf(i)<0){U.done[id].push(i);addXp(25);if(perfect){addXp(10);bump('perfect')}if(U.done[id].length==m.L.length){addXp(50);toast('Module complete! +50 bonus XP')}saveProg(id)}render()}function closeM(){$('modal').innerHTML='';$('main').innerHTML=libPage()}function saveProg(id){sb.from('progress').upsert({user_id:U.id,module_id:id,lessons:U.done[id]}).then(fail)}function bump(k,n){U.st[k]=(U.st[k]||0)+(n||1);saveSt();chk()}function saveSt(){clearTimeout(window._stt);window._stt=setTimeout(function(){if(U&&sb)sb.from('profiles').update({stats:U.st}).eq('id',U.id).then(function(){})},800)}
 init();
 </script>
 </body>

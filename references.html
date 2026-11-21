@@ -13,26 +13,22 @@
     <img src="https://github.com/AK9099080/Website20262027/blob/main/img/logo-home.png?raw=true" class="logo" alt="AxonEDU logo" onerror="this.style.display='none'">
     <span class="wordmark">Axon<em>EDU</em></span>
   </div>
-  <div class="auth-center">
-    <button id="authBtn" class="btn gold" onclick="loginBox()">Log in</button>
-    <button id="logoutBtn" class="btn ghost" onclick="logout()" style="display:none">Log out</button>
-    <span id="userChip" style="display:none;margin-left:10px"></span>
-  </div>
   <nav class="main-nav">
     <a href="index.html" class="nav-link">Home</a>
     <a href="about.html" class="nav-link">Why Learn AI</a>
     <a href="stats.html" class="nav-link">Statistics</a>
     <a href="news.html" class="nav-link">News</a>
+    <a href="dash.html" class="nav-link">Dashboard</a>
+    <a href="lib.html" class="nav-link">Library</a>
+    <a href="games.html" class="nav-link">Games</a>
+    <a href="lb.html" class="nav-link">Leaderboards</a>
   </nav>
+  <div class="auth-center">
+    <button id="authBtn" class="btn gold" onclick="loginBox()">Log in</button>
+    <button id="logoutBtn" class="btn ghost" onclick="logout()" style="display:none">Log out</button>
+    <span id="userChip" style="display:none;margin-left:10px"></span>
+  </div>
 </header>
-
-<nav class="sub" id="subNav" style="display:none">
-  <a href="dash.html" class="sub-link">Dashboard</a>
-  <a href="lib.html" class="sub-link">Library</a>
-  <a href="games.html" class="sub-link">Games</a>
-  <a href="lb.html" class="sub-link">Leaderboards</a>
-  <a href="me.html" class="sub-link">Profile</a>
-</nav>
 
 <main id="main">
   <h1>References</h1>
@@ -58,9 +54,9 @@ var sb=null;
 try{sb=supabase.createClient(SB_URL,SB_KEY)}catch(e){}
 function go(r){var m={home:'index.html',why:'about.html',stats:'stats.html',news:'news.html',dash:'dash.html',lib:'lib.html',games:'games.html',lb:'lb.html',me:'me.html'};if(m[r])location.href=m[r];}
 function updateAuthUI(){
-  var ab=$('authBtn'),lb=$('logoutBtn'),uc=$('userChip'),sn=$('subNav');
-  if(U){ab.style.display='none';lb.style.display='inline-block';uc.style.display='inline-block';sn.style.display='block';uc.innerHTML='<b>'+U.name+'</b> Lv'+(Math.floor(U.xp/100)+1);}
-  else{ab.style.display='inline-block';lb.style.display='none';uc.style.display='none';sn.style.display='none';}
+  var ab=$('authBtn'),lb=$('logoutBtn'),uc=$('userChip');
+  if(U){ab.style.display='none';lb.style.display='inline-block';uc.style.display='inline-block';uc.innerHTML='<b>'+U.name+'</b> Lv'+(Math.floor(U.xp/100)+1);}
+  else{ab.style.display='inline-block';lb.style.display='none';uc.style.display='none';}
 }
 async function init(){
   if(sb){try{var r=await sb.auth.getSession();if(r.data.session){U={id:r.data.session.user.id,name:r.data.session.user.email,xp:0,av:0,school:'',cls:''}}}catch(e){}}

@@ -15,26 +15,22 @@
     <img src="https://github.com/AK9099080/Website20262027/blob/main/img/logo-home.png?raw=true" class="logo" alt="AxonEDU logo" onerror="this.style.display='none'">
     <span class="wordmark">Axon<em>EDU</em></span>
   </div>
-  <div class="auth-center">
-    <button id="authBtn" class="btn gold" onclick="loginBox()">Log in</button>
-    <button id="logoutBtn" class="btn ghost" onclick="logout()" style="display:none">Log out</button>
-    <span id="userChip" style="display:none;margin-left:10px"></span>
-  </div>
   <nav class="main-nav">
     <a href="index.html" class="nav-link">Home</a>
     <a href="about.html" class="nav-link">Why Learn AI</a>
     <a href="stats.html" class="nav-link">Statistics</a>
     <a href="news.html" class="nav-link">News</a>
+    <a href="dash.html" class="nav-link">Dashboard</a>
+    <a href="lib.html" class="nav-link">Library</a>
+    <a href="games.html" class="nav-link">Games</a>
+    <a href="lb.html" class="nav-link on">Leaderboards</a>
   </nav>
+  <div class="auth-center">
+    <button id="authBtn" class="btn gold" onclick="loginBox()">Log in</button>
+    <button id="logoutBtn" class="btn ghost" onclick="logout()" style="display:none">Log out</button>
+    <span id="userChip" style="display:none;margin-left:10px"></span>
+  </div>
 </header>
-
-<nav class="sub" id="subNav" style="display:none">
-  <a href="dash.html" class="sub-link">Dashboard</a>
-  <a href="lib.html" class="sub-link">Library</a>
-  <a href="games.html" class="sub-link">Games</a>
-  <a href="lb.html" class="sub-link">Leaderboards</a>
-  <a href="me.html" class="sub-link">Profile</a>
-</nav>
 
 <main id="main"></main>
 
@@ -301,12 +297,12 @@ function chk(){if(!U)return;var c={les:0,tot:0,mods:0,md:{},lv:lvl(),xp:U.xp,st:
 function save(){if(U&&sb)sb.from('profiles').update({stats:U.st}).eq('id',U.id).then(function(){})}
 function go(r){var m={home:'index.html',why:'about.html',stats:'stats.html',news:'news.html',dash:'dash.html',lib:'lib.html',games:'games.html',lb:'lb.html',me:'me.html'};if(m[r])location.href=m[r];}
 function updateAuthUI(){
-  var ab=$('authBtn'),lb=$('logoutBtn'),uc=$('userChip'),sn=$('subNav');
+  var ab=$('authBtn'),lb=$('logoutBtn'),uc=$('userChip');
   if(U){
-    ab.style.display='none';lb.style.display='inline-block';uc.style.display='inline-block';sn.style.display='block';
+    ab.style.display='none';lb.style.display='inline-block';uc.style.display='inline-block';
     uc.innerHTML=av(28)+'<b>'+U.name+'</b> Lv'+lvl();
   } else {
-    ab.style.display='inline-block';lb.style.display='none';uc.style.display='none';sn.style.display='none';
+    ab.style.display='inline-block';lb.style.display='none';uc.style.display='none';
   }
 }
 async function loadUser(id){
@@ -353,6 +349,7 @@ if(lb=='friends'){var inc=(U.reqIn||[]).map(function(r){return '<tr><td><a class
 out=(U.reqOut||[]).map(function(r){return '<tr><td>Request sent to <a class="plink" onclick="viewProfile(\''+r.id+'\')">'+r.name+'</a>, waiting for them to accept</td><td style="text-align:right"><button class="btn ghost" onclick="declineReq(\''+r.id+'\',1)">Cancel</button></td></tr>'}).join('');
 req=(inc||out)?'<div class="card" style="margin-bottom:14px"><h3>Friend requests</h3><table>'+inc+out+'</table></div>':'';
 extra='<div class="card" style="margin-top:14px"><h3>Add a friend</h3><p class="mut">Send a request. They need to accept it before you appear on each other’s Friends board.</p><input type="text" id="fr" maxlength="16" placeholder="Their exact username"><button class="btn" onclick="addFr()">Send request</button></div>'}
+}
 var body=LB.loading?'<p class="mut">Loading…</p>':LB.rows.length?'<table><tr><th>#</th><th>Player</th><th>XP</th><th></th></tr>'+LB.rows.map(function(r,i){return '<tr class="'+(r.me?'me':'')+'"><td>'+(i+1)+'</td><td><span style="display:inline-flex;align-items:center;gap:10px">'+av(28,r.u)+'<a class="plink" onclick="viewProfile(\''+r.id+'\')">'+r.n+'</a>'+(r.me?' (you)':'')+'</span></td><td>'+r.x+'</td><td>'+(r.fi>=0?'<a style="cursor:pointer" onclick="rmFr('+r.fi+')">remove</a>':'')+'</td></tr>'}).join('')+'</table>':'<p class="mut">'+(LB.note||'Nobody here yet.')+'</p>';
 return '<h1>Leaderboards</h1><div class="pills">'+tabs.map(function(t){return '<button class="pill '+(lb==t[0]?'on':'')+'" onclick="lb=\''+t[0]+'\';loadBoard()">'+t[1]+'</button>'}).join('')+'</div>'+req+'<div class="card">'+body+'</div>'+(LB.note&&LB.rows.length?'<p class="src mut">'+LB.note+'</p>':'')+extra}
 async function loadBoard(){LB={rows:[],note:'',loading:true};$('main').innerHTML=board();
