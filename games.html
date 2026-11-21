@@ -24,6 +24,7 @@
     <a href="lib.html" class="nav-link">Library</a>
     <a href="games.html" class="nav-link on">Games</a>
     <a href="lb.html" class="nav-link">Leaderboards</a>
+    <a href="references.html" class="nav-link">References</a>
   </nav>
   <div class="auth-center">
     <button id="authBtn" class="btn gold" onclick="loginBox()">Log in</button>
@@ -253,7 +254,7 @@ function draw(){var g=$('gpbody');if(!g||!G)return;var q=G.qs[G.i];if(!q)return;
 function lane(nm,v){return '<div class="lane"><span>'+nm+'</span><div class="bar"><i style="width:'+Math.min(100,v/G.n*100)+'%"></i></div></div>'}
 g.innerHTML='<div class="card" style="margin-top:18px"><h2>'+G.name+'</h2>'+lane(U.name,G.i)+lane('Bot Byte',G.bots[0])+lane('Bot Bit',G.bots[1])+'<h3 style="margin-top:16px">'+q.q+'</h3>'+q.o.map(function(o,i){return '<button class="opt" onclick="ans('+i+',this)">'+o+'</button>'}).join('')+'</div>'}
 function ans(i,el){if(G.lock||G.end)return;var q=G.qs[G.i];G.lock=true;if(i==q.a){el.classList.add('good');setTimeout(function(){G.i++;G.lock=false;if(G.i>=G.n)finish(true);else draw()},500)}else{el.classList.add('no');setTimeout(function(){G.lock=false;draw()},700)}}
-function finish(win){bump('played');var sg='q_'+G.name.replace(/ /g,'');bump(sg+'_p');if(win)bump(sg+'_w');G.end=true;clearInterval(G.t);if(win){U.wins++;locW();if(G.name=='Prompt Doctor')bump('docWins');addXp(50)}else addXp(20);chk();save();
+function finish(win){bump('played');var sg='q_'+G.name.replace(/ /g,'');bump(sg+'_p');if(win)bump(sg+'_w');G.end=true;clearInterval(G.t);if(win){U.wins++;if(G.name=='Prompt Doctor')bump('docWins');addXp(50)}else addXp(20);chk();save();
 $('gpbody').innerHTML='<div class="card res" style="margin-top:18px"><div class="eyebrow">'+(win?'Victory':'Race over')+'</div><h2>'+(win?'You won! +50 XP':'A bot got there first. +20 XP')+'</h2><button class="btn" onclick="gpClose();gamesPage()">Play again</button></div>'
 }
 var FC=null;
@@ -306,25 +307,25 @@ function bump(k,n){U.st[k]=(U.st[k]||0)+(n||1);saveSt();chk()}
 function best(k,v){if(v>(U.st[k]||0)){U.st[k]=v;saveSt();chk()}}
 function addXpBig(n){while(n>0){var k=Math.min(n,100);addXp(k);n-=k}}
 var BL=null;
-function blStart(){var g=$('gpbody');g.innerHTML='<div class="card" style="margin-top:18px"><div class="eyebrow" id="bhud"></div><h3 id="bq" style="min-height:52px;margin-top:8px"></h3><canvas id="bc" width="800" height="500" style="width:100%;max-width:800px;display:block;margin:auto;border:1px solid var(--line);border-radius:12px;background:var(--bg);cursor:crosshair;touch-action:none"></canvas><div id="bmsg" class="res"></div></div>';
+function blStart(){var g=$('gpbody');g.innerHTML='<div class="card" style="margin-top:18px"><div class="eyebrow" id="bhud"></div><h3 id="bq" style="min-height:52px;margin-top:8px"></h3><canvas id="bc" width="600" height="400" style="width:100%;max-width:600px;display:block;margin:auto;border:1px solid var(--line);border-radius:12px;background:var(--bg);cursor:crosshair;touch-action:none"></canvas><div id="bmsg" class="res"></div></div>';
 var cv=$('bc'),cs=getComputedStyle(document.documentElement),C=function(n){return cs.getPropertyValue(n).trim()||'#888'};
-var me=BL={round:1,total:0,pts:0,need:300,time:60,ph:'ready',T:[],B:[],ax:400,ay:200,cd:0,pool:[],last:0,cur:null,cv:cv,cx:cv.getContext('2d'),col:{card:C('--card'),pri:C('--pri'),pri2:C('--pri2'),ink:C('--ink'),ok:C('--ok'),bad:C('--bad'),line:C('--line')}};
-function pos(e){var r=cv.getBoundingClientRect();me.ax=(e.clientX-r.left)*800/r.width;me.ay=(e.clientY-r.top)*500/r.height}
+var me=BL={round:1,total:0,pts:0,need:300,time:60,ph:'ready',T:[],B:[],ax:300,ay:200,cd:0,pool:[],last:0,cur:null,cv:cv,cx:cv.getContext('2d'),col:{card:C('--card'),pri:C('--pri'),pri2:C('--pri2'),ink:C('--ink'),ok:C('--ok'),bad:C('--bad'),line:C('--line')}};
+function pos(e){var r=cv.getBoundingClientRect();me.ax=(e.clientX-r.left)*600/r.width;me.ay=(e.clientY-r.top)*400/r.height}
 cv.onpointermove=pos;cv.onpointerdown=function(e){pos(e);blFire()};
 blMsg('Round 1','Hit the correct answer to score 100 points. A wrong hit costs 20. Reach <b>'+me.need+'</b> points within 60 seconds to advance. Click or tap directly on the answer you want to shoot. Your shot goes straight to what you click, even if another box is in the way.','Start round');
 window._blf=requestAnimationFrame(function f(t){if(BL!==me||$('bc')!==me.cv)return;blFrame(t);window._blf=requestAnimationFrame(f)})}
 function blMsg(h,p,b){$('bmsg').innerHTML='<h3>'+h+'</h3><p class="mut">'+p+'</p><button class="btn" onclick="'+(b=='Play again'?'blStart()':'blBegin()')+'">'+b+'</button>'}
 function blBegin(){BL.ph='play';BL.time=60;BL.pts=0;BL.B=[];BL.last=performance.now();blQ();$('bmsg').innerHTML=''}
 function blQ(){if(!BL.pool.length)BL.pool=QUIZ.concat(PROMPT,MYTH).sort(rnd);BL.cur=BL.pool.pop();$('bq').textContent=BL.cur.q;var arr=[];
-BL.cur.o.forEach(function(t,i){var w=170,h=64,x,y,k=0;do{x=20+Math.random()*(760-w);y=20+Math.random()*(300-h);k++}while(k<40&&arr.some(function(a){return x<a.x+a.w+8&&x+w+8>a.x&&y<a.y+a.h+8&&y+h+8>a.y}));
+BL.cur.o.forEach(function(t,i){var w=170,h=64,x,y,k=0;do{x=20+Math.random()*(560-w);y=20+Math.random()*(300-h);k++}while(k<40&&arr.some(function(a){return x<a.x+a.w+8&&x+w+8>a.x&&y<a.y+a.h+8&&y+h+8>a.y}));
 var sp=45+Math.random()*35,an=Math.random()*6.283;arr.push({x:x,y:y,w:w,h:h,vx:Math.cos(an)*sp,vy:Math.sin(an)*sp,t:t,ok:i==BL.cur.a,f:0,fc:null})});BL.T=arr}
-function blFire(){if(BL.ph!='play'||BL.cd>0)return;var a=Math.atan2(BL.ay-470,BL.ax-400);a=Math.min(-0.12,Math.max(-Math.PI+0.12,a));var d=Math.hypot(BL.ax-400,BL.ay-470);
-BL.B.push({x:400+Math.cos(a)*34,y:470+Math.sin(a)*34,vx:Math.cos(a)*1100,vy:Math.sin(a)*1100,life:Math.max(.05,(d-34)/1100)});BL.cd=0.12;
+function blFire(){if(BL.ph!='play'||BL.cd>0)return;var a=Math.atan2(BL.ay-370,BL.ax-300);a=Math.min(-0.12,Math.max(-Math.PI+0.12,a));var d=Math.hypot(BL.ax-300,BL.ay-370);
+BL.B.push({x:300+Math.cos(a)*34,y:370+Math.sin(a)*34,vx:Math.cos(a)*1100,vy:Math.sin(a)*1100,life:Math.max(.05,(d-34)/1100)});BL.cd=0.12;
 var hit=null,bd=1e9;BL.T.forEach(function(t){if(BL.ax>=t.x&&BL.ax<=t.x+t.w&&BL.ay>=t.y&&BL.ay<=t.y+t.h){var dd=Math.hypot(BL.ax-(t.x+t.w/2),BL.ay-(t.y+t.h/2));if(dd<bd){bd=dd;hit=t}}});if(hit)blHit(hit)}
 function blHit(h){if(h.ok){BL.pts+=100;if(BL.pts>=BL.need)blClear();else blQ()}else{BL.pts=Math.max(0,BL.pts-20);h.f=.4;h.fc=BL.col.bad}}
 function blFrame(t){var dt=Math.min(.05,((t-BL.last)/1000)||0);BL.last=t;
 if(BL.ph=='play'){BL.time-=dt;BL.cd-=dt;var T=BL.T;
-T.forEach(function(a){a.x+=a.vx*dt;a.y+=a.vy*dt;if(a.x<0){a.x=0;a.vx=Math.abs(a.vx)}if(a.x+a.w>800){a.x=800-a.w;a.vx=-Math.abs(a.vx)}if(a.y<0){a.y=0;a.vy=Math.abs(a.vy)}if(a.y+a.h>380){a.y=380-a.h;a.vy=-Math.abs(a.vy)}if(a.f>0)a.f-=dt});
+T.forEach(function(a){a.x+=a.vx*dt;a.y+=a.vy*dt;if(a.x<0){a.x=0;a.vx=Math.abs(a.vx)}if(a.x+a.w>600){a.x=600-a.w;a.vx=-Math.abs(a.vx)}if(a.y<0){a.y=0;a.vy=Math.abs(a.vy)}if(a.y+a.h>300){a.y=300-a.h;a.vy=-Math.abs(a.vy)}if(a.f>0)a.f-=dt});
 for(var i=0;i<T.length;i++)for(var j=i+1;j<T.length;j++){var a=T[i],b=T[j],ox=Math.min(a.x+a.w,b.x+b.w)-Math.max(a.x,b.x),oy=Math.min(a.y+a.h,b.y+b.h)-Math.max(a.y,b.y);
 if(ox>0&&oy>0){var tmp;if(ox<oy){if(a.x<b.x){a.x-=ox/2;b.x+=ox/2}else{a.x+=ox/2;b.x-=ox/2}tmp=a.vx;a.vx=b.vx;b.vx=tmp}else{if(a.y<b.y){a.y-=oy/2;b.y+=oy/2}else{a.y+=oy/2;b.y-=oy/2}tmp=a.vy;a.vy=b.vy;b.vy=tmp}}}
 BL.B=BL.B.filter(function(p){p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt;return p.life>0});
@@ -333,12 +334,12 @@ blDraw()}
 function blClear(){var bonus=Math.round(BL.time)*2;BL.total+=BL.pts+bonus;best('blRounds',BL.round);BL.ph='between';BL.T=[];BL.round++;BL.need=200+100*BL.round;blMsg('Round cleared','Time bonus +'+bonus+'. Total so far: '+BL.total+'. Round '+BL.round+' needs <b>'+BL.need+'</b> points.','Start round '+BL.round)}
 function blOver(){BL.total+=BL.pts;BL.ph='over';BL.T=[];var xp=Math.min(150,Math.floor(BL.total/6));addXpBig(xp);bump('played');best('blBest',BL.total);$('bq').textContent='';$('bmsg').innerHTML='<div class="eyebrow">Time’s up</div><h2>Total score '+BL.total+'</h2><p class="mut">You needed '+BL.need+' in round '+BL.round+' and got '+BL.pts+'. You earned <b>+'+xp+' XP</b> (1 XP per 6 points, up to 150).</p><button class="btn" onclick="gpClose();blStart()">Play again</button>'}
 function wrapT(cx,txt,w){var ws=txt.split(' '),l=[],c='';ws.forEach(function(x){var t=c?c+' '+x:x;if(cx.measureText(t).width>w&&c){l.push(c);c=x}else c=t});l.push(c);return l.slice(0,4)}
-function blDraw(){var cx=BL.cx,co=BL.col;cx.clearRect(0,0,800,500);
+function blDraw(){var cx=BL.cx,co=BL.col;cx.clearRect(0,0,600,400);
 var h=$('bhud');if(h)h.textContent='Round '+BL.round+' · Points '+BL.pts+' / '+BL.need+' · Time '+Math.max(0,Math.ceil(BL.time))+'s · Total '+BL.total;
 BL.T.forEach(function(a){cx.beginPath();if(cx.roundRect)cx.roundRect(a.x,a.y,a.w,a.h,12);else cx.rect(a.x,a.y,a.w,a.h);cx.fillStyle=a.f>0?a.fc:co.card;cx.fill();cx.lineWidth=2;cx.strokeStyle=co.pri2;cx.stroke();cx.fillStyle=a.f>0?'#fff':co.ink;cx.font='bold 12px sans-serif';cx.textAlign='center';cx.textBaseline='middle';var L=wrapT(cx,a.t,a.w-16);L.forEach(function(s,i){cx.fillText(s,a.x+a.w/2,a.y+a.h/2+(i-(L.length-1)/2)*15)})});
-var an=Math.min(-0.12,Math.max(-Math.PI+0.12,Math.atan2(BL.ay-470,BL.ax-400)));
-cx.strokeStyle=co.line;cx.setLineDash([4,6]);cx.beginPath();cx.moveTo(400,470);cx.lineTo(400+Math.cos(an)*300,470+Math.sin(an)*300);cx.stroke();cx.setLineDash([]);
-cx.save();cx.translate(400,470);cx.rotate(an);cx.fillStyle=co.pri;cx.fillRect(0,-7,36,14);cx.restore();cx.beginPath();cx.arc(400,480,24,0,6.283);cx.fillStyle=co.pri2;cx.fill();
+var an=Math.min(-0.12,Math.max(-Math.PI+0.12,Math.atan2(BL.ay-370,BL.ax-300)));
+cx.strokeStyle=co.line;cx.setLineDash([4,6]);cx.beginPath();cx.moveTo(300,370);cx.lineTo(300+Math.cos(an)*300,370+Math.sin(an)*300);cx.stroke();cx.setLineDash([]);
+cx.save();cx.translate(300,370);cx.rotate(an);cx.fillStyle=co.pri;cx.fillRect(0,-7,36,14);cx.restore();cx.beginPath();cx.arc(300,380,24,0,6.283);cx.fillStyle=co.pri2;cx.fill();
 cx.fillStyle=co.ink;BL.B.forEach(function(p){cx.beginPath();cx.arc(p.x,p.y,5,0,6.283);cx.fill()})}
 var GEMC=['#6d6bff','#22d3ee','#34d399','#f59e0b','#fb7185','#a78bfa'],GM=null,GN=7;
 function sl(ms){return new Promise(function(r){setTimeout(r,ms)})}
