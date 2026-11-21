@@ -3,13 +3,82 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AxonEDU &middot; AI Education</title>
+<title>Page not found &middot; AxonEDU</title>
 <link rel="stylesheet" href="style.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
-<div id="modal"></div>
-<main id="main"></main>
-<script src="app.js"></script>
-</body>
-</html>
+
+<header class="top">
+  <div class="brand" onclick="go('home')">
+    <img src="https://github.com/AK9099080/Website20262027/blob/main/img/logo-home.png?raw=true" class="logo" alt="AxonEDU logo" onerror="this.style.display='none'">
+    <span class="wordmark">Axon<em>EDU</em></span>
+  </div>
+  <div class="auth-center">
+    <button id="authBtn" class="btn gold" onclick="loginBox()">Log in</button>
+    <button id="logoutBtn" class="btn ghost" onclick="logout()" style="display:none">Log out</button>
+    <span id="userChip" style="display:none;margin-left:10px"></span>
+  </div>
+  <nav class="main-nav">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="about.html" class="nav-link">Why Learn AI</a>
+    <a href="stats.html" class="nav-link">Statistics</a>
+    <a href="news.html" class="nav-link">News</a>
+  </nav>
+</header>
+
+<nav class="sub" id="subNav" style="display:none">
+  <a href="dash.html" class="sub-link">Dashboard</a>
+  <a href="lib.html" class="sub-link">Library</a>
+  <a href="games.html" class="sub-link">Games</a>
+  <a href="lb.html" class="sub-link">Leaderboards</a>
+  <a href="me.html" class="sub-link">Profile</a>
+</nav>
+
+<main id="main">
+  <div class="card" style="text-align:center;max-width:520px;margin:0 auto">
+    <h1>404 — Page not found</h1>
+    <p class="mut">The page you’re looking for doesn’t exist. It may have moved or the link may be wrong.</p>
+    <div class="mut" style="margin-top:14px"><button class="btn gold" onclick="go('home')">Go home</button></div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="about.html">Why Learn AI</a>
+    <a href="stats.html">Statistics</a>
+    <a href="news.html">News</a>
+    <a href="references.html">References</a>
+  </div>
+  <div class="footer-copy">AxonEDU · a student project · practice data on leaderboards is simulated</div>
+</footer>
+
+<script>
+function $(i){return document.getElementById(i)}
+var U=null,SB_URL='https://rytzhadculmofsblaxju.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ5dHpoYWRjdWxtb2ZzYmxheGp1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4Mjg3MDIsImV4cCI6MjEwODQwNDcwMn0.d74dfDYWQGKGAmeYS43Bw24PSsdQF1WLHKQGQq7S4CU';
+var sb=null;
+try{sb=supabase.createClient(SB_URL,SB_KEY)}catch(e){}
+function go(r){var m={home:'index.html',why:'about.html',stats:'stats.html',news:'news.html',dash:'dash.html',lib:'lib.html',games:'games.html',lb:'lb.html',me:'me.html'};if(m[r])location.href=m[r];}
+function updateAuthUI(){
+  var ab=$('authBtn'),lb=$('logoutBtn'),uc=$('userChip'),sn=$('subNav');
+  if(U){ab.style.display='none';lb.style.display='inline-block';uc.style.display='inline-block';sn.style.display='block';uc.innerHTML='<b>'+U.name+'</b> Lv'+(Math.floor(U.xp/100)+1);}
+  else{ab.style.display='inline-block';lb.style.display='none';uc.style.display='none';sn.style.display='none';}
+}
+async function init(){
+  if(sb){try{var r=await sb.auth.getSession();if(r.data.session){U={id:r.data.session.user.id,name:r.data.session.user.email,xp:0,av:0,school:'',cls:''}}}catch(e){}}
+  updateAuthUI();
+}
+function loginBox(){$('modal').innerHTML='<div class="modal" onclick="if(event.target==this)$(\'modal\').innerHTML=\'\'"><div class="box"><h2>Log in or sign up</h2><p class="mut">Pick a username (3–16 letters, numbers or _) and a 6-digit PIN.</p><input type="text" id="un" maxlength="16" placeholder="Username" autocomplete="off"><input type="password" id="pin" inputmode="numeric" maxlength="6" placeholder="6-digit PIN" onkeydown="if(event.key==\'Enter\')doLogin()"><button class="btn" id="lgbtn" onclick="doLogin()">Let’s go</button> <button class="btn ghost" onclick="$(\'modal\').innerHTML=\'\'">Cancel</button></div></div>';$('un').focus()}
+async function doLogin(){
+  var v=$('un').value.trim(),pin=$('pin').value.trim();
+  if(!/^[A-Za-z0-9_]{3,16}$/.test(v)){toast('Username: 3–16 letters, numbers or _');return}
+  if(!/^\d{6}$/.test(pin)){toast('PIN must be exactly 6 digits');return}
+  if(!sb){toast('Could not reach the cloud service');return}
+  var b=$('lgbtn');b.disabled=true;var em=v.toLowerCase()+'@synapse.app',r=await sb.auth.signInWithPassword({email:em,password:pin});
+  if(r.error){var s=await sb.auth.signUp({email:em,password:pin});if(s.error||!s.data.user){b.disabled=false;toast('Sign-up failed. Try again.');return}if(!s.data.session){b.disabled=false;toast('Sign-up needs "Confirm email" turned off in Supabase');return}var ins=await sb.from('profiles').insert({id:s.data.user.id,username:v});if(ins.error){await sb.auth.signOut();b.disabled=false;toast('That username is already taken');return}r={data:{user:s.data.user}}}
+  U={id:r.data.user.id,name:v,xp:0,av:0,school:'',cls:''};$('modal').innerHTML='';updateAuthUI();toast('Welcome, '+v+'!');}
+function toast(t){var d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(function(){d.remove()},2400)}
+function logout(){try{await sb.auth.signOut()}catch(e){}U=null;updateAuthUI();location.href='index.html'}
+init();
+</script>

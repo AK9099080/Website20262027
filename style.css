@@ -24,9 +24,6 @@
   --ok:          #13a36b;
   --bad:         #e5484d;
 
-  /* Level 10 custom gradient — pick any two colors from a color wheel */
-  --lvl10:       linear-gradient(135deg, #7b2cbf, #4f46e5);
-
   /* Design tokens — cleaner, less glow */
   --radius:      24px;
   --radius-sm:   14px;
@@ -498,9 +495,6 @@ input[type=text], input[type=password], textarea, select {
   font-weight: 900;
   font-size: 18px;
 }
-.lvl10 .av, .badge.lvl10 b {
-  background: var(--lvl10) !important;
-}
 
 /* =====================================================================
    Games — full-screen popup
@@ -583,7 +577,3 @@ th { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: 
   .btn { width: 100%; text-align: center; padding: 12px 24px; }
 }
 
-/* Level 10 special gradient badge */
-.badge.lvl10 b {
-  background: var(--lvl10) !important;
-}
