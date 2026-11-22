@@ -1,54 +1,150 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Page not found – AxonEDU</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <base href="/">
-<title>Page not found &middot; AxonEDU</title>
 <link rel="stylesheet" href="style.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-</head>
-<body>
-<div id="modal"></div>
-
-<header class="top">
-  <div class="brand" onclick="go('home')">
-    <img src="https://github.com/AK9099080/Website20262027/blob/main/img/logo-home.png?raw=true" class="logo" alt="AxonEDU logo" onerror="this.style.display='none'">
-    <span class="wordmark">Axon<em>EDU</em></span>
+</head><body>
+<div class="top">
+  <div class="logo" onclick="go('home')">
+    <svg width="36" height="36" viewBox="0 0 40 40"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6d6bff"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs><rect width="40" height="40" rx="10" fill="url(#lg)"/><path d="M10 30L20 10L30 30M14.5 22h11" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="20" cy="10" r="3.2" fill="#fff"/></svg>Axon<em>EDU</em>
   </div>
-  <nav class="main-nav">
-    <a href="index.html" class="nav-link">Home</a>
-    <a href="why.html" class="nav-link">Why Learn AI</a>
-    <a href="statistics.html" class="nav-link">Statistics</a>
-    <a href="news.html" class="nav-link">News</a>
-    <a href="dash.html" class="nav-link">Dashboard</a>
-    <a href="lib.html" class="nav-link">Library</a>
-    <a href="games.html" class="nav-link">Games</a>
-    <a href="lb.html" class="nav-link">Leaderboards</a>
-    <a href="me.html" class="nav-link">Profile</a>
-    <a href="references.html" class="nav-link">References</a>
-  </nav>
-  <div class="auth-center">
-    <button id="authBtn" class="btn gold" onclick="loginBox()">Log in</button>
-    <button id="logoutBtn" class="btn ghost" onclick="logout()" style="display:none">Log out</button>
-    <span id="userChip" style="display:none;margin-left:10px"></span>
+  <div class="nav" id="nav">
+    <a onclick="go('home')">Home</a>
+    <a onclick="go('why')">Why Learn AI</a>
+    <a onclick="go('stats')">Statistics</a>
+    <a onclick="go('news')">News</a>
+    <a onclick="go('references')">References</a>
   </div>
-</header>
-
+  <div id="auth"></div>
+</div>
 <main id="main"></main>
-
-<footer>
-  <div class="footer-links">
-    <a href="index.html">Home</a>
-    <a href="why.html">Why Learn AI</a>
-    <a href="statistics.html">Statistics</a>
-    <a href="news.html">News</a>
-    <a href="references.html">References</a>
-  </div>
-  <div class="footer-copy">AxonEDU · a student project · practice data on leaderboards is simulated</div>
-</footer>
-
+<div id="modal"></div>
+<footer>AxonEDU · a student project</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
+var SB_URL='https://rytzhadculmofsblaxju.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ5dHpoYWRjdWxtb2ZzYmxheGp1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4Mjg3MDIsImV4cCI6MjEwODQwNDcwMn0.d74dfDYWQGKGAmeYS43Bw24PSsdQF1WLHKQGQq7S4CU';
+var sb=null,LB={rows:[],note:'',loading:false},QUIET=false;
+try{sb=supabase.createClient(SB_URL,SB_KEY)}catch(e){}
+var U=null,DB={},route='home',filt='All',lb='world',G=null;
+function load(){}
+function save(){}
+function $(i){return document.getElementById(i)}
+function lvl(){return Math.floor(U.xp/100)+1}
+function prog(m){return Math.round(((U.done[m.id]||[]).length/m.L.length)*100)}
+function toast(t){var d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(function(){d.remove()},2400)}
+function addXp(n){var before=lvl();U.xp+=n;sb.rpc('add_xp',{n:n}).then(fail);if(lvl()>before)toast('Level up. You are now level '+lvl());chk();save()}
+function badge(k){if(U.badges.indexOf(k)<0){U.badges.push(k);if(!QUIET)toast('New badge: '+BADGES.filter(function(b){return b[0]==k})[0][2])}}
+function chk(){var c={les:0,tot:0,mods:0,md:{},lv:lvl(),xp:U.xp,st:U.st||{},fr:U.friends?U.friends.length:0,sch:U.school,cls:U.cls};MODS.forEach(function(m){var n=(U.done[m.id]||[]).length;c.les+=n;c.tot+=m.L.length;if(n==m.L.length){c.mods++;c.md[m.id]=1}});ACH.forEach(function(a){if(a[4](c))badge(a[0])})}
+function go(r){var m={home:'index.html',why:'why.html',stats:'statistics.html',news:'news.html',dash:'dash.html',lib:'lib.html',games:'games.html',lb:'lb.html',me:'me.html',references:'references.html'};location.href=m[r]||'index.html'}
+var PRI=[['dash','Dashboard'],['lib','Library'],['games','Games'],['lb','Leaderboards'],['me','Profile']];
+function updateAuth(){var ab=$('auth');ab.innerHTML=U?'<button class="btn ghost" onclick="logout()">Log out</button>':'<button class="btn gold" onclick="loginBox()">Log in</button>';var s=$('sub');s.hidden=!U;if(U){var me=$('meDisplay');if(me)me.innerHTML=meHtml()}}
+function meHtml(){return av(28)+'<b>'+U.name+'</b> Level '+lvl()+'<span class="xpm"><i style="width:'+(U.xp%100)+'%"></i></span>'+U.xp+' XP'}
+function clean(t){return String(t==null?'':t).replace(/[<>&"'`]/g,'').trim().toUpperCase().slice(0,30)}
+function fail(r){if(r&&r.error)toast('Could not save. Check your connection.')}
+async function loadUser(id){
+var p=await sb.from('profiles').select('*').eq('id',id).single();
+if(p.error||!p.data){await sb.auth.signOut();U=null;return false}
+var pr=await sb.from('progress').select('module_id,lessons').eq('user_id',id);
+U={id:id,name:p.data.username,xp:p.data.xp,av:Math.min(p.data.avatar||0,AVS.length-1),school:p.data.school||'',cls:p.data.class_code||'',done:{},badges:[],created:p.data.created_at,wins:0,st:(p.data.stats&&typeof p.data.stats=='object'?p.data.stats:{}),friends:[],reqIn:[],reqOut:[]};
+(pr.data||[]).forEach(function(r){U.done[r.module_id]=r.lessons});
+U.wins=U.st.raceWins||0;
+await loadFriends();
+QUIET=true;chk();QUIET=false;startInbox();return true}
+async function init(){if(sb){try{var r=await sb.auth.getSession();if(r.data.session)await loadUser(r.data.session.user.id)}catch(e){}}updateAuth();$('main').innerHTML='<h1>Page not found</h1><div class="card">The page you opened doesn’t exist. <button class="btn" onclick="go(\'home\')">Go home</button></div>';}
+function loginBox(){$('modal').innerHTML='<div class="modal" onclick="if(event.target==this)$(\'modal\').innerHTML=\'\'"><div class="box"><h2>Log in or sign up</h2><p class="mut">Pick a username (3–16 letters, numbers or _) and a 6-digit PIN. New username? We’ll create your account. Existing one? Enter your PIN to continue. Don’t use your real name.</p><input type="text" id="un" maxlength="16" placeholder="Username" autocomplete="off"><input type="password" id="pin" inputmode="numeric" maxlength="6" placeholder="6-digit PIN" onkeydown="if(event.key==\'Enter\')doLogin()"><button class="btn" id="lgbtn" onclick="doLogin()">Let’s go</button> <button class="btn ghost" onclick="$(\'modal\').innerHTML=\'\'">Cancel</button></div></div>';$('un').focus()}
+async function doLogin(){var v=$('un').value.trim(),pin=$('pin').value.trim();
+if(!/^[A-Za-z0-9_]{3,16}$/.test(v)){toast('Username: 3–16 letters, numbers or _');return}
+if(!/^\d{6}$/.test(pin)){toast('PIN must be exactly 6 digits');return}
+if(!sb){toast('Could not reach the cloud service');return}
+var b=$('lgbtn');b.disabled=true;var em=v.toLowerCase()+'@synapse.app',r=await sb.auth.signInWithPassword({email:em,password:pin});
+if(r.error){var s=await sb.auth.signUp({email:em,password:pin});
+if(s.error||!s.data.user){b.disabled=false;toast(s.error&&/registered|already/i.test(s.error.message)?'Wrong PIN for that username':'Sign-up failed. Try again.');return}
+if(!s.data.session){b.disabled=false;toast('Sign-up needs "Confirm email" turned off in Supabase');return}
+var ins=await sb.from('profiles').insert({id:s.data.user.id,username:v});
+if(ins.error){await sb.auth.signOut();b.disabled=false;toast('That username is already taken');return}
+r={data:{user:s.data.user}}}
+if(!await loadUser(r.data.user.id)){b.disabled=false;return}
+$('modal').innerHTML='';toast('Welcome, '+U.name+'!');go('home')}
+async function logout(){try{if(INB)sb.removeChannel(INB)}catch(e){}if(RT)liveStop();try{await sb.auth.signOut()}catch(e){}U=null;go('home')}
+function saveProg(id){sb.from('progress').upsert({user_id:U.id,module_id:id,lessons:U.done[id]}).then(fail)}
+function setAv(i){U.av=i;sb.from('profiles').update({avatar:i}).eq('id',U.id).then(fail);render()}
+function locW(){U.st.raceWins=U.wins;saveSt()}
+function saveSet(){U.school=clean($('sch').value);U.cls=clean($('cls').value);chk();sb.from('profiles').update({school:U.school||null,class_code:U.cls||null}).eq('id',U.id).then(function(r){fail(r);if(!r.error)toast('Saved')})}
+function settings(){return '<div class="sec"><h2>Class and school</h2><div class="card"><p class="mut">Enter the same school name and class code as your classmates to appear on the same leaderboard. Spelling must match.</p><input type="text" id="sch" maxlength="30" placeholder="School name" value="'+U.school+'"><input type="text" id="cls" maxlength="30" placeholder="Class code" value="'+U.cls+'"><button class="btn" onclick="saveSet()">Save</button></div><p class="src mut" style="margin-top:14px">Your progress is saved to your account online, so you can log in from any device with your username and PIN.</p></div>'}
+async function loadFriends(){var r=await sb.from('friendships').select('requester,addressee,status'),rows=r.data||[],ids={},m={};
+rows.forEach(function(x){ids[x.requester==U.id?x.addressee:x.requester]=1});var il=Object.keys(ids);
+if(il.length){var p=await sb.from('profiles').select('id,username,xp,avatar').in('id',il);(p.data||[]).forEach(function(x){m[x.id]=x})}
+var F=[],I=[],O=[];rows.forEach(function(x){var o=x.requester==U.id?x.addressee:x.requester,pr=m[o];if(!pr)return;
+if(x.status=='accepted')F.push({id:o,name:pr.username,xp:pr.xp,av:pr.avatar});else if(x.addressee==U.id)I.push({id:o,name:pr.username});else O.push({id:o,name:pr.username})});
+if(!r.error){U.friends=F;U.reqIn=I;U.reqOut=O}}
+function ping(id,ev){try{var ch=sb.channel('inbox:'+id);ch.subscribe(function(st){if(st=='SUBSCRIBED'){ch.send({type:'broadcast',event:ev,payload:{}});setTimeout(function(){sb.removeChannel(ch)},1500)}})}catch(e){}}
+function onFriendEvt(msg){toast(msg);loadFriends().then(function(){chk();render();if(route=='lb')loadBoard()})}
+async function addFr(){var v=$('fr').value.trim();if(!v)return;var r=await sb.from('profiles').select('id,username').eq('username',v).maybeSingle();if(!r.data){toast('No player with that exact username');return}await sendReq(r.data.id,r.data.username);var e=$('fr');if(e)e.value=''}
+async function sendReq(id,name){if(id==U.id){toast('That’s you!');return}
+if(U.friends.some(function(f){return f.id==id})){toast('You’re already friends');return}
+if(U.reqOut.some(function(f){return f.id==id})){toast('Request already sent');return}
+if(U.reqIn.some(function(f){return f.id==id})){await acceptReq(id);return}
+var i=await sb.from('friendships').insert({requester:U.id,addressee:id});if(i.error){fail(i);return}
+toast('Friend request sent to '+name);ping(id,'friendreq');await loadFriends();render();if(route=='lb')loadBoard()}
+async function acceptReq(id){var r=await sb.from('friendships').update({status:'accepted'}).eq('requester',id).eq('addressee',U.id).eq('status','pending').select();
+if(r.error||!(r.data&&r.data.length)){toast('Could not accept that request');return}
+toast('You’re now friends!');ping(id,'friendacc');await loadFriends();chk();render();if(route=='lb')loadBoard()}
+async function declineReq(id,cancel){var q=sb.from('friendships').delete();q=cancel?q.eq('requester',U.id).eq('addressee',id):q.eq('requester',id).eq('addressee',U.id);var r=await q;if(r.error){fail(r);return}await loadFriends();render();if(route=='lb')loadBoard()}
+async function rmFr(i){var f=U.friends[i];if(!f)return;var r=await sb.from('friendships').delete().or('and(requester.eq.'+U.id+',addressee.eq.'+f.id+'),and(requester.eq.'+f.id+',addressee.eq.'+U.id+')');if(r.error){fail(r);return}U.friends.splice(i,1);render();loadBoard()}
+async function rmFrById(id){var r=await sb.from('friendships').delete().or('and(requester.eq.'+U.id+',addressee.eq.'+id+'),and(requester.eq.'+id+',addressee.eq.'+U.id+')');if(r.error){fail(r);return}await loadFriends();loadBoard();}
+async function viewProfile(id){var M=$('modal');M.innerHTML='<div class="modal" onclick="if(event.target==this)closeM()"><div class="box" style="max-width:640px"><p class="mut">Loading…</p></div></div>';
+var p=await sb.from('profiles').select('id,username,xp,avatar,stats,created_at').eq('id',id).maybeSingle();
+if(!p.data){M.innerHTML='<div class="modal" onclick="closeM()"><div class="box">Could not load this profile.</div></div>';return}
+var pr=await sb.from('progress').select('module_id,lessons').eq('user_id',id),dn={};(pr.data||[]).forEach(function(r){dn[r.module_id]=r.lessons});
+var d=p.data,st=(d.stats&&typeof d.stats=='object')?d.stats:{},N=function(k){return Number(st[k])||0},lv=Math.floor(d.xp/100)+1,
+W=function(g){return N('q_'+g+'_w')+' wins / '+N('q_'+g+'_p')+' played'},
+rows=[['Quiz Race',W('QuizRace')],['Myth Buster',W('MythBuster')],['Prompt Doctor',W('PromptDoctor')],['Flashcard Sprint',N('fcDone')+' decks cleared'],['Match Up',N('matchBest')?'Best time '+N('matchBest')+' seconds':'Not played yet'],['Quiz Blaster','Best score '+N('blBest')+' · best run '+N('blRounds')+' rounds cleared'],['Gem Match','Best score '+N('gemBest')+' · '+N('gemQ')+' questions answered right'],['Friend duels',N('duelWins')+' wins / '+N('duels')+' played']],
+rel=id==U.id?'':U.friends.some(function(f){return f.id==id})?'<span class="tag">Friends</span>':U.reqOut.some(function(f){return f.id==id})?'<span class="tag">Request sent</span>':U.reqIn.some(function(f){return f.id==id})?'<button class="btn" onclick="acceptReq(\''+id+'\').then(function(){viewProfile(\''+id+'\')})">Accept friend request</button>':'<button class="btn" onclick="sendReq(\''+id+'\',\''+d.username+'\').then(function(){viewProfile(\''+id+'\')})">Add friend</button>';
+var mods=MODS.map(function(m){var ds=(dn[m.id]||[]).filter(function(i){return Number.isInteger(i)&&i>=0&&i<m.L.length}),n=ds.length,full=n==m.L.length;
+return '<div class="card" style="margin-top:10px"><div style="display:flex;justify-content:space-between;gap:8px"><h3>'+m.t+'</h3><span class="tag">'+(full?'Completed':n?'In progress':'Not started')+'</span></div><div class="bar"><i style="width:'+(n/m.L.length*100)+'%"></i></div><p class="src mut" style="margin-bottom:0">'+n+' of '+m.L.length+' lessons'+(n?' done: '+ds.sort(function(a,b){return a-b}).map(function(i){return m.L[i][0]}).join(', '):'')+'</div>').join('');
+M.innerHTML='<div class="modal" onclick="if(event.target==this)closeM()"><div class="box" style="max-width:660px"><div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">'+av(64,{name:d.username,av:d.avatar})+'<div style="flex:1"><h2>'+d.username+'</h2><div class="mut">Level '+lv+' · '+d.xp+' XP</div>'+(d.created_at?'<div class="src mut">Joined '+fd(d.created_at)+'</div>':'')+'<div class="bar"><i style="width:'+(d.xp%100)+'%"></i></div></div>'+rel+'</div>'
++'<h3 style="margin-top:22px">Personal bests</h3><div class="card"><table>'+rows.map(function(r){return '<tr><td>'+r[0]+'</td><td class="mut">'+r[1]+'</td></tr>'}).join('')+'</table></div><h3 style="margin-top:22px">Lessons</h3>'+mods+'<p style="text-align:right;margin-top:16px"><button class="btn ghost" onclick="closeM()">Close</button></p></div></div>'}
+function fd(t){try{return new Date(t).toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'})}catch(e){return ''}}
+function closeM(){$('modal').innerHTML='';render()}
+function render(){updateAuth();$('main').innerHTML='<h1>Page not found</h1><div class="card">The page you opened doesn’t exist. <button class="btn" onclick="go(\'home\')">Go home</button></div>';}
+var RT=null,INB=null;
+function startInbox(){try{if(INB)sb.removeChannel(INB);INB=sb.channel('inbox:'+U.id).on('broadcast',{event:'invite'},function(m){showInvite(m.payload)}).on('broadcast',{event:'friendreq'},function(){onFriendEvt('You have a new friend request')}).on('broadcast',{event:'friendacc'},function(){onFriendEvt('Your friend request was accepted')}).subscribe()}catch(e){}}
+async function showInvite(p){if(!p||!p.room||!p.fromId||p.fromId==U.id)return;var r=await sb.from('profiles').select('username').eq('id',p.fromId).maybeSingle();if(!r.data)return;
+var d=document.createElement('div');d.className='toast';d.style.cssText='top:16px;bottom:auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center;max-width:92vw';
+d.innerHTML=r.data.username+' invites you to a live duel <button class="btn">Accept</button><button class="btn ghost" style="color:var(--bg);border-color:var(--bg)">Decline</button>';
+var b=d.querySelectorAll('button');b[0].onclick=function(){d.remove();go('games');liveJoin(p.room,p.fromId,r.data.username)};b[1].onclick=function(){d.remove()};document.body.appendChild(d);setTimeout(function(){d.remove()},45000)}
+function liveOpen(onReady){var c=sb.channel('room:'+RT.room,{config:{broadcast:{self:false}}});RT.ch=c;
+c.on('broadcast',{event:'join'},function(){if(RT&&RT.role=='host'&&RT.state=='wait'){RT.state='play';c.send({type:'broadcast',event:'start',payload:{qids:RT.qids}});livePlay()}});
+c.on('broadcast',{event:'start'},function(m){var q=m.payload&&m.payload.qids;if(RT&&RT.role=='guest'&&RT.state=='wait'&&Array.isArray(q)&&q.length==5&&q.every(function(i){return Number.isInteger(i)&&i>=0&&i<ALLQ.length})){RT.qids=q;RT.state='play';livePlay()}});
+c.on('broadcast',{event:'next'},function(m){if(RT&&RT.role=='guest'&&RT.state=='play'&&m.payload.i>=0&&m.payload.i<5){RT.i=m.payload.i;RT.t=15;RT.lock=false;RT.opp.ans=false;liveDraw()}});
+c.on('broadcast',{event:'ans'},function(m){var p=m.payload;if(RT&&RT.state=='play'&&p.i==RT.i&&Number.isInteger(p.s)){RT.opp.s=p.s;RT.opp.ans=true;liveHud();liveCheck()}});
+c.on('broadcast',{event:'end'},function(m){if(RT&&RT.role=='guest'&&RT.state=='play'){RT.s=Number(m.payload.g)||0;RT.opp.s=Number(m.payload.h)||0;liveEnd()}});
+c.on('broadcast',{event:'bye'},function(){if(RT&&RT.state!='done'){var n=RT.opp.name;liveStop(1);var g=$('game');if(g)g.innerHTML='<div class="card res" style="margin-top:18px">'+n+' left the duel.</div>'}});
+c.subscribe(function(st){if(st=='SUBSCRIBED'&&RT&&RT.ch===c)onReady()})}
+function livePlay(){RT.iv=setInterval(liveTick,1000);liveDraw()}
+function liveTick(){if(!RT||RT.state!='play')return;if(!$('game')){liveStop();return}RT.t--;var e=$('dt');if(e)e.style.width=Math.max(0,RT.t/15*100)+'%';if(RT.t<=0){RT.lock=true;if(RT.role=='host'&&!RT.adv){RT.adv=true;liveAdvance()}}}
+function liveCheck(){if(RT.role=='host'&&RT.lock&&RT.opp.ans&&!RT.adv){RT.adv=true;setTimeout(liveAdvance,900)}}
+function liveAdvance(){if(!RT||RT.state!='play')return;RT.i++;RT.adv=false;if(RT.i>=5){RT.ch.send({type:'broadcast',event:'end',payload:{h:RT.s,g:RT.opp.s}});liveEnd();return}RT.t=15;RT.lock=false;RT.opp.ans=false;RT.ch.send({type:'broadcast',event:'next',payload:{i:RT.i}});liveDraw()}
+function liveDraw(){var g=$('game');if(!g||!RT)return;var q=ALLQ[RT.qids[RT.i]];g.innerHTML='<div class="card" style="margin-top:18px"><div class="eyebrow">Live duel vs '+RT.opp.name+' · Question '+(RT.i+1)+'/5</div><p id="lh" class="mut"></p><div class="bar"><i id="dt" style="width:100%;transition:width 1s linear"></i></div><h3 style="margin-top:16px">'+q.q+'</h3>'+q.o.map(function(o,i){return '<button class="opt" onclick="liveAns('+i+',this)">'+o+'</button>'}).join('')+'</div>';liveHud()}
+function liveHud(){var e=$('lh');if(e&&RT)e.textContent='You '+RT.s+' · '+RT.opp.name+' '+RT.opp.s+(RT.opp.ans?' · answered':'')}
+function liveAns(i,el){if(!RT||RT.lock||RT.state!='play')return;RT.lock=true;var ok=i==ALLQ[RT.qids[RT.i]].a;if(ok)RT.s+=10+Math.max(0,RT.t);el.classList.add(ok?'good':'no');RT.ch.send({type:'broadcast',event:'ans',payload:{i:RT.i,s:RT.s}});liveHud();liveCheck()}
+function liveEnd(){if(!RT||RT.state=='done')return;clearInterval(RT.iv);RT.state='done';var me=RT.s,op=RT.opp.s,n=RT.opp.name,win=me>op,xp=30+(win?20:0),g=$('game'),c=RT.ch;bump('duels');if(win)bump('duelWins');addXp(xp);
+if(g)g.innerHTML='<div class="card res" style="margin-top:18px"><div class="eyebrow">'+(win?'Victory':me<op?'Defeat':'Draw')+'</div><h2>You '+me+' – '+op+' '+n+'</h2><p class="mut">+'+xp+' XP</p></div>';setTimeout(function(){try{sb.removeChannel(c)}catch(e){}},1500);RT=null}
+function liveStop(q){if(!RT)return;clearInterval(RT.iv);var c=RT.ch;try{if(c){if(!q)c.send({type:'broadcast',event:'bye',payload:{}});setTimeout(function(){sb.removeChannel(c)},800)}}catch(e){}RT=null}
+function liveInvite(){var id=$('dfr').value,f=U.friends.filter(function(x){return x.id==id})[0];if(!f)return;if(RT)liveStop();
+RT={role:'host',room:Math.random().toString(36).slice(2,10),opp:{id:f.id,name:f.name,s:0,ans:false},i:0,s:0,t:15,lock:false,state:'wait',qids:ALLQ.map(function(x,i){return i}).sort(rnd).slice(0,5)};
+var g=$('game'),room=RT.room;g.innerHTML='<div class="card res" style="margin-top:18px"><h3>Waiting for '+f.name+' to accept…</h3><p class="mut">They get a pop-up if they’re logged in.</p><button class="btn ghost" onclick="liveStop();$(\'game\').innerHTML=\'\'">Cancel</button></div>';g.scrollIntoView({behavior:'smooth'});
+liveOpen(function(){var ch=sb.channel('inbox:'+f.id);ch.subscribe(function(st){if(st=='SUBSCRIBED'){ch.send({type:'broadcast',event:'invite',payload:{room:room,fromId:U.id}});setTimeout(function(){sb.removeChannel(ch)},1500)}})});
+setTimeout(function(){if(RT&&RT.room==room&&RT.state=='wait'){liveStop();var g2=$('game');if(g2)g2.innerHTML='<div class="card res" style="margin-top:18px">'+f.name+' didn’t join. They may be offline.</div>'}},45000)}
+function liveJoin(room,fid,name){if(RT)liveStop();RT={role:'guest',room:room,opp:{id:fid,name:name,s:0,ans:false},i:0,s:0,t:15,lock:false,state:'wait'};var g=$('game');if(g){g.innerHTML='<div class="card res" style="margin-top:18px"><h3>Joining duel with '+name+'…</h3></div>';g.scrollIntoView({behavior:'smooth'})}
+liveOpen(function(){RT.ch.send({type:'broadcast',event:'join',payload:{}})});
+setTimeout(function(){if(RT&&RT.room==room&&RT.state=='wait'){liveStop(1);var g2=$('game');if(g2)g2.innerHTML='<div class="card res" style="margin-top:18px">The invite expired or '+name+' left.</div>'}},12000)}
+function rnd(){return Math.random()-.5}
+function saveSt(){clearTimeout(stT);stT=setTimeout(function(){if(U&&sb)sb.from('profiles').update({stats:U.st}).eq('id',U.id).then(function(){})},800)}
+function bump(k,n){U.st[k]=(U.st[k]||0)+(n||1);saveSt();chk()}
+function best(k,v){if(v>(U.st[k]||0)){U.st[k]=v;saveSt();chk()}}
+function addXpBig(n){while(n>0){var k=Math.min(n,100);addXp(k);n-=k}}
 function Q(q,right,w1,w2,w3){var o=[right,w1,w2,w3].filter(Boolean).sort(function(){return Math.random()-.5});return{q:q,o:o,a:o.indexOf(right)}}
 function TF(q,isTrue){return{q:q,o:['True','False'],a:isTrue?0:1}}
 var QUIZ=[
@@ -70,7 +166,7 @@ Q('Which may signal an AI-generated image?','Odd details like strange hands or g
 Q('What does “bias” mean in AI?','Unfair patterns in results','The AI’s speed','A kind of password','The size of the model'),
 Q('Which protects your privacy when using AI?','Not sharing personal details','Sharing your location','Reusing one password','Posting your address'),
 Q('A neural network is…','A math structure of connected layers inspired by the brain','A fishing tool','A type of Wi-Fi','A social network'),
-Q('What is “deep learning”?','Machine learning with many-layered neural networks','Learning while sleeping','Studying underwater','Reading slowly'),
+Q('What does “deep learning” mean?','Machine learning with many-layered neural networks','Learning while sleeping','Studying underwater','Reading slowly'),
 Q('Which describes supervised learning?','Learning from examples with correct labels','Learning with no data','Learning by guessing','Learning only in class'),
 Q('What does a trained AI “model” contain?','Numbers that capture patterns','A copy of the internet','Human memories','Hand-typed rules for every case'),
 Q('Which is a good way to study with AI?','Have it quiz you on your notes','Have it write your whole essay','Copy answers on a test','Skip the reading'),
@@ -94,7 +190,7 @@ Q('A hallucination is most likely to include…','Invented quotes or citations',
 Q('Which habit helps you learn with AI?','Try first, then use AI to check','Ask AI before reading anything','Never read the original','Copy and paste'),
 Q('What does a CAPTCHA try to tell apart?','Humans from automated bots','Cats from dogs','Fast from slow','Old from new'),
 Q('Which step reduces AI bias?','Testing on many different groups of people','Using only one kind of data','Ignoring complaints','Hiding results'),
-Q('What does “context window” limit?','How much text a model can consider at once','How long you can chat per day','The screen size','The font'),
+Q('What does a “context window” limit?','How much text a model can consider at once','How long you can chat per day','The screen size','The font'),
 Q('Which is a sign of good data?','It is accurate, current and covers many groups','It is old and unchecked','It is all the same','It is secret'),
 Q('What does “open source” software mean?','Its code is available for others to view or use','It is free of bugs','It has no owner','It runs offline only'),
 Q('Spaced repetition means…','Reviewing material at growing time gaps','Studying once all night','Reading one page','Skipping review'),
@@ -118,7 +214,7 @@ Q('Which prompt adds useful context?','Fix the grammar in my essay for 9th-grade
 Q('You want an example. Best follow-up?','Give one real-world example of this idea','More','Why','Again'),
 Q('Best way to use AI on a math problem?','Try it first, then ask AI to check your steps','Copy the answer','Ask for the answer only','Skip the problem'),
 Q('How do you test an AI’s claim?','Check a trusted source','Trust it','Ask it twice','Ignore it'),
-Q('Best way to summarize?','Summarize this paragraph in 3 bullets for a 10th grader, then list 2 key terms','Summarize','Make it short','Tell me everything'),
+Q('Which prompt asks for a summary well?','Summarize this paragraph in 3 bullets for a 10th grader, then list 2 key terms','Summarize','Make it short','Tell me everything'),
 Q('Which prompt asks for a useful format?','List the pros and cons of solar power in a two-column table','Solar','Tell me about energy','Explain'),
 Q('Which prompt sets a helpful role?','Act as a patient tutor and quiz me on fractions, one question at a time','Fractions','Be smart','Math now'),
 Q('You got a vague answer. Best follow-up?','Add details: “Make it specific to a high school chemistry class”','Say “bad”','Ask the same thing again','Give up'),
@@ -129,7 +225,6 @@ Q('Which prompt best asks for a comparison?','Compare mitosis and meiosis in a t
 ];
 var TERMS=[['Machine learning','Software that learns patterns from examples instead of fixed rules'],['Training data','The examples an AI learns from'],['Hallucination','When AI confidently states something false or invented'],['Bias','Unfair patterns an AI picks up from its data'],['Prompt','The instruction or question you give an AI'],['Deepfake','An AI-made fake image, audio or video of a real person'],['Generative AI','AI that creates new text, images or audio'],['Iteration','Improving an answer through follow-up requests'],['Plagiarism','Passing off someone else’s or an AI’s work as your own'],['Privacy','Keeping personal information out of tools you do not control'],['Algorithm','Step-by-step instructions a computer follows'],['Neural network','Layers of connected units that learn patterns'],['Token','A small chunk of text a language model reads'],['Large language model','AI trained on huge amounts of text to predict and write language'],['Model','The trained set of numbers that captures patterns'],['Parameter','A number inside a model that is adjusted during training'],['Supervised learning','Learning from examples that come with correct labels'],['Chatbot','A program you can hold a conversation with'],['Context window','How much text a model can consider at once'],['Fine-tuning','Extra training that specializes a model'],['Automation','Using technology to do tasks with little human effort'],['Transparency','Being open about how and when AI was used'],['Human in the loop','A person reviews or approves AI decisions'],['Overfitting','Memorizing training data instead of learning general patterns'],['Reverse image search','Finding where else an image appears online'],['Citation','A note crediting where information came from']];
 var ALLQ=QUIZ.concat(MYTH,PROMPT);
-
 var MODS=[
 {id:'basics',t:'AI Basics',ic:'01',tags:['Easy','Essential','First'],d:'What AI really is, how it learns, and where it falls short.',L:[
 ['What is AI?',['Artificial intelligence (AI) is the field of building computer systems that do tasks that usually need human intelligence, such as recognizing speech, spotting faces in photos, translating languages, or recommending videos.','Almost all AI today is “narrow”: it is very good at one kind of task and cannot easily transfer that skill to something else. A chess program cannot write a poem, and a poem-writing program cannot drive a car.','AI does not think or understand the way people do. It finds patterns in data and uses math to predict what is most likely. When your phone suggests the next word, it is calculating probabilities from patterns in huge amounts of text.','You already meet AI daily: spam filters, map apps that reroute around traffic, streaming recommendations, and voice assistants. “General” AI, a machine as flexible as a human, does not exist today and is still a research goal.'],[
@@ -154,11 +249,11 @@ Q('Which is a limit of today’s AI?','Weak common sense outside its training','
 Q('Who is responsible for AI-assisted work you hand in?','You are','The AI','Nobody','The internet')]]
 ]},
 {id:'tools',t:'Practical AI Tools',ic:'02',tags:['Easy','Essential'],d:'Tools that can help with school work, and how to use them well.',L:[
-['The AI toolbox',['AI tools come in many types. Chatbots answer questions in text. Image generators make pictures from descriptions. Translators convert languages. Coding assistants help write programs. Study tools make flashcards and summaries. Accessibility tools turn speech into text and text to speech.','Different tools suit different jobs. Pick the tool that fits the task instead of using one chatbot for everything.','Before using any tool, check your school’s rules and the tool’s privacy settings. Some tools store what you type, and some have age limits.','A good habit is to ask yourself three questions: What am I trying to learn or make? Is this tool allowed? What information am I giving it?'],[
+['The AI toolbox',['AI tools come in many types. Chatbots answer questions in text. Image generators make pictures from descriptions. Translators convert languages. Coding assistants help write programs. Study tools make flashcards and summaries. Accessibility tools turn speech into text and text into speech.','Different tools suit different jobs. Pick the tool that fits the task instead of using one chatbot for everything.','Before using any tool, check your school’s rules and the tool’s privacy settings. Some tools store what you type, and some have age limits.','A good habit is to ask yourself three questions: What am I trying to learn or make? Is this tool allowed? What information am I giving it?'],[
 Q('Which tool type turns spoken words into text?','Speech-to-text','Image generator','Translator only','Spreadsheet'),
 Q('Best way to pick an AI tool?','Match it to the job and check school rules','Use whatever is trending','Pick the first result','Use the most expensive one'),
 Q('Why check a tool’s privacy settings?','What you type may be stored','To make it faster','To change its color','They are always identical')]],
-['Studying with a chatbot',['A chatbot can act like a patient tutor. You can ask it to explain an idea in simpler words, give examples, quiz you, or check your reasoning step by step.','One strong technique is “explain it back”: write the concept in your own words, then ask the AI to point out gaps or mistakes. You learn because you do the thinking first.','Asking an AI to complete a whole assignment skips the learning and often breaks school rules. Use it to understand, not to replace your effort.'],[
+['Studying with a chatbot',['A chatbot can act like a patient tutor. You can ask it to explain an idea in simpler words, give examples, quiz you, or check your reasoning step by step.','One strong technique is “explain it back”: write the concept in your own words, then ask the AI to point out gaps or mistakes. You learn because you do the thinking first.','Ask for hints and steps instead of final answers, especially in math and science. If you only collect answers, you practice copying, not solving.','Asking an AI to complete a whole assignment skips the learning and often breaks school rules. Use it to understand, not to replace your effort.'],[
 Q('Which use of a chatbot helps you learn most?','Asking it to quiz you and explain mistakes','Asking it to do the assignment','Asking for only final answers','Never reading your notes'),
 Q('The “explain it back” method means…','You explain the idea yourself, then ask AI to find gaps','AI explains and you copy','You repeat what AI said word for word','You skip explaining'),
 Q('Asking AI to do your entire assignment mostly…','Skips the learning and may break the rules','Improves your memory','Is always allowed','Makes you faster at tests')]],
@@ -178,7 +273,7 @@ Q('AI translation is best used to…','Get the gist, then check important wordin
 {id:'ethics',t:'Ethical AI Use',ic:'03',tags:['Essential','Medium'],d:'Honesty, fairness, privacy and responsibility.',L:[
 ['Academic integrity',['Plagiarism means presenting someone else’s work as your own, and that includes work written by AI. Your school may allow AI for some tasks, require citation for others, and ban it for tests.','Always read the policy for each class. If it is unclear, ask your teacher before you start, not after you submit.','When AI is allowed, disclose how you used it: for example, “I used a chatbot to brainstorm topics and check my grammar.” Being open protects you.','AI-detection tools are not fully reliable and can wrongly flag honest work. Keep drafts, notes, and version history so you can show your own process.'],[
 Q('If AI helped with your work, you should…','Follow school policy and disclose it','Hide it','Delete your notes','Blame the AI'),
-Q('AI-detection tools are…','Not fully reliable and can be wrong','Always correct','Required by law','Never used'),
+Q('AI-detection tools are…','Not fully reliable and can wrongly flag honest work','Always correct','Required by law','Never used'),
 Q('A good way to show your own process is to…','Keep drafts and notes','Delete earlier versions','Submit in one go','Avoid taking notes')]],
 ['Bias and fairness',['AI bias can come from data, from how examples are labeled, and from design choices. If the data reflects unfair patterns in the past, the AI can repeat them.','Reports have described experimental hiring tools that learned to favor men because past hires were mostly men. Facial analysis tools have also been less accurate for some groups.','Bias matters most when AI helps decide things about people, such as jobs, loans, school admissions, or policing.','Ask who is missing from the data, test the system on different groups, publish limits, and keep humans involved in important decisions.'],[
 Q('Where can AI bias come from?','Data, labeling and design choices','Only from electricity','Only from users’ clothes','It cannot happen'),
@@ -259,96 +354,30 @@ var ACH=[
 ['lvl10','Lv10','Veteran','Reach level 10',function(c){return c.lv>=10}],
 ['xp500','5H','500 Club','Earn 500 XP',function(c){return c.xp>=500}],
 ['xp1000','1K','1,000 Club','Earn 1,000 XP',function(c){return c.xp>=1000}],
-['win','RW','Race Winner','Win a Quiz Race',function(c){return U&&U.wins>=1}],
-['win5','R5','Race Veteran','Win 5 races',function(c){return U&&U.wins>=5}],
-['play10','G10','Regular','Play 10 games',function(c){return U&&U.st&&U.st.played>=10}],
-['play25','G25','Dedicated','Play 25 games',function(c){return U&&U.st&&U.st.played>=25}],
-['doc','Rx','Prompt Doctor','Win a Prompt Doctor round',function(c){return U&&U.st&&U.st.docWins>=1}],
-['fc','FC','Memory Maker','Clear a Flashcard Sprint deck',function(c){return U&&U.st&&U.st.fcDone>=1}],
-['match','MU','Quick Match','Finish Match Up in under 60 seconds',function(c){return U&&U.st&&U.st.matchFast>=1}],
-['b1','B1','Sharpshooter','Clear round 1 in Quiz Blaster',function(c){return U&&U.st&&U.st.blRounds>=1}],
-['b3','B3','Dead Eye','Clear 3 rounds in Quiz Blaster',function(c){return U&&U.st&&U.st.blRounds>=3}],
-['b500','B5','Big Score','Score 500+ in one Quiz Blaster game',function(c){return U&&U.st&&U.st.blBest>=500}],
-['duel','D1','First Duel','Play a friend duel',function(c){return U&&U.st&&U.st.duels>=1}],
-['dwin','DW','Duelist','Win a duel',function(c){return U&&U.st&&U.st.duelWins>=1}],
-['dwin5','D5','Champion','Win 5 duels',function(c){return U&&U.st&&U.st.duelWins>=5}],
-['gem1','GM','Gem Hunter','Score 1,000 in Gem Match',function(c){return U&&U.st&&U.st.gemBest>=1000}],
-['gemq','GQ','Smart Matcher','Answer 10 Gem Match questions correctly',function(c){return U&&U.st&&U.st.gemQ>=10}],
-['perf','PF','Perfect Score','Ace a lesson quiz on the first try',function(c){return U&&U.st&&U.st.perfect>=1}],
-['fr1','F1','Friendly','Add a friend',function(c){return U&&U.friends&&U.friends.length>=1}],
-['fr5','F5','Social','Add 5 friends',function(c){return U&&U.friends&&U.friends.length>=5}],
-['team','TM','Team Player','Set your school and class code',function(c){return U&&U.school&&U.cls}]];
+['win','RW','Race Winner','Win a Quiz Race',function(c){return U.wins>=1}],
+['win5','R5','Race Veteran','Win 5 races',function(c){return U.wins>=5}],
+['play10','G10','Regular','Play 10 games',function(c){return c.st.played>=10}],
+['play25','G25','Dedicated','Play 25 games',function(c){return c.st.played>=25}],
+['doc','Rx','Prompt Doctor','Win a Prompt Doctor round',function(c){return c.st.docWins>=1}],
+['fc','FC','Memory Maker','Clear a Flashcard Sprint deck',function(c){return c.st.fcDone>=1}],
+['match','MU','Quick Match','Finish Match Up in under 60 seconds',function(c){return c.st.matchFast>=1}],
+['b1','B1','Sharpshooter','Clear round 1 in Quiz Blaster',function(c){return c.st.blRounds>=1}],
+['b3','B3','Dead Eye','Clear 3 rounds in Quiz Blaster',function(c){return c.st.blRounds>=3}],
+['b500','B5','Big Score','Score 500+ in one Quiz Blaster game',function(c){return c.st.blBest>=500}],
+['duel','D1','First Duel','Play a friend duel',function(c){return c.st.duels>=1}],
+['dwin','DW','Duelist','Win a duel',function(c){return c.st.duelWins>=1}],
+['dwin5','D5','Champion','Win 5 duels',function(c){return c.st.duelWins>=5}],
+['gem1','GM','Gem Hunter','Score 1,000 in Gem Match',function(c){return c.st.gemBest>=1000}],
+['gemq','GQ','Smart Matcher','Answer 10 Gem Match questions correctly',function(c){return c.st.gemQ>=10}],
+['perf','PF','Perfect Score','Ace a lesson quiz on the first try',function(c){return c.st.perfect>=1}],
+['fr1','F1','Friendly','Add a friend',function(c){return c.fr>=1}],
+['fr5','F5','Social','Add 5 friends',function(c){return c.fr>=5}],
+['team','TM','Team Player','Set your school and class code',function(c){return c.sch&&c.cls}]];
 var BADGES=ACH.map(function(a){return[a[0],a[1],a[2],a[3]]});
 var AVS=[['#6d6bff,#22d3ee','Aurora',1],['#f43f5e,#fb923c','Ember',1],['#10b981,#22d3ee','Mint',2],['#8b5cf6,#ec4899','Nebula',3],['#f59e0b,#ef4444','Solar',4],['#0ea5e9,#1e3a8a','Deep',5],['#9ca3af,#4b5563','Chrome',6]];
 function av(sz,u){u=u||U;var i=typeof u.av==='number'?u.av:0;return '<span class="av" style="width:'+sz+'px;height:'+sz+'px;font-size:'+Math.round(sz*.45)+'px;background:linear-gradient(135deg,'+AVS[i][0]+')">'+u.name.charAt(0).toUpperCase()+'</span>'}
 var STATS=[['65%','of teens say they’ve used an AI chatbot or tool','Pew Research Center, 2025 (approx.)'],['1 in 4','students report using AI for schoolwork','Teen surveys, 2024–25 (approx.)'],['40%','of jobs worldwide expected to be affected by AI','IMF, 2024 (approx.)'],['≈50%','of teachers say they want AI training','Education surveys, 2024–25 (approx.)']];
 var NEWS=[['Models get better at reasoning','Newer AI systems can work through multi-step math and science problems, showing their steps along the way.','Advancement'],['Schools write AI policies','Districts are publishing guidelines on when AI help is allowed, and many ask students to cite it.','Education'],['AI helps spot disease earlier','Researchers are testing image-analysis tools that flag possible problems for doctors to review.','Science'],['Concerns: errors and over-reliance','Teachers note AI can be wrong and that leaning on it can weaken practice with writing and problem-solving.','Caution'],['Open and small models grow','Smaller models are now able to run on laptops and phones, making AI more widely available.','Advancement'],['Calls for clearer labels','Some groups want AI-made images and text to be clearly marked so people aren’t misled.','Caution']];
-var REFS=[];
-
-var U=null,DB={},route='home',filt='All',lb='world',G=null,FC=null,MU=null,BL=null,DG=null,RT=null,GM=null,INB=null;
-var SB_URL='https://rytzhadculmofsblaxju.supabase.co';
-var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ5dHpoYWRjdWxtb2ZzYmxheGp1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4Mjg3MDIsImV4cCI6MjEwODQwNDcwMn0.d74dfDYWQGKGAmeYS43Bw24PSsdQF1WLHKQGQq7S4CU';
-var sb=null,LB={rows:[],note:'',loading:false},QUIET=false;
-try{sb=supabase.createClient(SB_URL,SB_KEY)}catch(e){}
-function $(i){return document.getElementById(i)}
-function lvl(){return Math.floor(U.xp/100)+1}
-function prog(m){return Math.round(((U.done[m.id]||[]).length/m.L.length)*100)}
-function toast(t){var d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(function(){d.remove()},2400)}
-function addXp(n){var before=lvl();U.xp+=n;sb.rpc('add_xp',{n:n}).then(fail);if(lvl()>before)toast('Level up. You are now level '+lvl());chk();save()}
-function loseXp(n){U.xp=Math.max(0,U.xp-n);sb.rpc('lose_xp',{n:n}).then(fail);chk();save()}
-function badge(k){if(U&&U.badges.indexOf(k)<0){U.badges.push(k);if(!QUIET)toast('New badge: '+BADGES.filter(function(b){return b[0]==k})[0][2])}}
-function chk(){if(!U)return;var c={les:0,tot:0,mods:0,md:{},lv:lvl(),xp:U.xp,st:U.st||{},fr:U.friends?U.friends.length:0,sch:U.school,cls:U.cls};MODS.forEach(function(m){var n=(U.done[m.id]||[]).length;c.les+=n;c.tot+=m.L.length;if(n==m.L.length){c.mods++;c.md[m.id]=1}});ACH.forEach(function(a){if(a[4](c))badge(a[0])})}
-function save(){if(U&&sb)sb.from('profiles').update({stats:U.st}).eq('id',U.id).then(function(){})}
-function go(r){var m={home:'index.html',why:'why.html',stats:'statistics.html',news:'news.html',dash:'dash.html',lib:'lib.html',games:'games.html',lb:'lb.html',me:'me.html'};if(m[r])location.href=m[r];}
-function updateAuthUI(){
-  var ab=$('authBtn'),lbBtn=$('logoutBtn'),uc=$('userChip');
-  if(U){ab.style.display='none';lbBtn.style.display='inline-block';uc.style.display='inline-block';uc.innerHTML=av(28)+'<b>'+U.name+'</b> Lv'+lvl();}
-  else{ab.style.display='inline-block';lbBtn.style.display='none';uc.style.display='none';}
-}
-async function loadUser(id){
-  try{
-    var p=await sb.from('profiles').select('*').eq('id',id).single();
-    if(p.error||!p.data){await sb.auth.signOut();U=null;return false}
-    var pr=await sb.from('progress').select('module_id,lessons').eq('user_id',id);
-    U={id:id,name:p.data.username,xp:p.data.xp,av:Math.min(p.data.avatar||0,AVS.length-1),school:p.data.school||'',cls:p.data.class_code||'',done:{},badges:[],created:p.data.created_at,wins:0,st:(p.data.stats&&typeof p.data.stats=='object'?p.data.stats:{}),friends:[],reqIn:[],reqOut:[]};
-    (pr.data||[]).forEach(function(r){U.done[r.module_id]=r.lessons});
-    U.wins=U.st.raceWins||0;
-    QUIET=true;chk();QUIET=false;return true}
-  catch(e){U=null;return false}
-}
-async function init(){
-  if(sb){try{var r=await sb.auth.getSession();if(r.data.session)await loadUser(r.data.session.user.id)}catch(e){}}
-  updateAuthUI();
-}
-function loginBox(){$('modal').innerHTML='<div class="modal" onclick="if(event.target==this)$(\'modal\').innerHTML=\'\'"><div class="box"><h2>Log in or sign up</h2><p class="mut">Pick a username (3–16 letters, numbers or _) and a 6-digit PIN. New username? We’ll create your account. Existing one? Enter your PIN to continue. Don’t use your real name.</p><input type="text" id="un" maxlength="16" placeholder="Username" autocomplete="off"><input type="password" id="pin" inputmode="numeric" maxlength="6" placeholder="6-digit PIN" onkeydown="if(event.key==\'Enter\')doLogin()"><button class="btn" id="lgbtn" onclick="doLogin()">Let’s go</button> <button class="btn ghost" onclick="$(\'modal\').innerHTML=\'\'">Cancel</button></div></div>';$('un').focus()}
-async function doLogin(){
-  var v=$('un').value.trim(),pin=$('pin').value.trim();
-  if(!/^[A-Za-z0-9_]{3,16}$/.test(v)){toast('Username: 3–16 letters, numbers or _');return}
-  if(!/^\d{6}$/.test(pin)){toast('PIN must be exactly 6 digits');return}
-  if(!sb){toast('Could not reach the cloud service');return}
-  var b=$('lgbtn');b.disabled=true;var em=v.toLowerCase()+'@synapse.app';
-  try{
-    var r=await sb.auth.signInWithPassword({email:em,password:pin});
-    if(r.error){var s=await sb.auth.signUp({email:em,password:pin});
-      if(s.error||!s.data.user){b.disabled=false;toast(s.error&&/registered|already/i.test(s.error.message)?'Wrong PIN for that username':'Sign-up failed. Try again.');return}
-      if(!s.data.session){b.disabled=false;toast('Sign-up needs "Confirm email" turned off in Supabase');return}
-      var ins=await sb.from('profiles').insert({id:s.data.user.id,username:v});
-      if(ins.error){await sb.auth.signOut();b.disabled=false;toast('That username is already taken');return}
-      r={data:{user:s.data.user}}}
-    if(!await loadUser(r.data.user.id)){b.disabled=false;return}$('modal').innerHTML='';toast('Welcome, '+U.name+'!');go('dash')}
-  catch(e){b.disabled=false;toast('Login failed: '+(e&&e.message?e.message:'Check your connection'));}
-}
-async function logout(){try{if(INB)sb.removeChannel(INB)}catch(e){}if(RT)liveStop();try{await sb.auth.signOut()}catch(e){}U=null;updateAuthUI();location.href='index.html'}
-function fail(r){if(r&&r.error)toast('Could not save. Check your connection.')}
-
-function notFound(){
-  var html='<div class="sec"><h1>Page not found</h1><p class="mut">The page you opened doesn’t exist. You can still log in and keep going.</p>';
-  html+='<button class="btn gold" onclick="go(\'home\')">Go home</button> <button class="btn ghost" onclick="go(\'dash\')">Dashboard</button>';
-  html+='</div>';
-  $('main').innerHTML=html;
-}
-notFound();
+function tags(m){return m.tags.map(function(t){return '<span class="tag '+t+'">'+t+'</span>'}).join('')}
 init();
-</script>
-</body>
-</html>
+</script></body></html>
