@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<base href="/">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dashboard &middot; AxonEDU</title>
 <link rel="stylesheet" href="style.css">
@@ -335,7 +336,7 @@ async function doLogin(){
       var ins=await sb.from('profiles').insert({id:s.data.user.id,username:v});
       if(ins.error){await sb.auth.signOut();b.disabled=false;toast('That username is already taken');return}
       r={data:{user:s.data.user}}}
-    await loadUser(r.data.user.id);$('modal').innerHTML='';toast('Welcome, '+U.name+'!');go('dash')}
+    if(!await loadUser(r.data.user.id)){b.disabled=false;return}$('modal').innerHTML='';toast('Welcome, '+U.name+'!');go('dash')}
   catch(e){b.disabled=false;toast('Login failed: '+(e&&e.message?e.message:'Check your connection'));}
 }
 async function logout(){
