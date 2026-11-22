@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<base href="/">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<base href="/">
 <title>Games &middot; AxonEDU</title>
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -18,13 +18,14 @@
   </div>
   <nav class="main-nav">
     <a href="index.html" class="nav-link">Home</a>
-    <a href="about.html" class="nav-link">Why Learn AI</a>
-    <a href="stats.html" class="nav-link">Statistics</a>
+    <a href="why.html" class="nav-link">Why Learn AI</a>
+    <a href="statistics.html" class="nav-link">Statistics</a>
     <a href="news.html" class="nav-link">News</a>
     <a href="dash.html" class="nav-link">Dashboard</a>
     <a href="lib.html" class="nav-link">Library</a>
     <a href="games.html" class="nav-link on">Games</a>
     <a href="lb.html" class="nav-link">Leaderboards</a>
+    <a href="me.html" class="nav-link">Profile</a>
     <a href="references.html" class="nav-link">References</a>
   </nav>
   <div class="auth-center">
@@ -39,16 +40,18 @@
 <footer>
   <div class="footer-links">
     <a href="index.html">Home</a>
-    <a href="about.html">Why Learn AI</a>
-    <a href="stats.html">Statistics</a>
+    <a href="why.html">Why Learn AI</a>
+    <a href="statistics.html">Statistics</a>
     <a href="news.html">News</a>
     <a href="references.html">References</a>
   </div>
   <div class="footer-copy">AxonEDU · a student project · practice data on leaderboards is simulated</div>
 </footer>
 
-<div id="gp"></div>
 <script>
+/* =====================================================================
+   SHARED DATA — QUIZ, MYTH, PROMPT, TERMS, ALLQ
+   ===================================================================== */
 function Q(q,right,w1,w2,w3){var o=[right,w1,w2,w3].filter(Boolean).sort(function(){return Math.random()-.5});return{q:q,o:o,a:o.indexOf(right)}}
 function TF(q,isTrue){return{q:q,o:['True','False'],a:isTrue?0:1}}
 var QUIZ=[
@@ -94,7 +97,7 @@ Q('A hallucination is most likely to include…','Invented quotes or citations',
 Q('Which habit helps you learn with AI?','Try first, then use AI to check','Ask AI before reading anything','Never read the original','Copy and paste'),
 Q('What does a CAPTCHA try to tell apart?','Humans from automated bots','Cats from dogs','Fast from slow','Old from new'),
 Q('Which step reduces AI bias?','Testing on many different groups of people','Using only one kind of data','Ignoring complaints','Hiding results'),
-Q('What does a “context window” limit?','How much text a model can consider at once','How long you can chat per day','The screen size','The font'),
+Q('What does “context window” limit?','How much text a model can consider at once','How long you can chat per day','The screen size','The font'),
 Q('Which is a sign of good data?','It is accurate, current and covers many groups','It is old and unchecked','It is all the same','It is secret'),
 Q('What does “open source” software mean?','Its code is available for others to view or use','It is free of bugs','It has no owner','It runs offline only'),
 Q('Spaced repetition means…','Reviewing material at growing time gaps','Studying once all night','Reading one page','Skipping review'),
@@ -118,7 +121,7 @@ Q('Which prompt adds useful context?','Fix the grammar in my essay for 9th-grade
 Q('You want an example. Best follow-up?','Give one real-world example of this idea','More','Why','Again'),
 Q('Best way to use AI on a math problem?','Try it first, then ask AI to check your steps','Copy the answer','Ask for the answer only','Skip the problem'),
 Q('How do you test an AI’s claim?','Check a trusted source','Trust it','Ask it twice','Ignore it'),
-Q('Which prompt asks for a summary well?','Summarize this paragraph in 3 bullets for a 10th grader, then list 2 key terms','Summarize','Make it short','Tell me everything'),
+Q('Best way to summarize?','Summarize this paragraph in 3 bullets for a 10th grader, then list 2 key terms','Summarize','Make it short','Tell me everything'),
 Q('Which prompt asks for a useful format?','List the pros and cons of solar power in a two-column table','Solar','Tell me about energy','Explain'),
 Q('Which prompt sets a helpful role?','Act as a patient tutor and quiz me on fractions, one question at a time','Fractions','Be smart','Math now'),
 Q('You got a vague answer. Best follow-up?','Add details: “Make it specific to a high school chemistry class”','Say “bad”','Ask the same thing again','Give up'),
@@ -130,6 +133,121 @@ Q('Which prompt best asks for a comparison?','Compare mitosis and meiosis in a t
 var TERMS=[['Machine learning','Software that learns patterns from examples instead of fixed rules'],['Training data','The examples an AI learns from'],['Hallucination','When AI confidently states something false or invented'],['Bias','Unfair patterns an AI picks up from its data'],['Prompt','The instruction or question you give an AI'],['Deepfake','An AI-made fake image, audio or video of a real person'],['Generative AI','AI that creates new text, images or audio'],['Iteration','Improving an answer through follow-up requests'],['Plagiarism','Passing off someone else’s or an AI’s work as your own'],['Privacy','Keeping personal information out of tools you do not control'],['Algorithm','Step-by-step instructions a computer follows'],['Neural network','Layers of connected units that learn patterns'],['Token','A small chunk of text a language model reads'],['Large language model','AI trained on huge amounts of text to predict and write language'],['Model','The trained set of numbers that captures patterns'],['Parameter','A number inside a model that is adjusted during training'],['Supervised learning','Learning from examples that come with correct labels'],['Chatbot','A program you can hold a conversation with'],['Context window','How much text a model can consider at once'],['Fine-tuning','Extra training that specializes a model'],['Automation','Using technology to do tasks with little human effort'],['Transparency','Being open about how and when AI was used'],['Human in the loop','A person reviews or approves AI decisions'],['Overfitting','Memorizing training data instead of learning general patterns'],['Reverse image search','Finding where else an image appears online'],['Citation','A note crediting where information came from']];
 var ALLQ=QUIZ.concat(MYTH,PROMPT);
 
+/* =====================================================================
+   LESSON CONTENT — MODS
+   ===================================================================== */
+var MODS=[
+{id:'basics',t:'AI Basics',ic:'01',tags:['Easy','Essential','First'],d:'What AI really is, how it learns, and where it falls short.',L:[
+['What is AI?',['Artificial intelligence (AI) is the field of building computer systems that do tasks that usually need human intelligence, such as recognizing speech, spotting faces in photos, translating languages, or recommending videos.','Almost all AI today is “narrow”: it is very good at one kind of task and cannot easily transfer that skill to something else. A chess program cannot write a poem, and a poem-writing program cannot drive a car.','AI does not think or understand the way people do. It finds patterns in data and uses math to predict what is most likely. When your phone suggests the next word, it is calculating probabilities from patterns in huge amounts of text.','You already meet AI daily: spam filters, map apps that reroute around traffic, streaming recommendations, and voice assistants. “General” AI, a machine as flexible as a human, does not exist today and is still a research goal.'],[
+Q('Most AI in use today is best described as…','Narrow: built for one kind of task','General: able to do anything humans can','Conscious','Magic'),
+Q('When a phone suggests your next word, it is mainly…','Calculating what is most likely from patterns','Reading your mind','Looking in your diary','Choosing randomly'),
+Q('Which is an everyday example of AI?','A video app recommending shows','A paper map','A light switch','A pencil')]],
+['How machines learn',['Traditional programs follow rules that a person wrote. Machine learning flips this: you give the computer many examples, and it adjusts itself until it can find the pattern on its own.','There are three main styles. In supervised learning, examples come with answers (labels), like photos tagged “cat” or “dog”. In unsupervised learning, the AI finds groups without labels. In reinforcement learning, it learns by trial and error, earning rewards for good results, like a game-playing AI.','The result of training is a model: a large collection of numbers, called parameters, that capture the patterns. Training means nudging those numbers again and again to reduce mistakes.','After training, the model is tested on new examples it has never seen. This checks that it can handle new situations instead of just memorizing, a problem called overfitting.'],[
+Q('In supervised learning, training examples come with…','Correct labels or answers','Nothing at all','Random noise','A teacher in the room'),
+Q('What is a “model” in machine learning?','The trained numbers that capture patterns','A person who poses for photos','A paper rule book','A type of screen'),
+Q('Why test an AI on examples it has not seen?','To check it works on new situations, not only memorized ones','To make it faster','To delete the data','To reset it')]],
+['Data: fuel and flaw',['Data is the collection of examples an AI learns from: text, images, audio, numbers. In general, more and better data leads to better performance.','Quality matters as much as quantity. Errors, outdated facts, or missing groups of people get copied into the AI. People say “garbage in, garbage out”.','Real studies have shown the effect. Research such as the 2018 Gender Shades project found that some face-analysis systems made more mistakes on darker-skinned women, partly because of who was in the training data.','Good practice includes collecting data from many kinds of people and situations, checking that labels are correct, and testing the AI on different groups before using it.'],[
+Q('“Garbage in, garbage out” means…','Poor-quality data leads to poor AI results','AI recycles trash','Fast data is best','Data does not matter'),
+Q('An AI trained mostly on one group of people will probably…','Work worse for groups it saw less','Work perfectly for everyone','Refuse to run','Ignore the data'),
+Q('Which helps make an AI fairer?','Training and testing on diverse data','Using less data','Hiding the results','Skipping tests')]],
+['Neural networks and deep learning',['A neural network is a math structure loosely inspired by the brain. It is built from layers of simple connected units, often called neurons, that pass numbers to each other.','Each connection has a weight, a number that says how strongly one unit affects the next. Training is the process of adjusting millions or billions of these weights.','“Deep learning” means a network with many layers. In an image model, early layers might detect edges, middle layers shapes, and later layers whole objects like faces or cars.','Deep learning took off around 2012 because large datasets and powerful chips called GPUs became available. These networks are powerful but hard to explain: even experts struggle to say exactly why one gave a certain answer. This is called the “black box” problem.'],[
+Q('What does training a neural network adjust?','The weights on its connections','Its screen brightness','Its password','Its name'),
+Q('“Deep” in deep learning refers to…','Having many layers','Being hidden underground','Being difficult to read','Using old data'),
+Q('The “black box” problem means…','It is hard to explain why the AI gave a certain answer','The AI is stored in a black case','The AI only works at night','The AI hides passwords')]],
+['AI versus human intelligence',['AI can beat people at narrow tasks such as chess, predicting protein shapes, or spotting patterns in medical scans. It is fast, consistent, and does not get tired.','But AI lacks common sense, lived experience, and true understanding. It can fail in strange ways when a situation looks different from its training data.','People bring judgment, ethics, empathy, and creativity grounded in real life. The best results often come from people and AI working together, with the human making the final call.','A simple rule: use AI as a tool, and remember you stay accountable for what you submit and decide.'],[
+Q('Which is a strength of AI?','Fast, consistent work on narrow tasks','Deep common sense','Understanding feelings','Moral judgment'),
+Q('Which is a limit of today’s AI?','Weak common sense outside its training','It cannot be fast','It cannot use data','It cannot run on computers'),
+Q('Who is responsible for AI-assisted work you hand in?','You are','The AI','Nobody','The internet')]]
+]},
+{id:'tools',t:'Practical AI Tools',ic:'02',tags:['Easy','Essential'],d:'Tools that can help with school work, and how to use them well.',L:[
+['The AI toolbox',['AI tools come in many types. Chatbots answer questions in text. Image generators make pictures from descriptions. Translators convert languages. Coding assistants help write programs. Study tools make flashcards and summaries. Accessibility tools turn speech into text and text to speech.','Different tools suit different jobs. Pick the tool that fits the task instead of using one chatbot for everything.','Before using any tool, check your school’s rules and the tool’s privacy settings. Some tools store what you type, and some have age limits.','A good habit is to ask yourself three questions: What am I trying to learn or make? Is this tool allowed? What information am I giving it?'],[
+Q('Which tool type turns spoken words into text?','Speech-to-text','Image generator','Translator only','Spreadsheet'),
+Q('Best way to pick an AI tool?','Match it to the job and check school rules','Use whatever is trending','Pick the first result','Use the most expensive one'),
+Q('Why check a tool’s privacy settings?','What you type may be stored','To make it faster','To change its color','They are always identical')]],
+['Studying with a chatbot',['A chatbot can act like a patient tutor. You can ask it to explain an idea in simpler words, give examples, quiz you, or check your reasoning step by step.','One strong technique is “explain it back”: write the concept in your own words, then ask the AI to point out gaps or mistakes. You learn because you do the thinking first.','Ask for hints and steps instead of final answers, especially in math and science. If you only collect answers, you practice copying, not solving.','Asking an AI to complete a whole assignment skips the learning and often breaks school rules. Use it to understand, not to replace your effort.'],[
+Q('Which use of a chatbot helps you learn most?','Asking it to quiz you and explain mistakes','Asking it to do the assignment','Asking for only final answers','Never reading your notes'),
+Q('The “explain it back” method means…','You explain the idea yourself, then ask AI to find gaps','AI explains and you copy','You repeat what AI said word for word','You skip explaining'),
+Q('Asking AI to do your entire assignment mostly…','Skips the learning and may break the rules','Improves your memory','Is always allowed','Makes you faster at tests')]],
+['Notes, summaries and flashcards',['AI can summarize a long reading, but summaries lose detail and can introduce errors. Treat a summary as a map, then skim the original to confirm important points.','Flashcards work best when they come from your own class notes, because making and checking them is itself studying.','Use spaced repetition: review cards at growing gaps, such as tomorrow, in three days, then in a week. This beats cramming for long-term memory.','Only paste material you are allowed to share, and leave out private information like names, grades, or addresses.'],[
+Q('A risk of AI summaries is…','Missing or distorted details','They are always too long','They cannot be read','They are illegal'),
+Q('Spaced repetition means…','Reviewing material at growing time gaps','Studying once all night','Reading one page','Skipping review'),
+Q('What should you avoid pasting into an AI tool?','Private information like addresses or grades','A paragraph from your own notes','A math problem you are practicing','A vocabulary list you made')]],
+['Research and fact-checking',['AI can invent sources: titles, authors, and links that look real but do not exist. This is a hallucination, and it is especially common when you ask for exact citations.','Use AI to brainstorm search terms, explain background, and suggest questions. Then find real sources yourself in library databases, government sites, universities, and reputable news outlets.','Try lateral reading: open new tabs and search for who is behind a source and what other trustworthy sites say about it, instead of judging only by how the page looks.','Verify every number, date, and quote before using it, and cite the real source you found, not the chatbot.'],[
+Q('What should you do with a source an AI gives you?','Confirm it exists by finding it yourself','Cite it without checking','Assume it is real','Ignore all sources'),
+Q('Lateral reading means…','Checking what other sources say about a source','Reading sideways','Reading very fast','Reading only the title'),
+Q('AI is best used in research to…','Brainstorm search terms and explain background','Replace all real sources','Write citations from memory','Skip fact-checking')]],
+['Accessibility and creative tools',['Many AI features make learning more accessible. Speech-to-text helps students who struggle to type, text-to-speech reads aloud, captions help with listening, and translation supports students learning English.','AI can also adjust reading level, break long text into smaller chunks, or describe images for people with low vision.','For creative work, AI can help you brainstorm ideas, find a rhythm for a song, or try layouts. The creative choices and the final voice should still be yours.','When AI helps with a creative project, follow class rules and say so. Honest credit builds trust.'],[
+Q('Which AI feature can help a student who struggles to type?','Speech-to-text dictation','A bigger keyboard only','Auto-delete','Screen lock'),
+Q('When AI helps with creative work, you should…','Be open about it and follow class rules','Hide it','Claim it did nothing','Delete the project'),
+Q('AI translation is best used to…','Get the gist, then check important wording','Replace every language teacher','Guarantee perfect grammar','Write legal contracts alone')]]
+]},
+{id:'ethics',t:'Ethical AI Use',ic:'03',tags:['Essential','Medium'],d:'Honesty, fairness, privacy and responsibility.',L:[
+['Academic integrity',['Plagiarism means presenting someone else’s work as your own, and that includes work written by AI. Your school may allow AI for some tasks, require citation for others, and ban it for tests.','Always read the policy for each class. If it is unclear, ask your teacher before you start, not after you submit.','When AI is allowed, disclose how you used it: for example, “I used a chatbot to brainstorm topics and check my grammar.” Being open protects you.','AI-detection tools are not fully reliable and can wrongly flag honest work. Keep drafts, notes, and version history so you can show your own process.'],[
+Q('If AI helped with your work, you should…','Follow school policy and disclose it','Hide it','Delete your notes','Blame the AI'),
+Q('AI-detection tools are…','Not fully reliable and can be wrong','Always correct','Required by law','Never used'),
+Q('A good way to show your own process is to…','Keep drafts and notes','Delete earlier versions','Submit in one go','Avoid taking notes')]],
+['Bias and fairness',['AI bias can come from data, from how examples are labeled, and from design choices. If the data reflects unfair patterns in the past, the AI can repeat them.','Reports have described experimental hiring tools that learned to favor men because past hires were mostly men. Facial analysis tools have also been less accurate for some groups.','Bias matters most when AI helps decide things about people, such as jobs, loans, school admissions, or policing.','Ask who is missing from the data, test the system on different groups, publish limits, and keep humans involved in important decisions.'],[
+Q('Where can AI bias come from?','Data, labeling and design choices','Only from electricity','Only from users’ clothes','It cannot happen'),
+Q('A hiring AI trained on past hires that were mostly men might…','Favor men unfairly','Treat everyone equally for sure','Refuse all applicants','Ignore resumes'),
+Q('A good step to reduce bias is to…','Test the system on different groups of people','Use less testing','Hide the training data','Avoid asking questions')]],
+['Privacy and data',['Many AI tools store what you type, and some use it to improve their models. Depending on the tool and settings, your chats could be seen by company staff or leaked in a breach.','Never share passwords, home addresses, ID numbers, or private details about other people. Photos, voice recordings, and school records are personal data too.','Look for privacy and data settings, such as turning off chat history or opting out of training when the option exists.','A simple test: if you would not post it publicly, do not paste it into an AI tool.'],[
+Q('Which is safest to type into a public chatbot?','A general question about photosynthesis','Your password','Your home address','A classmate’s private details'),
+Q('Why not paste a classmate’s private details into AI?','It could expose their information','It makes the AI tired','It is faster','There is no reason'),
+Q('What should you check in an AI app?','Privacy and data settings','Only the logo','The color theme','Nothing')]],
+['Misinformation and deepfakes',['Generative AI can produce convincing fake text, images, audio, and video. A deepfake is a fake that imitates a real person’s face or voice.','Clues like odd hands, garbled text, or lighting that does not match can help today, but fakes keep improving. Visual clues alone are not enough.','Pause before sharing. Check trusted news sources, look for the original upload, and try a reverse image search to see where else the image appears.','Making fake images or audio of classmates or teachers can harm people and may break school rules or laws. Do not create or spread them.'],[
+Q('Best first step with a shocking viral video?','Pause and check trusted sources','Share it right away','Assume it is true','Comment angrily'),
+Q('Why can’t you rely only on visual clues to spot fakes?','AI keeps improving and fixing obvious flaws','Fakes are always perfect','Clues never exist','Photos cannot be edited'),
+Q('Making a fake image of a classmate is…','Harmful and can break rules or laws','A harmless joke always','Required in some classes','Good practice')]],
+['Responsibility, transparency and impact',['When AI makes a mistake, people and organizations are still responsible. “The computer did it” is not an excuse. Whoever builds, chooses, or uses a system shares accountability.','Transparency means being open about when and how AI is used, and being honest about what it cannot do.','Decisions with big consequences for people, such as health, law, or grades, should include human review.','AI also has costs. Training and running large models uses a lot of electricity and often water for cooling, and AI is changing jobs. Use AI thoughtfully, and build skills that work alongside it.'],[
+Q('High-stakes decisions about people should…','Include human review','Be fully automatic','Be hidden','Be random'),
+Q('Why does AI have an environmental impact?','Training and running models uses large amounts of energy','AI uses paper','AI is made of metal only','It does not'),
+Q('Transparency means…','Being open about when and how AI was used','Hiding AI use','Making AI invisible','Deleting records')]]
+]},
+{id:'gen',t:'Generative AI',ic:'04',tags:['Medium'],d:'How AI writes, draws and composes, and where it goes wrong.',L:[
+['What generative AI is',['Most older AI classified or predicted things: is this email spam, what is in this photo. Generative AI creates new content such as text, images, music, code, and video.','Generative models learn from enormous collections of existing examples. They pick up patterns of how words fit together or how shapes and colors look, then produce something new that follows those patterns.','Familiar examples include chatbots that write essays or answers, image tools that turn a description into a picture, and tools that turn text into speech or music.','Because the output is new each time, the same prompt can give different results.'],[
+Q('What makes AI “generative”?','It creates new content','It only sorts emails','It only stores files','It only searches'),
+Q('Which is a generative AI task?','Writing a poem from a prompt','Sorting numbers','Spell checking only','Counting words'),
+Q('Generative models learn from…','Large amounts of existing examples','One single file','Nothing','Only the user’s memory')]],
+['How language models work',['A large language model (LLM) is trained on huge amounts of text. Its core skill is predicting the next token, a small chunk of text such as a word or part of a word, over and over to build a response.','After the first training, models are often tuned further using human feedback, so their answers are more helpful and safer.','A model has a context window, which limits how much text it can consider at once. Very long chats or documents may push early details out.','LLMs do not look facts up like a database unless connected to search tools. They generate text that sounds right based on patterns, which is why they can be fluent and wrong.'],[
+Q('A large language model mainly works by…','Predicting the next piece of text','Copying web pages exactly','Reading minds','Using a calculator only'),
+Q('A “token” is…','A small chunk of text','A coin','A password','A video frame'),
+Q('Context window means…','How much text the model can consider at once','The browser window','The time of day','A pop-up ad')]],
+['Hallucinations and limits',['A hallucination is a confident answer that is false or invented. It might be a made-up quote, a book that does not exist, or a wrong date.','Hallucinations are more likely with obscure topics, very specific requests like exact page numbers, and questions that assume something false.','You can reduce them: give the AI the text to work from, ask it to say when it is unsure, and request sources you can check.','Always verify important claims with reliable sources. A confident tone does not mean an answer is correct.'],[
+Q('A hallucination is…','A confident answer that is false or invented','A spelling mistake','A slow reply','A long answer'),
+Q('Which request is most likely to produce made-up details?','Exact page numbers from an obscure study','Adding 2 + 2','Defining “noun”','Naming the seasons'),
+Q('Best way to check an important AI claim?','Verify with reliable sources','Ask again politely','Trust the tone','Check nothing')]],
+['Images, audio and video',['Many image generators use a method called diffusion. They start from random noise and refine it step by step into a picture that matches your text description.','Similar approaches can create music, voices, and short videos. Quality is improving quickly, which makes spotting fakes harder.','There are open debates. Many artists argue that training on their work without permission is unfair, and courts and lawmakers are still working out the rules.','If you use an AI image in a project, label it as AI-generated, avoid imitating real people’s identity, and follow class and platform rules.'],[
+Q('Many image generators start from…','Random noise refined step by step','A finished photo','A blank paper scan','Your camera roll'),
+Q('A debated issue about image AI is…','Whether training on artists’ work without permission is fair','Whether images have pixels','Whether screens glow','Whether colors exist'),
+Q('If you use an AI image in a project…','Label it as AI-generated','Hide the source','Claim you drew it','Remove the title')]],
+['Creativity, authorship and copyright',['AI can be a brainstorming partner: it can suggest ideas, titles, plot twists, or ways to organize an argument. You decide what to keep and make it your own.','In the United States, the Copyright Office has said that copyright protection depends on human authorship. Purely AI-generated material generally cannot be copyrighted, though human creative choices added to it can matter.','Do not present AI text as your own voice. Teachers and readers want to see your thinking, and your writing improves only when you do the writing.','Credit tools and sources honestly, and when remixing someone else’s work, get permission or use material that allows reuse.'],[
+Q('In creative work AI is best used as…','A brainstorming partner while you make final choices','A replacement for your voice','A way to avoid thinking','A secret'),
+Q('In the US, copyright generally requires…','Human authorship','A robot signature','A big budget','A school stamp'),
+Q('Why does your own voice matter?','Teachers and readers want to see your thinking','AI cannot write words','Voices are loud','Grammar is optional')]]
+]},
+{id:'opt',t:'Optimizing Your AI Use',ic:'05',tags:['Hard'],d:'Prompt craft, checking work, study systems, and knowing when not to use AI.',L:[
+['Anatomy of a good prompt',['A strong prompt usually covers five things: role (who the AI should act as), context (who you are and what you need), task (what to do), format (how the answer should look), and constraints (length, tone, what to avoid).','Compare “Tell me about photosynthesis” with “Act as a tutor. I am a 9th grader. Explain photosynthesis in 5 bullet points, then ask me 2 questions to check my understanding.” The second gives the AI a target.','Include any text or data the AI should use, and say what to do if information is missing.','Short prompts are fine for simple tasks. Add detail whenever the first answer misses what you wanted.'],[
+Q('Which prompt element tells the AI the shape of the answer?','Format','Role only','Luck','Volume'),
+Q('Why add context like your grade level?','It helps the AI aim the answer at you','It makes the AI slower','It is required','It changes nothing'),
+Q('Which prompt is stronger?','Act as a tutor and explain fractions to a 6th grader with 3 examples','Fractions','Math please','Tell me stuff')]],
+['Iterating and refining',['Treat the first answer as a draft. Follow up with specific requests: make it shorter, give an example, explain step by step, use simpler words, or argue the opposite side.','You can ask the AI to ask you questions first. This helps it learn what you need and often improves the result.','Compare more than one version, and combine the best parts yourself. Your judgment is the editor.','If the conversation drifts or gets long, start a fresh chat and paste a short summary of what matters.'],[
+Q('The first AI answer should be treated as…','A draft you can improve','The final truth','A threat','Useless'),
+Q('Which follow-up is useful?','Make it shorter and add one example','Do it again','Whatever','Fix everything'),
+Q('If a long chat drifts, you can…','Start a new chat with a short summary','Keep typing in caps','Close the laptop','Delete your notes')]],
+['Verifying and critiquing outputs',['Check every AI answer with a quick routine: is it accurate, complete, fair, and based on real sources? Does it actually answer the question?','You can ask the AI to critique its own answer or list weaknesses, but that does not replace checking independent sources.','Cross-check key facts with a second source. For code, run it and test edge cases. For math, check the steps.','Watch for bias and one-sided framing, and notice when the AI sounds more sure than the evidence allows.'],[
+Q('Asking AI to critique its own answer…','Helps, but you still need independent checking','Replaces all fact-checking','Always fixes it','Is forbidden'),
+Q('For AI-written code you should…','Run and test it','Trust it blindly','Never run it','Print it only'),
+Q('A good check of a key fact is to…','Confirm it in a second reliable source','Ask the same AI again only','Skip it','Count the words')]],
+['Study systems with AI',['Learning science favors active methods: retrieval practice (testing yourself), spacing (reviewing over days), and interleaving (mixing topics). AI can create practice questions and track what you miss.','The Feynman technique pairs well with AI: explain a topic in simple words, find where you get stuck, then ask the AI to help fill only those gaps.','Build a routine: read or attempt first, quiz yourself, review mistakes, and schedule your next review.','Keep notes on your weak spots. The goal is for you to get better without the AI.'],[
+Q('Retrieval practice means…','Testing yourself from memory','Rereading only','Highlighting everything','Sleeping on notes'),
+Q('Interleaving means…','Mixing different topics while practicing','Studying one topic only','Copying notes','Studying in silence only'),
+Q('A good AI study routine is…','Try first, quiz yourself, review mistakes','Read answers only','Copy the AI','Avoid practice')]],
+['When not to use AI',['Sometimes the struggle is the learning. If your goal is to build writing fluency, math skill, or deep understanding, doing the work yourself is the point. Psychologists call this “desirable difficulty”.','Do not use AI when rules forbid it, when private information is involved, or for high-stakes medical, legal, or safety decisions without a qualified person.','Also skip it when it would be faster to do by hand, or when you cannot check the answer.','Build the habit: try first, then use AI to check, stretch, or practice. That keeps you in charge.'],[
+Q('“Desirable difficulty” means…','Effortful practice can help you learn more deeply','Hard things are always bad','Difficulty means failure','Learning should be effortless'),
+Q('Which situation calls for NOT using AI?','The rules forbid it','You want to brainstorm where allowed','You want a quiz on your notes','You want a rephrased hint'),
+Q('A habit that keeps you in charge is…','Try first, then use AI to check','Use AI first every time','Never check','Share every detail')]]
+]}
+];
 var ACH=[
 ['first','L1','First Lesson','Complete your first lesson',function(c){return c.les>=1}],
 ['five','L5','Warm-Up','Complete 5 lessons',function(c){return c.les>=5}],
@@ -169,46 +287,49 @@ var ACH=[
 var BADGES=ACH.map(function(a){return[a[0],a[1],a[2],a[3]]});
 var AVS=[['#6d6bff,#22d3ee','Aurora',1],['#f43f5e,#fb923c','Ember',1],['#10b981,#22d3ee','Mint',2],['#8b5cf6,#ec4899','Nebula',3],['#f59e0b,#ef4444','Solar',4],['#0ea5e9,#1e3a8a','Deep',5],['#9ca3af,#4b5563','Chrome',6]];
 function av(sz,u){u=u||U;var i=typeof u.av==='number'?u.av:0;return '<span class="av" style="width:'+sz+'px;height:'+sz+'px;font-size:'+Math.round(sz*.45)+'px;background:linear-gradient(135deg,'+AVS[i][0]+')">'+u.name.charAt(0).toUpperCase()+'</span>'}
-var FAKE=['Maya R.','Jordan T.','Priya S.','Leo M.','Sofia G.','Dev K.','Ava L.','Noah B.','Zoe C.','Eli W.'];
 var STATS=[['65%','of teens say they’ve used an AI chatbot or tool','Pew Research Center, 2025 (approx.)'],['1 in 4','students report using AI for schoolwork','Teen surveys, 2024–25 (approx.)'],['40%','of jobs worldwide expected to be affected by AI','IMF, 2024 (approx.)'],['≈50%','of teachers say they want AI training','Education surveys, 2024–25 (approx.)']];
 var NEWS=[['Models get better at reasoning','Newer AI systems can work through multi-step math and science problems, showing their steps along the way.','Advancement'],['Schools write AI policies','Districts are publishing guidelines on when AI help is allowed, and many ask students to cite it.','Education'],['AI helps spot disease earlier','Researchers are testing image-analysis tools that flag possible problems for doctors to review.','Science'],['Concerns: errors and over-reliance','Teachers note AI can be wrong and that leaning on it can weaken practice with writing and problem-solving.','Caution'],['Open and small models grow','Smaller models are now able to run on laptops and phones, making AI more widely available.','Advancement'],['Calls for clearer labels','Some groups want AI-made images and text to be clearly marked so people aren’t misled.','Caution']];
 var REFS=[];
 
-var U=null,SB_URL='https://rytzhadculmofsblaxju.supabase.co';
+/* =====================================================================
+   STATE & SUPABASE
+   ===================================================================== */
+var U=null,DB={},route='home',filt='All',lb='world',G=null,FC=null,MU=null,BL=null,DG=null,RT=null,GM=null,INB=null;
+var SB_URL='https://rytzhadculmofsblaxju.supabase.co';
 var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ5dHpoYWRjdWxtb2ZzYmxheGp1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4Mjg3MDIsImV4cCI6MjEwODQwNDcwMn0.d74dfDYWQGKGAmeYS43Bw24PSsdQF1WLHKQGQq7S4CU';
-var sb=null,LB={rows:[],note:'',loading:false},QUIET=false,INB=null,RT=null;
+var sb=null,LB={rows:[],note:'',loading:false},QUIET=false;
 try{sb=supabase.createClient(SB_URL,SB_KEY)}catch(e){}
 function $(i){return document.getElementById(i)}
 function lvl(){return Math.floor(U.xp/100)+1}
+function prog(m){return Math.round(((U.done[m.id]||[]).length/m.L.length)*100)}
 function toast(t){var d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(function(){d.remove()},2400)}
 function addXp(n){var before=lvl();U.xp+=n;sb.rpc('add_xp',{n:n}).then(fail);if(lvl()>before)toast('Level up. You are now level '+lvl());chk();save()}
 function loseXp(n){U.xp=Math.max(0,U.xp-n);sb.rpc('lose_xp',{n:n}).then(fail);chk();save()}
 function badge(k){if(U&&U.badges.indexOf(k)<0){U.badges.push(k);if(!QUIET)toast('New badge: '+BADGES.filter(function(b){return b[0]==k})[0][2])}}
-function chk(){if(!U)return;var c={les:0,tot:0,mods:0,md:{},lv:lvl(),xp:U.xp,st:U.st||{},fr:U.friends?U.friends.length:0,sch:U.school,cls:U.cls};ACH.forEach(function(a){if(a[4](c))badge(a[0])})}
+function chk(){if(!U)return;var c={les:0,tot:0,mods:0,md:{},lv:lvl(),xp:U.xp,st:U.st||{},fr:U.friends?U.friends.length:0,sch:U.school,cls:U.cls};MODS.forEach(function(m){var n=(U.done[m.id]||[]).length;c.les+=n;c.tot+=m.L.length;if(n==m.L.length){c.mods++;c.md[m.id]=1}});ACH.forEach(function(a){if(a[4](c))badge(a[0])})}
 function save(){if(U&&sb)sb.from('profiles').update({stats:U.st}).eq('id',U.id).then(function(){})}
-function go(r){var m={home:'index.html',why:'about.html',stats:'stats.html',news:'news.html',dash:'dash.html',lib:'lib.html',games:'games.html',lb:'lb.html',me:'me.html'};if(m[r])location.href=m[r];}
+function go(r){var m={home:'index.html',why:'why.html',stats:'statistics.html',news:'news.html',dash:'dash.html',lib:'lib.html',games:'games.html',lb:'lb.html',me:'me.html'};if(m[r])location.href=m[r];}
 function updateAuthUI(){
-  var ab=$('authBtn'),lb=$('logoutBtn'),uc=$('userChip');
-  if(U){
-    ab.style.display='none';lb.style.display='inline-block';uc.style.display='inline-block';
-    uc.innerHTML=av(28)+'<b>'+U.name+'</b> Lv'+lvl();
-  } else {
-    ab.style.display='inline-block';lb.style.display='none';uc.style.display='none';
-  }
+  var ab=$('authBtn'),lbBtn=$('logoutBtn'),uc=$('userChip');
+  if(U){ab.style.display='none';lbBtn.style.display='inline-block';uc.style.display='inline-block';uc.innerHTML=av(28)+'<b>'+U.name+'</b> Lv'+lvl();}
+  else{ab.style.display='inline-block';lbBtn.style.display='none';uc.style.display='none';}
 }
 async function loadUser(id){
-  var p=await sb.from('profiles').select('*').eq('id',id).single();
-  if(p.error||!p.data){await sb.auth.signOut();U=null;return false}
-  U={id:id,name:p.data.username,xp:p.data.xp,av:Math.min(p.data.avatar||0,AVS.length-1),school:p.data.school||'',cls:p.data.class_code||'',done:{},badges:[],created:p.data.created_at,wins:0,st:(p.data.stats&&typeof p.data.stats=='object'?p.data.stats:{}),friends:[],reqIn:[],reqOut:[]};
-  U.wins=U.st.raceWins||0;
-  QUIET=true;chk();QUIET=false;return true}
+  try{
+    var p=await sb.from('profiles').select('*').eq('id',id).single();
+    if(p.error||!p.data){await sb.auth.signOut();U=null;return false}
+    var pr=await sb.from('progress').select('module_id,lessons').eq('user_id',id);
+    U={id:id,name:p.data.username,xp:p.data.xp,av:Math.min(p.data.avatar||0,AVS.length-1),school:p.data.school||'',cls:p.data.class_code||'',done:{},badges:[],created:p.data.created_at,wins:0,st:(p.data.stats&&typeof p.data.stats=='object'?p.data.stats:{}),friends:[],reqIn:[],reqOut:[]};
+    (pr.data||[]).forEach(function(r){U.done[r.module_id]=r.lessons});
+    U.wins=U.st.raceWins||0;
+    QUIET=true;chk();QUIET=false;return true}
+  catch(e){U=null;return false}
+}
 async function init(){
   if(sb){try{var r=await sb.auth.getSession();if(r.data.session)await loadUser(r.data.session.user.id)}catch(e){}}
   updateAuthUI();
-  $('main').innerHTML=gamesPage();
 }
-function loginBox(){
-  $('modal').innerHTML='<div class="modal" onclick="if(event.target==this)$(\'modal\').innerHTML=\'\'"><div class="box"><h2>Log in or sign up</h2><p class="mut">Pick a username (3–16 letters, numbers or _) and a 6-digit PIN. New username? We’ll create your account. Existing one? Enter your PIN to continue. Don’t use your real name.</p><input type="text" id="un" maxlength="16" placeholder="Username" autocomplete="off"><input type="password" id="pin" inputmode="numeric" maxlength="6" placeholder="6-digit PIN" onkeydown="if(event.key==\'Enter\')doLogin()"><button class="btn" id="lgbtn" onclick="doLogin()">Let’s go</button> <button class="btn ghost" onclick="$(\'modal\').innerHTML=\'\'">Cancel</button></div></div>';$('un').focus()}
+function loginBox(){$('modal').innerHTML='<div class="modal" onclick="if(event.target==this)$(\'modal\').innerHTML=\'\'"><div class="box"><h2>Log in or sign up</h2><p class="mut">Pick a username (3–16 letters, numbers or _) and a 6-digit PIN. New username? We’ll create your account. Existing one? Enter your PIN to continue. Don’t use your real name.</p><input type="text" id="un" maxlength="16" placeholder="Username" autocomplete="off"><input type="password" id="pin" inputmode="numeric" maxlength="6" placeholder="6-digit PIN" onkeydown="if(event.key==\'Enter\')doLogin()"><button class="btn" id="lgbtn" onclick="doLogin()">Let’s go</button> <button class="btn ghost" onclick="$(\'modal\').innerHTML=\'\'">Cancel</button></div></div>';$('un').focus()}
 async function doLogin(){
   var v=$('un').value.trim(),pin=$('pin').value.trim();
   if(!/^[A-Za-z0-9_]{3,16}$/.test(v)){toast('Username: 3–16 letters, numbers or _');return}
@@ -223,185 +344,448 @@ async function doLogin(){
       var ins=await sb.from('profiles').insert({id:s.data.user.id,username:v});
       if(ins.error){await sb.auth.signOut();b.disabled=false;toast('That username is already taken');return}
       r={data:{user:s.data.user}}}
-    if(!await loadUser(r.data.user.id)){b.disabled=false;return}$('modal').innerHTML='';toast('Welcome, '+U.name+'!');go('games')}
+    if(!await loadUser(r.data.user.id)){b.disabled=false;return}$('modal').innerHTML='';toast('Welcome, '+U.name+'!');go('dash')}
   catch(e){b.disabled=false;toast('Login failed: '+(e&&e.message?e.message:'Check your connection'));}
 }
-async function logout(){
-  try{if(INB)sb.removeChannel(INB)}catch(e){}
-  if(RT)liveStop();
-  try{await sb.auth.signOut()}catch(e){}
-  U=null;updateAuthUI();$('main').innerHTML=gamesPage();location.href='index.html'}
+async function logout(){try{if(INB)sb.removeChannel(INB)}catch(e){}if(RT)liveStop();try{await sb.auth.signOut()}catch(e){}U=null;updateAuthUI();location.href='index.html'}
 function fail(r){if(r&&r.error)toast('Could not save. Check your connection.')}
-function gpOpen(){$('gp').innerHTML='<div class="game-popup" onclick="if(event.target==this)gpClose()"><button class="close-popup" onclick="gpClose()">×</button><div class="game-header"><h2 id="gpt">Game</h2></div><div class="game-body" id="gpbody"></div><div class="game-footer"><button class="btn" onclick="gpClose()">Exit</button></div></div>';$('gp').style.display='flex'}
-function gpClose(){$('gp').innerHTML='';$('gp').style.display='none';if(G){clearInterval(G.t);G.end=true;G=null}if(MU)MU=null;if(FC)FC=null;if(BL){BL=null;clearInterval(window._blf)}if(DG){clearInterval(DG.iv);DG=null}if(GM){GM=null;clearInterval(window._gmf)}}
-function gamesPage(){
-  if(!U){return '<h1>Games</h1><p class="mut">Log in to play games and save your scores.</p><div style="text-align:center;margin-top:18px"><button class="btn gold" onclick="loginBox()">Log in</button></div>'}
-  return '<h1>Games</h1><p class="mut">Every round earns XP. Questions live in the code, so you can swap in your own.</p><div class="grid">'+
-cg('Q','Quiz Race','Answer correctly to move your racer. Beat the bots to the finish.','play(QUIZ,\'Quiz Race\',5)')+
-cg('T/F','Myth Buster','Rapid true-or-false. Bust the AI myths before the bots do.','play(MYTH,\'Myth Buster\',5)')+
-cg('Rx','Prompt Doctor','Pick the prompt that gets the best answer. This skill improves every AI result.','play(PROMPT,\'Prompt Doctor\',5)')+
-cg('FC','Flashcard Sprint','Learn 10 key terms. Cards you miss come back soon, which helps them stick.','fcStart()')+
-cg('M','Match Up','Match terms to definitions. Finish under 60 seconds for bonus XP.','muStart()')+
-cg('BL','Quiz Blaster','Aim and shoot the correct answer while the targets drift and bounce. Beat each 60-second round to advance.','blStart()')+
-cg('GM','Gem Match','Swap gems to score. Reach the points goal to unlock a question, and answer right for extra moves.','gmStart()')+
-'<div id="game"></div><div id="duels"></div></div>'
+
+/* =====================================================================
+   QUIZ RACE
+   ===================================================================== */
+function pick(qs,n){var s=qs.slice();for(var i=s.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=s[i];s[i]=s[j];s[j]=t}return s.slice(0,n)}
+function shuffle(a){var s=a.slice();for(var i=s.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=s[i];s[i]=s[j];s[j]=t}return s}
+function race(){
+  if(!U){$('main').innerHTML='<div class="sec"><h1>Games</h1><p class="mut">Log in to play.</p><button class="btn gold" onclick="loginBox()">Log in</button></div>';return}
+  var qs=pick(ALLQ,10);
+  var qi=0,score=0,started=false,startT=0,timer=null;
+  var html='<div class="sec"><h1>Quiz Race</h1><p class="mut">10 questions. Answer fast — wrong answers lose 10 XP (floored at 0).</p>';
+  html+='<div id="raceBox"><div class="race-intro"><h2>Ready?</h2><button class="btn gold" onclick="raceStart()">Start Race</button></div>';
+  html+='<div id="raceQ" style="display:none"><div class="mut" id="raceProg">Question <span id="raceN">1</span>/10</div><h2 id="raceQtxt"></h2><div id="raceOpts"></div><div class="mut" id="raceFb"></div></div>';
+  html+='<div id="raceEnd" style="display:none"><h2 id="raceRes"></h2><div class="mut" id="raceMsg"></div><button class="btn gold" onclick="race()">Play Again</button><button class="btn ghost" onclick="games()">Menu</button></div></div></div>';
+  $('main').innerHTML=html;
+  window.raceStart=function(){
+    qi=0;score=0;startT=Date.now();
+    $('raceQ').style.display='';$('raceEnd').style.display='none';$('raceProg').style.display='';
+    raceNext();
+  };
+  window.raceNext=function(){
+    if(qi>=qs.length){raceEnd();return}
+    var q=qs[qi];
+    $('raceN').textContent=(qi+1)+'/10';
+    $('raceQtxt').textContent=q.q;
+    var opts='';
+    q.o.forEach(function(o,j){opts+='<button class="opt" onclick="raceAns('+j+')">'+o+'</button>'});
+    $('raceOpts').innerHTML=opts;
+    $('raceFb').textContent='';
+  };
+  window.raceAns=function(j){
+    var q=qs[qi];
+    var correct=j==q.a;
+    if(correct){score++;$('raceFb').textContent='Correct!';$('raceFb').style.color='#10b981';}
+    else{var nx=Math.max(0,U.xp-10);U.xp=nx;loseXp(10);$('raceFb').textContent='Wrong — answer was '+q.o[q.a]+' (−10 XP)';$('raceFb').style.color='#ef4444'}
+    var btns=$('raceOpts').querySelectorAll('.opt');
+    btns.forEach(function(b,k){if(k==q.a)b.style.background='#10b981';if(k==j&&!correct)b.style.background='#ef4444';b.disabled=true});
+    setTimeout(function(){qi++;raceNext()},900);
+  };
+  window.raceEnd=function(){
+    var pct=Math.round(score/10*100);
+    var won=score>=7;
+    $('raceQ').style.display='none';$('raceProg').style.display='none';
+    $('raceRes').textContent=score+'/10 — '+pct+'%';
+    $('raceMsg').textContent=won?'You won '+ (score>=7?'25 XP':'')+'! '+(won?('+25 XP'):'')+' ':'Keep practicing.';
+    if(won){addXp(25);U.wins=(U.wins||0)+1;badge('win');if(U.wins>=5)badge('win5')}
+    $('raceEnd').style.display='';
+  };
 }
-function cg(ch,t,d,f,l){return '<div class="card"><div class="chip">'+ch+'</div><h3>'+t+'</h3><p class="mut">'+d+'</p><button class="btn" onclick="gpOpen();'+f+'">'+(l||'Play')+'</button></div>'}
-var G=null;
-function play(bank,name,n){var qs=bank.slice().sort(function(){return Math.random()-.5}).slice(0,n);G={name:name,qs:qs,i:0,n:n,bots:[0,0],lock:false,end:false};
-$('gpbody').innerHTML='<div class="card" style="margin-top:18px"><h2>'+G.name+'</h2></div>';
-G.t=setInterval(function(){if(G.end)return;G.bots=G.bots.map(function(b,k){return Math.random()<(k?.35:.5)?b+1:b});if(G.bots.some(function(b){return b>=G.n}))finish(false);else draw()},2600);draw()}
-function draw(){var g=$('gpbody');if(!g||!G)return;var q=G.qs[G.i];if(!q)return;
-function lane(nm,v){return '<div class="lane"><span>'+nm+'</span><div class="bar"><i style="width:'+Math.min(100,v/G.n*100)+'%"></i></div></div>'}
-g.innerHTML='<div class="card" style="margin-top:18px"><h2>'+G.name+'</h2>'+lane(U.name,G.i)+lane('Bot Byte',G.bots[0])+lane('Bot Bit',G.bots[1])+'<h3 style="margin-top:16px">'+q.q+'</h3>'+q.o.map(function(o,i){return '<button class="opt" onclick="ans('+i+',this)">'+o+'</button>'}).join('')+'</div>'}
-function ans(i,el){if(G.lock||G.end)return;var q=G.qs[G.i];G.lock=true;if(i==q.a){el.classList.add('good');setTimeout(function(){G.i++;G.lock=false;if(G.i>=G.n)finish(true);else draw()},500)}else{el.classList.add('no');setTimeout(function(){G.lock=false;draw()},700)}}
-function finish(win){bump('played');var sg='q_'+G.name.replace(/ /g,'');bump(sg+'_p');if(win)bump(sg+'_w');G.end=true;clearInterval(G.t);if(win){U.wins++;if(G.name=='Prompt Doctor')bump('docWins');addXp(50)}else addXp(20);chk();save();
-$('gpbody').innerHTML='<div class="card res" style="margin-top:18px"><div class="eyebrow">'+(win?'Victory':'Race over')+'</div><h2>'+(win?'You won! +50 XP':'A bot got there first. +20 XP')+'</h2><button class="btn" onclick="gpClose();gamesPage()">Play again</button></div>'
+window.race=race;
+
+/* =====================================================================
+   MYTH BUSTER
+   ===================================================================== */
+function myth(){
+  if(!U){$('main').innerHTML='<div class="sec"><h1>Games</h1><p class="mut">Log in to play.</p><button class="btn gold" onclick="loginBox()">Log in</button></div>';return}
+  var qs=pick(MYTH,10),qi=0,score=0;
+  var html='<div class="sec"><h1>Myth Buster</h1><p class="mut">True or false? Bust AI myths.</p>';
+  html+='<div id="mythBox"><div class="myth-intro"><button class="btn gold" onclick="mythStart()">Start</button></div>';
+  html+='<div id="mythQ" style="display:none"><div class="mut" id="mythProg">Question <span id="mythN">1</span>/10</div><h2 id="mythQtxt"></h2>';
+  html+='<button class="opt" onclick="mythAns(true)">True</button> <button class="opt" onclick="mythAns(false)">False</button>';
+  html+='<div class="mut" id="mythFb"></div></div>';
+  html+='<div id="mythEnd" style="display:none"><h2 id="mythRes"></h2><div class="mut" id="mythMsg"></div><button class="btn gold" onclick="myth()">Play Again</button><button class="btn ghost" onclick="games()">Menu</button></div></div></div>';
+  $('main').innerHTML=html;
+  window.mythStart=function(){qi=0;score=0;$('mythQ').style.display='';$('mythEnd').style.display='none';mythNext();};
+  window.mythNext=function(){
+    if(qi>=qs.length){mythEnd();return}
+    var q=qs[qi];
+    $('mythN').textContent=(qi+1)+'/10';
+    $('mythQtxt').textContent=q.q;
+    $('mythFb').textContent='';
+  };
+  window.mythAns=function(isT){
+    var q=qs[qi];
+    var correct=isT==q.a;
+    if(correct){score++;$('mythFb').textContent='Correct!';$('mythFb').style.color='#10b981';}
+    else{$('mythFb').textContent='Wrong — it is '+(q.a?'true':'false')+'.';$('mythFb').style.color='#ef4444'}
+    setTimeout(function(){qi++;mythNext()},900);
+  };
+  window.mythEnd=function(){
+    $('mythQ').style.display='none';
+    $('mythRes').textContent=score+'/10';
+    $('mythMsg').textContent=score>=7?'Great job — you know your AI facts!':'Keep reading the lessons.';
+    addXp(Math.floor(score*2));
+    chk();save();
+    $('mythEnd').style.display='';
+  };
 }
-var FC=null;
-function fcStart(){var q=TERMS.slice().sort(rnd).slice(0,10);FC={q:q,n:q.length,show:false,miss:0};fcDraw()}
-function fcDraw(){var g=$('gpbody');if(!g)return;
-if(!FC.q.length){addXp(20);bump('fcDone');bump('played');g.innerHTML='<div class="card res" style="margin-top:18px"><div class="eyebrow">Deck cleared</div><h2>All '+FC.n+' terms learned. +20 XP</h2><p class="mut">Cards you needed again: '+FC.miss+'</p><button class="btn" onclick="gpClose();fcStart()">Go again</button></div>';return}
-var c=FC.q[0];g.innerHTML='<div class="card" style="margin-top:18px"><div class="eyebrow">Flashcard Sprint · '+(FC.n-FC.q.length)+'/'+FC.n+' learned</div><div class="bar"><i style="width:'+((FC.n-FC.q.length)/FC.n*100)+'%"></i></div><h2 style="margin:18px 0">'+c[0]+'</h2>'+(FC.show?'<p>'+c[1]+'</p><button class="btn" onclick="fcNext(1)">Got it</button> <button class="btn ghost" onclick="fcNext(0)">Show again soon</button>':'<p class="mut">Say the definition in your head, then reveal it.</p><button class="btn" onclick="FC.show=true;fcDraw()">Reveal</button>')+'</div>'}
-function fcNext(k){var c=FC.q.shift();if(!k){FC.miss++;FC.q.splice(Math.min(2,FC.q.length),0,c)}FC.show=false;fcDraw()}
-var MU=null;
-function muStart(){var p=TERMS.slice().sort(rnd).slice(0,6),ix=p.map(function(x,i){return i});MU={p:p,t:ix.slice().sort(rnd),d:ix.slice().sort(rnd),sel:-1,done:{},t0:Date.now()};muDraw()}
-function muBtn(i,side){var dn=MU.done[i],sel=side=='t'&&MU.sel==i;return '<button class="opt" '+(dn?'disabled style="border-color:var(--ok);opacity:.6"':sel?'style="border-color:var(--pri2)"':'')+' onclick="muPick('+i+',\''+side+'\')">'+(side=='t'?MU.p[i][0]:MU.p[i][1])+'</button>'}
-function muDraw(){var g=$('gpbody');if(!g)return;g.innerHTML='<div class="card" style="margin-top:18px"><div class="eyebrow">Match Up · '+Object.keys(MU.done).length+'/'+MU.p.length+' matched</div><p class="mut">Pick a term, then its definition.</p><div style="display:grid;grid-template-columns:1fr 1.6fr;gap:12px"><div>'+MU.t.map(function(i){return muBtn(i,'t')}).join('')+'</div><div>'+MU.d.map(function(i){return muBtn(i,'d')}).join('')+'</div></div></div>'}
-function muPick(i,side){if(side=='t'){MU.sel=i;muDraw();return}
-if(MU.sel<0){toast('Pick a term first');return}
-if(MU.sel==i){MU.done[i]=1;MU.sel=-1;if(Object.keys(MU.done).length==MU.p.length){var s=Math.round((Date.now()-MU.t0)/1000);addXp(s<60?40:25);bump('played');if(s<60)bump('matchFast');if(!U.st.matchBest||s<U.st.matchBest){U.st.matchBest=s;saveSt()}$('gpbody').innerHTML='<div class="card res" style="margin-top:18px"><div class="eyebrow">Complete</div><h2>Matched in '+s+' seconds. +'+(s<60?40:25)+' XP</h2><button class="btn" onclick="gpClose();muStart()">Play again</button></div>';return}}
-else{MU.sel=-1;toast('Not a match')}muDraw()}
-var DU={},DG=null;
-function loadDuels(){var el=$('duels');if(!el||!U)return;
-sb.from('duels').select('*').order('created_at',{ascending:false}).limit(20).then(function(r){
-  if(r.error){el.innerHTML='<div class="sec"><h2>Friend duels</h2><p class="mut">Duels aren’t set up yet. Run the duels SQL in Supabase.</p></div>';return}
-  var rows=r.data||[],ids={},m={};rows.forEach(function(d){ids[d.challenger]=1;ids[d.opponent]=1});
-  var il=Object.keys(ids);if(il.length){sb.from('profiles').select('id,username').in('id',il).then(function(pr){
-    var mp={};(pr.data||[]).forEach(function(p){mp[p.id]=p.username})
-    DU={};var inc='',wait='',fin='',bonus=0,cl=[];try{cl=JSON.parse(localStorage.getItem('sh_dc_'+U.id)||'[]')}catch(e){}
-    rows.forEach(function(d){DU[d.id]=d;var mine=d.challenger==U.id,o=mp[mine?d.opponent:d.challenger]||'Player';
-    if(d.o_score==null){if(mine)wait+='<tr><td>'+o+'</td><td class="mut">Waiting for them to play</td><td></td></tr>';else inc+='<tr><td>'+o+'</td><td>challenged you</td><td><button class="btn" onclick="acceptDuel(\''+d.id+'\')">Play</button></td></tr>'}
-    else{var a=mine?d.c_score:d.o_score,b=mine?d.o_score:d.c_score;if(a>b&&cl.indexOf(d.id)<0){cl.push(d.id);bonus+=20}fin+='<tr><td>'+o+'</td><td>'+a+' – '+b+'</td><td>'+(a>b?'Win':a<b?'Loss':'Tie')+'</td></tr>'}});
-    if(bonus){bump('duelWins',bonus/20);addXp(bonus);toast('Duel win bonus: +'+bonus+' XP');try{localStorage.setItem('sh_dc_'+U.id,JSON.stringify(cl.slice(-100)))}catch(e){}}
-    function T(x){return x?'<div class="card"><table>'+x+'</table></div>':'<p class="mut">None right now.</p>'}
-    el.innerHTML='<div class="sec"><h2>Friend duels</h2><p class="mut">You and a friend answer the same 5 questions, 15 seconds each. Faster correct answers score more. Live duel: you both play right now and your friend gets an invite pop-up. Send for later: you each play on your own time and the result appears when both have played.</p>'
-    +(U.friends.length?'<div class="card"><select id="dfr">'+U.friends.map(function(f){return '<option value="'+f.id+'">'+f.name+'</option>'}).join('')+'</select> <button class="btn" onclick="liveInvite()">Live duel now</button> <button class="btn ghost" onclick="startDuel()">Send for later</button></div>':'<div class="card mut">Add friends on the Leaderboards page to duel them.</div>')
-    +'<h3 style="margin-top:22px">Challenges for you</h3>'+T(inc)+'<h3 style="margin-top:22px">Waiting on friends</h3>'+T(wait)+'<h3 style="margin-top:22px">Results</h3>'+T(fin)+'</div>'
-  })}
-})
+window.myth=myth;
+
+/* =====================================================================
+   PROMPT DOCTOR
+   ===================================================================== */
+function promptDoc(){
+  if(!U){$('main').innerHTML='<div class="sec"><h1>Games</h1><p class="mut">Log in to play.</p><button class="btn gold" onclick="loginBox()">Log in</button></div>';return}
+  var cases=[
+  ['The user asks “tell me about the Civil War”','“Explain the main causes of the Civil War in 5 bullets for a 10th grader”'],
+  ['The user wants a summary','“Summarize this article in 3 bullets for a 9th grader, then list 2 key terms”'],
+  ['The user wants math help','“Try the problem first, then ask the AI to check your steps one at a time”'],
+  ['The user wants coding help','“Explain this Python function line by line, then give 2 practice exercises”'],
+  ['The user wants study help','“Act as a tutor and quiz me on photosynthesis, one question at a time”'],
+  ];
+  var ci=0,score=0;
+  var html='<div class="sec"><h1>Prompt Doctor</h1><p class="mut">Fix the weak prompt. Pick the better rewrite.</p>';
+  html+='<div id="pdBox"><div class="pd-intro"><button class="btn gold" onclick="pdStart()">Start</button></div>';
+  html+='<div id="pdQ" style="display:none"><div class="mut" id="pdProg">Case <span id="pdN">1</span>/5</div><h3 id="pdBad">Weak: <span id="pdBadT"></span></h3>';
+  html+='<h3 id="pdGood">Better: <span id="pdGoodT"></span></h3>';
+  html+='<button class="opt" onclick="pdAns(true)">This is better</button> <button class="opt" onclick="pdAns(false)">Not better</button>';
+  html+='<div class="mut" id="pdFb"></div></div>';
+  html+='<div id="pdEnd" style="display:none"><h2 id="pdRes"></h2><div class="mut" id="pdMsg"></div><button class="btn gold" onclick="promptDoc()">Play Again</button><button class="btn ghost" onclick="games()">Menu</button></div></div></div>';
+  $('main').innerHTML=html;
+  window.pdStart=function(){ci=0;score=0;$('pdQ').style.display='';$('pdEnd').style.display='none';pdNext();};
+  window.pdNext=function(){
+    if(ci>=cases.length){pdEnd();return}
+    $('pdN').textContent=(ci+1)+'/5';
+    $('pdBadT').textContent=cases[ci][0];
+    $('pdGoodT').textContent=cases[ci][1];
+    $('pdFb').textContent='';
+  };
+  window.pdAns=function(b){
+    var correct=b===true;
+    if(correct){score++;$('pdFb').textContent='Correct!';$('pdFb').style.color='#10b981';}
+    else{$('pdFb').textContent='That rewrite is weaker.';$('pdFb').style.color='#ef4444'}
+    setTimeout(function(){ci++;pdNext()},900);
+  };
+  window.pdEnd=function(){
+    $('pdQ').style.display='none';
+    $('pdRes').textContent=score+'/5';
+    $('pdMsg').textContent=score>=4?'Prompt pro! ':'Practice writing clearer prompts.';
+    addXp(score*5);
+    if(score>=4){badge('doc');U.st.docWins=(U.st.docWins||0)+1}
+    chk();save();
+    $('pdEnd').style.display='';
+  };
 }
-function startDuel(){var id=$('dfr').value,f=U.friends.filter(function(x){return x.id==id})[0];if(!f)return;duelPlay({qids:ALLQ.map(function(x,i){return i}).sort(rnd).slice(0,5),opp:id,name:f.name,mode:'new'})}
-function acceptDuel(id){var d=DU[id];if(!d)return;var f=U.friends.filter(function(x){return x.id==d.challenger})[0];duelPlay({qids:d.qids,id:id,name:f?f.name:'a friend',mode:'ans'})}
-function duelPlay(d){if(DG)clearInterval(DG.iv);DG={d:d,i:0,s:0,t:15,lock:false};DG.iv=setInterval(duelTick,1000);duelDraw();$('gpbody').scrollIntoView({behavior:'smooth'})}
-function duelTick(){if(!$('gpbody')){clearInterval(DG.iv);return}if(DG.lock)return;DG.t--;var e=$('dt');if(e)e.style.width=(DG.t/15*100)+'%';if(DG.t<=0){DG.lock=true;duelNext(0,0)}}
-function duelDraw(){var g=$('gpbody'),q=ALLQ[DG.d.qids[DG.i]];g.innerHTML='<div class="card" style="margin-top:18px"><div class="eyebrow">Duel vs '+DG.d.name+' · Question '+(DG.i+1)+'/5 · Score '+DG.s+'</div><div class="bar"><i id="dt" style="width:100%;transition:width 1s linear"></i></div><h3 style="margin-top:16px">'+q.q+'</h3>'+q.o.map(function(o,i){return '<button class="opt" onclick="duelAns('+i+',this)">'+o+'</button>'}).join('')+'</div>'}
-function duelAns(i,el){if(DG.lock)return;DG.lock=true;var ok=i==ALLQ[DG.d.qids[DG.i]].a,t=DG.t;el.classList.add(ok?'good':'no');setTimeout(function(){duelNext(ok,t)},600)}
-function duelNext(ok,t){if(ok)DG.s+=10+Math.max(0,t);DG.i++;DG.t=15;DG.lock=false;if(DG.i>=5)duelEnd();else duelDraw()}
-async function duelEnd(){clearInterval(DG.iv);DG.lock=true;var d=DG.d,s=DG.s,g=$('gpbody');if(!g)return;g.innerHTML='<div class="card res" style="margin-top:18px"><h2>Saving your result…</h2></div>';
-var r=d.mode=='new'?await sb.from('duels').insert({challenger:U.id,opponent:d.opp,qids:d.qids,c_score:s}):await sb.from('duels').update({o_score:s}).eq('id',d.id).is('o_score',null).select();
-if(r.error||(d.mode!='new'&&!(r.data&&r.data.length))){g.innerHTML='<div class="card res" style="margin-top:18px">Could not save the duel. Check your connection and that the duels SQL has been run.</div>';return}
-bump('duels');addXp(30);g.innerHTML='<div class="card res" style="margin-top:18px"><div class="eyebrow">Duel played</div><h2>Your score: '+s+'. +30 XP</h2><p class="mut">'+(d.mode=='new'?'Your friend will see the challenge on their Games page.':'See the results list below.')+'</p></div>';loadDuels()}
-var stT=null;
-function saveSt(){clearTimeout(stT);stT=setTimeout(function(){if(U&&sb)sb.from('profiles').update({stats:U.st}).eq('id',U.id).then(function(){})},800)}
-function bump(k,n){U.st[k]=(U.st[k]||0)+(n||1);saveSt();chk()}
-function best(k,v){if(v>(U.st[k]||0)){U.st[k]=v;saveSt();chk()}}
-function addXpBig(n){while(n>0){var k=Math.min(n,100);addXp(k);n-=k}}
-var BL=null;
-function blStart(){var g=$('gpbody');g.innerHTML='<div class="card" style="margin-top:18px"><div class="eyebrow" id="bhud"></div><h3 id="bq" style="min-height:52px;margin-top:8px"></h3><canvas id="bc" width="600" height="400" style="width:100%;max-width:600px;display:block;margin:auto;border:1px solid var(--line);border-radius:12px;background:var(--bg);cursor:crosshair;touch-action:none"></canvas><div id="bmsg" class="res"></div></div>';
-var cv=$('bc'),cs=getComputedStyle(document.documentElement),C=function(n){return cs.getPropertyValue(n).trim()||'#888'};
-var me=BL={round:1,total:0,pts:0,need:300,time:60,ph:'ready',T:[],B:[],ax:300,ay:200,cd:0,pool:[],last:0,cur:null,cv:cv,cx:cv.getContext('2d'),col:{card:C('--card'),pri:C('--pri'),pri2:C('--pri2'),ink:C('--ink'),ok:C('--ok'),bad:C('--bad'),line:C('--line')}};
-function pos(e){var r=cv.getBoundingClientRect();me.ax=(e.clientX-r.left)*600/r.width;me.ay=(e.clientY-r.top)*400/r.height}
-cv.onpointermove=pos;cv.onpointerdown=function(e){pos(e);blFire()};
-blMsg('Round 1','Hit the correct answer to score 100 points. A wrong hit costs 20. Reach <b>'+me.need+'</b> points within 60 seconds to advance. Click or tap directly on the answer you want to shoot. Your shot goes straight to what you click, even if another box is in the way.','Start round');
-window._blf=requestAnimationFrame(function f(t){if(BL!==me||$('bc')!==me.cv)return;blFrame(t);window._blf=requestAnimationFrame(f)})}
-function blMsg(h,p,b){$('bmsg').innerHTML='<h3>'+h+'</h3><p class="mut">'+p+'</p><button class="btn" onclick="'+(b=='Play again'?'blStart()':'blBegin()')+'">'+b+'</button>'}
-function blBegin(){BL.ph='play';BL.time=60;BL.pts=0;BL.B=[];BL.last=performance.now();blQ();$('bmsg').innerHTML=''}
-function blQ(){if(!BL.pool.length)BL.pool=QUIZ.concat(PROMPT,MYTH).sort(rnd);BL.cur=BL.pool.pop();$('bq').textContent=BL.cur.q;var arr=[];
-BL.cur.o.forEach(function(t,i){var w=170,h=64,x,y,k=0;do{x=20+Math.random()*(560-w);y=20+Math.random()*(300-h);k++}while(k<40&&arr.some(function(a){return x<a.x+a.w+8&&x+w+8>a.x&&y<a.y+a.h+8&&y+h+8>a.y}));
-var sp=45+Math.random()*35,an=Math.random()*6.283;arr.push({x:x,y:y,w:w,h:h,vx:Math.cos(an)*sp,vy:Math.sin(an)*sp,t:t,ok:i==BL.cur.a,f:0,fc:null})});BL.T=arr}
-function blFire(){if(BL.ph!='play'||BL.cd>0)return;var a=Math.atan2(BL.ay-370,BL.ax-300);a=Math.min(-0.12,Math.max(-Math.PI+0.12,a));var d=Math.hypot(BL.ax-300,BL.ay-370);
-BL.B.push({x:300+Math.cos(a)*34,y:370+Math.sin(a)*34,vx:Math.cos(a)*1100,vy:Math.sin(a)*1100,life:Math.max(.05,(d-34)/1100)});BL.cd=0.12;
-var hit=null,bd=1e9;BL.T.forEach(function(t){if(BL.ax>=t.x&&BL.ax<=t.x+t.w&&BL.ay>=t.y&&BL.ay<=t.y+t.h){var dd=Math.hypot(BL.ax-(t.x+t.w/2),BL.ay-(t.y+t.h/2));if(dd<bd){bd=dd;hit=t}}});if(hit)blHit(hit)}
-function blHit(h){if(h.ok){BL.pts+=100;if(BL.pts>=BL.need)blClear();else blQ()}else{BL.pts=Math.max(0,BL.pts-20);h.f=.4;h.fc=BL.col.bad}}
-function blFrame(t){var dt=Math.min(.05,((t-BL.last)/1000)||0);BL.last=t;
-if(BL.ph=='play'){BL.time-=dt;BL.cd-=dt;var T=BL.T;
-T.forEach(function(a){a.x+=a.vx*dt;a.y+=a.vy*dt;if(a.x<0){a.x=0;a.vx=Math.abs(a.vx)}if(a.x+a.w>600){a.x=600-a.w;a.vx=-Math.abs(a.vx)}if(a.y<0){a.y=0;a.vy=Math.abs(a.vy)}if(a.y+a.h>300){a.y=300-a.h;a.vy=-Math.abs(a.vy)}if(a.f>0)a.f-=dt});
-for(var i=0;i<T.length;i++)for(var j=i+1;j<T.length;j++){var a=T[i],b=T[j],ox=Math.min(a.x+a.w,b.x+b.w)-Math.max(a.x,b.x),oy=Math.min(a.y+a.h,b.y+b.h)-Math.max(a.y,b.y);
-if(ox>0&&oy>0){var tmp;if(ox<oy){if(a.x<b.x){a.x-=ox/2;b.x+=ox/2}else{a.x+=ox/2;b.x-=ox/2}tmp=a.vx;a.vx=b.vx;b.vx=tmp}else{if(a.y<b.y){a.y-=oy/2;b.y+=oy/2}else{a.y+=oy/2;b.y-=oy/2}tmp=a.vy;a.vy=b.vy;b.vy=tmp}}}
-BL.B=BL.B.filter(function(p){p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt;return p.life>0});
-if(BL.ph=='play'&&BL.time<=0)blOver()}
-blDraw()}
-function blClear(){var bonus=Math.round(BL.time)*2;BL.total+=BL.pts+bonus;best('blRounds',BL.round);BL.ph='between';BL.T=[];BL.round++;BL.need=200+100*BL.round;blMsg('Round cleared','Time bonus +'+bonus+'. Total so far: '+BL.total+'. Round '+BL.round+' needs <b>'+BL.need+'</b> points.','Start round '+BL.round)}
-function blOver(){BL.total+=BL.pts;BL.ph='over';BL.T=[];var xp=Math.min(150,Math.floor(BL.total/6));addXpBig(xp);bump('played');best('blBest',BL.total);$('bq').textContent='';$('bmsg').innerHTML='<div class="eyebrow">Time’s up</div><h2>Total score '+BL.total+'</h2><p class="mut">You needed '+BL.need+' in round '+BL.round+' and got '+BL.pts+'. You earned <b>+'+xp+' XP</b> (1 XP per 6 points, up to 150).</p><button class="btn" onclick="gpClose();blStart()">Play again</button>'}
-function wrapT(cx,txt,w){var ws=txt.split(' '),l=[],c='';ws.forEach(function(x){var t=c?c+' '+x:x;if(cx.measureText(t).width>w&&c){l.push(c);c=x}else c=t});l.push(c);return l.slice(0,4)}
-function blDraw(){var cx=BL.cx,co=BL.col;cx.clearRect(0,0,600,400);
-var h=$('bhud');if(h)h.textContent='Round '+BL.round+' · Points '+BL.pts+' / '+BL.need+' · Time '+Math.max(0,Math.ceil(BL.time))+'s · Total '+BL.total;
-BL.T.forEach(function(a){cx.beginPath();if(cx.roundRect)cx.roundRect(a.x,a.y,a.w,a.h,12);else cx.rect(a.x,a.y,a.w,a.h);cx.fillStyle=a.f>0?a.fc:co.card;cx.fill();cx.lineWidth=2;cx.strokeStyle=co.pri2;cx.stroke();cx.fillStyle=a.f>0?'#fff':co.ink;cx.font='bold 12px sans-serif';cx.textAlign='center';cx.textBaseline='middle';var L=wrapT(cx,a.t,a.w-16);L.forEach(function(s,i){cx.fillText(s,a.x+a.w/2,a.y+a.h/2+(i-(L.length-1)/2)*15)})});
-var an=Math.min(-0.12,Math.max(-Math.PI+0.12,Math.atan2(BL.ay-370,BL.ax-300)));
-cx.strokeStyle=co.line;cx.setLineDash([4,6]);cx.beginPath();cx.moveTo(300,370);cx.lineTo(300+Math.cos(an)*300,370+Math.sin(an)*300);cx.stroke();cx.setLineDash([]);
-cx.save();cx.translate(300,370);cx.rotate(an);cx.fillStyle=co.pri;cx.fillRect(0,-7,36,14);cx.restore();cx.beginPath();cx.arc(300,380,24,0,6.283);cx.fillStyle=co.pri2;cx.fill();
-cx.fillStyle=co.ink;BL.B.forEach(function(p){cx.beginPath();cx.arc(p.x,p.y,5,0,6.283);cx.fill()})}
-var GEMC=['#6d6bff','#22d3ee','#34d399','#f59e0b','#fb7185','#a78bfa'],GM=null,GN=7;
-function sl(ms){return new Promise(function(r){setTimeout(r,ms)})}
-function gmNew(){var g=[];for(var r=0;r<GN;r++){g[r]=[];for(var c=0;c<GN;c++){var t;do{t=Math.floor(Math.random()*6)}while((c>=2&&g[r][c-1]==t&&g[r][c-2]==t)||(r>=2&&g[r-1][c]==t&&g[r-2][c]==t));g[r][c]=t}}return g}
-function gmMatches(g){var m={},r,c,k,t,x;for(r=0;r<GN;r++){c=0;while(c<GN){t=g[r][c];k=1;while(c+k<GN&&g[r][c+k]==t)k++;if(t>=0&&k>=3)for(x=0;x<k;x++)m[r+','+(c+x)]=1;c+=k}}
-for(c=0;c<GN;c++){r=0;while(r<GN){t=g[r][c];k=1;while(r+k<GN&&g[r+k][c]==t)k++;if(t>=0&&k>=3)for(x=0;x<k;x++)m[(r+x)+','+c]=1;r+=k}}
-return Object.keys(m).map(function(s){return s.split(',').map(Number)})}
-function gmHasMove(g){for(var r=0;r<GN;r++)for(var c=0;c<GN;c++){var d=[[0,1],[1,0]];for(var k=0;k<2;k++){var r2=r+d[k][0],c2=c+d[k][1];if(r2<GN&&c2<GN){var t=g[r][c];g[r][c]=g[r2][c2];g[r2][c2]=t;var ok=gmMatches(g).length>0;t=g[r][c];g[r][c]=g[r2][c2];g[r2][c2]=t;if(ok)return true}}}return false}
-function gmFresh(){var g;do{g=gmNew()}while(!gmHasMove(g));return g}
-function gmStart(){GM={g:gmFresh(),pts:0,since:0,need:300,qn:0,moves:20,sel:null,busy:false,qp:null,over:false,chain:0};
-$('gpbody').innerHTML='<div class="card" style="margin-top:18px"><div class="eyebrow" id="gmh"></div><p class="mut" style="margin:6px 0">Tap a gem, then a neighbor to swap. Match 3 or more. Hit the points goal to unlock a question: answer right for more moves.</p><div id="gmq"></div><div class="gmg" id="gmg"></div><div id="gmm" class="res"></div></div>';gmDraw();gmHud();$('gpbody').scrollIntoView({behavior:'smooth'})}
-function gmHud(){var h=$('gmh');if(h&&GM)h.textContent='Points '+GM.pts+' · Moves '+GM.moves+' · Next question in '+Math.max(0,GM.need-GM.since)+' points'}
-function gmDraw(pop){var e=$('gmg');if(!e||!GM)return;e.innerHTML=GM.g.map(function(row,r){return row.map(function(t,c){if(t<0)return '<span></span>';var s=GM.sel&&GM.sel[0]==r&&GM.sel[1]==c;return '<button class="gem t'+t+(s?' sel':'')+(pop&&pop[r+','+c]?' pop':'')+'" style="--c:'+GEMC[t]+'" onclick="gmClick('+r+','+c+')"><i></i></button>'}).join('')}).join('')}
-function gmClick(r,c){if(!GM||GM.busy||GM.over||GM.qp)return;var s=GM.sel;
-if(!s){GM.sel=[r,c]}else if(s[0]==r&&s[1]==c){GM.sel=null}else if(Math.abs(s[0]-r)+Math.abs(s[1]-c)==1){gmSwap(s,[r,c]);return}else{GM.sel=[r,c]}gmDraw()}
-async function gmSwap(a,b){var g=GM.g,t;GM.busy=true;GM.sel=null;t=g[a[0]][a[1]];g[a[0]][a[1]]=g[b[0]][b[1]];g[b[0]][b[1]]=t;gmDraw();await sl(200);if(!$('gmg'))return;
-if(!gmMatches(g).length){t=g[a[0]][a[1]];g[a[0]][a[1]]=g[b[0]][b[1]];g[b[0]][b[1]]=t;gmDraw();toast('No match. Try another swap');GM.busy=false;return}
-GM.moves--;GM.chain=0;gmHud();await gmResolve();if(!$('gmg'))return;
-if(GM.chain>=3)toast('Chain of '+GM.chain+'!');
-if(!gmHasMove(GM.g)){GM.g=gmFresh();gmDraw();toast('No moves left on the board. Shuffled!')}
-GM.busy=false;gmAfter()}
-async function gmResolve(){var g=GM.g;while(true){var m=gmMatches(g);if(!m.length)break;GM.chain++;var gain=Math.round(m.length*10*(1+(GM.chain-1)*.5)),pop={};GM.pts+=gain;GM.since+=gain;m.forEach(function(x){pop[x[0]+','+x[1]]=1});gmDraw(pop);gmHud();await sl(280);if(!$('gmg'))return;
-m.forEach(function(x){g[x[0]][x[1]]=-1});
-for(var c=0;c<GN;c++){var col=[],r;for(r=GN-1;r>=0;r--)if(g[r][c]>=0)col.push(g[r][c]);while(col.length<GN)col.push(Math.floor(Math.random()*6));for(r=0;r<GN;r++)g[GN-1-r][c]=col[r]}
-gmDraw();await sl(240);if(!$('gmg'))return}}
-function gmAfter(){if(GM.since>=GM.need)gmAsk(1);else if(GM.moves<=0)gmEnd()}
-function gmAsk(att){var q=ALLQ[Math.floor(Math.random()*ALLQ.length)];GM.qp={q:q,att:att};GM.busy=true;
-$('gmq').innerHTML='<div class="card" style="margin:12px 0;border-color:var(--pri2)"><div class="eyebrow">Question time'+(att==2?' · last chance':'')+'</div><h3>'+q.q+'</h3>'+q.o.map(function(o,i){return '<button class="opt" onclick="gmAns('+i+')">'+o+'</button>'}).join('')+'<p class="src mut">Correct answer: +'+(att==1?10:5)+' moves'+(att==1?'. Miss it and you get one more chance.':'. Miss this one and there are no bonus moves.')+'</p></div>'}
-function gmAns(i){var p=GM&&GM.qp;if(!p||p.lock)return;p.lock=true;
-if(i==p.q.a){var b=p.att==1?10:5;GM.moves+=b;GM.qn++;GM.since=0;GM.need=300+100*GM.qn;bump('gemQ');GM.qp=null;$('gmq').innerHTML='';toast('Correct! +'+b+' moves');GM.busy=false;gmHud()}
-else if(p.att==1){toast('Not quite. One more chance');setTimeout(function(){if(GM&&GM.qp)gmAsk(2)},700)}
-else{GM.qn++;GM.since=0;GM.need=300+100*GM.qn;GM.qp=null;$('gmq').innerHTML='';toast('No bonus moves this time');GM.busy=false;gmHud();if(GM.moves<=0)gmEnd()}}
-function gmEnd(){GM.over=true;GM.busy=true;var xp=Math.min(150,Math.floor(GM.pts/8));addXpBig(xp);bump('played');best('gemBest',GM.pts);$('gmm').innerHTML='<div class="eyebrow">Out of moves</div><h2>'+GM.pts+' points</h2><p class="mut">+'+xp+' XP (1 XP per 8 points, up to 150)</p><button class="btn" onclick="gpClose();gmStart()">Play again</button>'}
-var RT=null;
-function liveInvite(){var id=$('dfr').value,f=U.friends.filter(function(x){return x.id==id})[0];if(!f)return;if(RT)liveStop();
-RT={role:'host',room:Math.random().toString(36).slice(2,10),opp:{id:f.id,name:f.name,s:0,ans:false},i:0,s:0,t:15,lock:false,state:'wait',qids:ALLQ.map(function(x,i){return i}).sort(rnd).slice(0,5)};
-var g=$('gpbody'),room=RT.room;g.innerHTML='<div class="card res" style="margin-top:18px"><h3>Waiting for '+f.name+' to accept…</h3><p class="mut">They get a pop-up if they’re logged in.</p><button class="btn ghost" onclick="liveStop();$(\'gpbody\').innerHTML=\'\'">Cancel</button></div>';g.scrollIntoView({behavior:'smooth'});
-sb.channel('inbox:'+f.id).subscribe(function(st){if(st=='SUBSCRIBED'){sb.channel('inbox:'+f.id).send({type:'broadcast',event:'invite',payload:{room:room,fromId:U.id}});setTimeout(function(){try{sb.removeChannel(sb.channel('inbox:'+f.id))}catch(e){}},1500)}});
-setTimeout(function(){if(RT&&RT.room==room&&RT.state=='wait'){liveStop();var g2=$('gpbody');if(g2)g2.innerHTML='<div class="card res" style="margin-top:18px">'+f.name+' didn’t join. They may be offline.</div>'}},45000)}
-function liveJoin(room,fid,name){if(RT)liveStop();RT={role:'guest',room:room,opp:{id:fid,name:name,s:0,ans:false},i:0,s:0,t:15,lock:false,state:'wait'};var g=$('gpbody');if(g){g.innerHTML='<div class="card res" style="margin-top:18px"><h3>Joining duel with '+name+'…</h3></div>';g.scrollIntoView({behavior:'smooth'})}
-sb.channel('room:'+RT.room).send({type:'broadcast',event:'join',payload:{}})
-setTimeout(function(){if(RT&&RT.room==room&&RT.state=='wait'){liveStop(1);var g2=$('gpbody');if(g2)g2.innerHTML='<div class="card res" style="margin-top:18px">The invite expired or '+name+' left.</div>'}},12000)}
-function liveOpen(onReady){var c=sb.channel('room:'+RT.room,{config:{broadcast:{self:false}}});RT.ch=c;
-c.on('broadcast',{event:'join'},function(){if(RT&&RT.role=='host'&&RT.state=='wait'){RT.state='play';c.send({type:'broadcast',event:'start',payload:{qids:RT.qids}});livePlay()}});
-c.on('broadcast',{event:'start'},function(m){var q=m.payload&&m.payload.qids;if(RT&&RT.role=='guest'&&RT.state=='wait'&&Array.isArray(q)&&q.length==5&&q.every(function(i){return Number.isInteger(i)&&i>=0&&i<ALLQ.length})){RT.qids=q;RT.state='play';livePlay()}});
-c.on('broadcast',{event:'next'},function(m){if(RT&&RT.role=='guest'&&RT.state=='play'&&m.payload.i>=0&&m.payload.i<5){RT.i=m.payload.i;RT.t=15;RT.lock=false;RT.opp.ans=false;liveDraw()}});
-c.on('broadcast',{event:'ans'},function(m){var p=m.payload;if(RT&&RT.state=='play'&&p.i==RT.i&&Number.isInteger(p.s)){RT.opp.s=p.s;RT.opp.ans=true;liveHud();liveCheck()}});
-c.on('broadcast',{event:'end'},function(m){if(RT&&RT.role=='guest'&&RT.state=='play'){RT.s=Number(m.payload.g)||0;RT.opp.s=Number(m.payload.h)||0;liveEnd()}});
-c.on('broadcast',{event:'bye'},function(){if(RT&&RT.state!='done'){var n=RT.opp.name;liveStop(1);var g=$('gpbody');if(g)g.innerHTML='<div class="card res" style="margin-top:18px">'+n+' left the duel.</div>'}});
-c.subscribe(function(st){if(st=='SUBSCRIBED'&&RT&&RT.ch===c)onReady()})}
-function livePlay(){RT.iv=setInterval(liveTick,1000);liveDraw()}
-function liveTick(){if(!RT||RT.state!='play')return;if(!$('gpbody')){liveStop();return}RT.t--;var e=$('dt');if(e)e.style.width=Math.max(0,RT.t/15*100)+'%';if(RT.t<=0){RT.lock=true;if(RT.role=='host'&&!RT.adv){RT.adv=true;liveAdvance()}}}
-function liveCheck(){if(RT.role=='host'&&RT.lock&&RT.opp.ans&&!RT.adv){RT.adv=true;setTimeout(liveAdvance,900)}}
-function liveAdvance(){if(!RT||RT.state!='play')return;RT.i++;RT.adv=false;if(RT.i>=5){RT.ch.send({type:'broadcast',event:'end',payload:{h:RT.s,g:RT.opp.s}});liveEnd();return}RT.t=15;RT.lock=false;RT.opp.ans=false;RT.ch.send({type:'broadcast',event:'next',payload:{i:RT.i}});liveDraw()}
-function liveDraw(){var g=$('gpbody');if(!g||!RT)return;var q=ALLQ[RT.qids[RT.i]];g.innerHTML='<div class="card" style="margin-top:18px"><div class="eyebrow">Live duel vs '+RT.opp.name+' · Question '+(RT.i+1)+'/5</div><p id="lh" class="mut"></p><div class="bar"><i id="dt" style="width:100%;transition:width 1s linear"></i></div><h3 style="margin-top:16px">'+q.q+'</h3>'+q.o.map(function(o,i){return '<button class="opt" onclick="liveAns('+i+',this)">'+o+'</button>'}).join('')+'</div>';liveHud()}
-function liveHud(){var e=$('lh');if(e&&RT)e.textContent='You '+RT.s+' · '+RT.opp.name+' '+RT.opp.s+(RT.opp.ans?' · answered':'')}
-function liveAns(i,el){if(!RT||RT.lock||RT.state!='play')return;RT.lock=true;var ok=i==ALLQ[RT.qids[RT.i]].a;if(ok)RT.s+=10+Math.max(0,RT.t);el.classList.add(ok?'good':'no');RT.ch.send({type:'broadcast',event:'ans',payload:{i:RT.i,s:RT.s}});liveHud();liveCheck()}
-function liveEnd(){if(!RT||RT.state=='done')return;clearInterval(RT.iv);RT.state='done';var me=RT.s,op=RT.opp.s,n=RT.opp.name,win=me>op,xp=30+(win?20:0),g=$('gpbody'),c=RT.ch;bump('duels');if(win)bump('duelWins');addXp(xp);
-if(g)g.innerHTML='<div class="card res" style="margin-top:18px"><div class="eyebrow">'+(win?'Victory':me<op?'Defeat':'Draw')+'</div><h2>You '+me+' – '+op+' '+n+'</h2><p class="mut">+'+xp+' XP</p></div>';setTimeout(function(){try{sb.removeChannel(c)}catch(e){}},1500);RT=null}
-function liveStop(q){if(!RT)return;clearInterval(RT.iv);var c=RT.ch;try{if(c){if(!q)c.send({type:'broadcast',event:'bye',payload:{}});setTimeout(function(){sb.removeChannel(c)},800)}}catch(e){}RT=null}
-function rnd(){return Math.random()-.5}
+window.promptDoc=promptDoc;
+
+/* =====================================================================
+   FLASHCARD SPRINT
+   ===================================================================== */
+function flashcard(){
+  if(!U){$('main').innerHTML='<div class="sec"><h1>Games</h1><p class="mut">Log in to play.</p><button class="btn gold" onclick="loginBox()">Log in</button></div>';return}
+  var deck=ALLQ.slice().sort(function(){return Math.random()-.5}).slice(0,8);
+  var ci=0,score=0,startT=Date.now();
+  var html='<div class="sec"><h1>Flashcard Sprint</h1><p class="mut">8 cards. Say the answer out loud, then flip to check.</p>';
+  html+='<div id="fcBox"><div class="fc-intro"><button class="btn gold" onclick="fcStart()">Start Sprint</button></div>';
+  html+='<div id="fcQ" style="display:none"><div class="mut" id="fcProg">Card <span id="fcN">1</span>/8</div>';
+  html+='<div class="fc-card" id="fcCard" onclick="fcFlip()"><div class="fc-front" id="fcFront"></div><div class="fc-back" id="fcBack"></div></div>';
+  html+='<div style="margin-top:10px"><button class="opt" onclick="fcRight()">Got it right</button> <button class="opt" onclick="fcWrong()">Wrong</button></div>';
+  html+='<div class="mut" id="fcFb"></div></div>';
+  html+='<div id="fcEnd" style="display:none"><h2 id="fcRes"></h2><div class="mut" id="fcMsg"></div><button class="btn gold" onclick="flashcard()">Play Again</button><button class="btn ghost" onclick="games()">Menu</button></div></div></div>';
+  $('main').innerHTML=html;
+  window.fcStart=function(){ci=0;score=0;startT=Date.now();$('fcQ').style.display='';$('fcEnd').style.display='none';fcNext();};
+  window.fcNext=function(){
+    if(ci>=deck.length){fcEnd();return}
+    $('fcN').textContent=(ci+1)+'/8';
+    $('fcFront').textContent=deck[ci].q;
+    $('fcBack').textContent='Answer: '+deck[ci].o[deck[ci].a];
+    document.getElementById('fcCard').classList.remove('flipped');
+    $('fcFb').textContent='';
+  };
+  window.fcFlip=function(){document.getElementById('fcCard').classList.toggle('flipped');};
+  window.fcRight=function(){score++;fcAdv();};
+  window.fcWrong=function(){fcAdv();};
+  window.fcAdv=function(){ci++;fcNext();};
+  window.fcEnd=function(){
+    $('fcQ').style.display='none';
+    var sec=Math.round((Date.now()-startT)/1000);
+    $('fcRes').textContent=score+'/8 correct in '+sec+'s';
+    $('fcMsg').textContent=score>=6?'Fast recall! ':'Review the lessons.';
+    addXp(score*3);
+    if(score==8){badge('fc');U.st.fcDone=(U.st.fcDone||0)+1}
+    chk();save();
+    $('fcEnd').style.display='';
+  };
+}
+window.flashcard=flashcard;
+
+/* =====================================================================
+   MATCH UP
+   ===================================================================== */
+function matchUp(){
+  if(!U){$('main').innerHTML='<div class="sec"><h1>Games</h1><p class="mut">Log in to play.</p><button class="btn gold" onclick="loginBox()">Log in</button></div>';return}
+  var terms=TERMS.slice().sort(function(){return Math.random()-.5}).slice(0,6);
+  var cards=[];
+  terms.forEach(function(t){cards.push({side:'term',text:t[0],id:t[0]});cards.push({side:'def',text:t[1],id:t[0]})});
+  cards=shuffle(cards);
+  var first=null,matched=0,moves=0,startT=Date.now(),lock=false;
+  var html='<div class="sec"><h1>Match Up</h1><p class="mut">Match each term to its definition.</p>';
+  html+='<div id="muBox"><div class="mu-intro"><button class="btn gold" onclick="muStart()">Start</button></div>';
+  html+='<div id="muQ" style="display:none"><div class="mut" id="muProg">Matched <span id="muM">0</span>/6 &middot; Moves <span id="muMov">0</span></div>';
+  html+='<div class="mu-grid" id="muGrid"></div>';
+  html+='<div class="mut" id="muFb"></div></div>';
+  html+='<div id="muEnd" style="display:none"><h2 id="muRes"></h2><div class="mut" id="muMsg"></div><button class="btn gold" onclick="matchUp()">Play Again</button><button class="btn ghost" onclick="games()">Menu</button></div></div></div>';
+  $('main').innerHTML=html;
+  window.muStart=function(){
+    cards=shuffle(cards);first=null;matched=0;moves=0;lock=false;
+    $('muM').textContent='0';$('muMov').textContent='0';
+    $('muQ').style.display='';$('muEnd').style.display='none';
+    var grid='';
+    cards.forEach(function(c,i){grid+='<div class="mu-card" onclick="muPick('+i+')" id="muCard'+i+'">'+c.text+'</div>'});
+    $('muGrid').innerHTML=grid;
+  };
+  window.muPick=function(i){
+    if(lock)return;
+    var el=document.getElementById('muCard'+i);
+    if(el.classList.contains('matched')||el.classList.contains('show'))return;
+    el.classList.add('show');
+    if(!first){first=i;return}
+    lock=true;moves++;$('muMov').textContent=moves;
+    var c1=cards[first],c2=cards[i];
+    if(c1.id==c2.id){setTimeout(function(){document.getElementById('muCard'+first).classList.add('matched');document.getElementById('muCard'+i).classList.add('matched');matched++;$('muM').textContent=matched;first=null;lock=false;if(matched==6)muEnd()},500)}
+    else{setTimeout(function(){document.getElementById('muCard'+first).classList.remove('show');document.getElementById('muCard'+i).classList.remove('show');first=null;lock=false},900)}
+  };
+  window.muEnd=function(){
+    $('muQ').style.display='none';
+    var sec=Math.round((Date.now()-startT)/1000);
+    $('muRes').textContent='Matched 6/6 in '+moves+' moves, '+sec+'s';
+    $('muMsg').textContent=sec<60?'Quick match! ':'Good work.';
+    addXp(Math.floor(600/moves));
+    if(sec<60){badge('match');U.st.matchFast=(U.st.matchFast||0)+1}
+    chk();save();
+    $('muEnd').style.display='';
+  };
+}
+window.matchUp=matchUp;
+
+/* =====================================================================
+   QUIZ BLASTER (canvas shooter)
+   ===================================================================== */
+function blaster(){
+  if(!U){$('main').innerHTML='<div class="sec"><h1>Games</h1><p class="mut">Log in to play.</p><button class="btn gold" onclick="loginBox()">Log in</button></div>';return}
+  var html='<div class="sec"><h1>Quiz Blaster</h1><p class="mut">Shoot the correct answer. Canvas shooter.</p>';
+  html+='<div id="blBox"><div class="bl-intro"><button class="btn gold" onclick="blStart()">Start</button></div>';
+  html+='<div id="blGame" style="display:none"><div class="mut" id="blHud">Score <span id="blScore">0</span> &middot; Round <span id="blRnd">1</span> &middot; HP <span id="blHp">3</span></div>';
+  html+='<canvas id="blCanvas" width="600" height="400"></canvas>';
+  html+='<div class="mut" id="blFb"></div></div>';
+  html+='<div id="blEnd" style="display:none"><h2 id="blRes"></h2><div class="mut" id="blMsg"></div><button class="btn gold" onclick="blaster()">Play Again</button><button class="btn ghost" onclick="games()">Menu</button></div></div></div>';
+  $('main').innerHTML=html;
+  window.blStart=function(){
+    blScore=0;blRnd=1;blHp=3;
+    $('blHud').style.display='';$('blGame').style.display='';$('blEnd').style.display='none';
+    $('blFb').textContent='';
+    blLoop();
+  };
+  var blScore=0,blRnd=1,blHp=3,blOver=false;
+  var canvas,ctx,ship={x:300,y:350,w:30,h:20},bullets=[],enemies=[],ansX=0,ansText='',ansCorrect=false,q=null;
+  function newQ(){
+    var all=ALLQ.slice();
+    q=all[Math.floor(Math.random()*all.length)];
+    var opts=q.o.slice();
+    var correct=opts[q.a];
+    ansText=correct;
+    enemies=[];
+    opts.forEach(function(o,i){
+      enemies.push({x:50+Math.random()*500,y:-50-w,tx:o,w:120,h:40,spd:1.5+i*0.3,active:true,correct:o==correct});
+    });
+    enemies[Math.floor(Math.random()*enemies.length)].x=250;
+  }
+  function blLoop(){
+    if(blOver){blEnd();return}
+    var c=document.getElementById('blCanvas');
+    if(!c){return}
+    ctx=c.getContext('2d');
+    ctx.clearRect(0,0,600,400);
+    // ship
+    ctx.fillStyle='#1F4277';ctx.fillRect(ship.x,ship.y,ship.w,ship.h);
+    // bullets
+    ctx.fillStyle='#f59e0b';
+    bullets.forEach(function(b,i){b.y-=6;ctx.fillRect(b.x,b.y,4,10);if(b.y<0)bullets.splice(i,1)});
+    // enemies
+    enemies.forEach(function(e){
+      if(!e.active)return;
+      e.y+=e.spd;
+      ctx.fillStyle=e.correct?'#10b981':'#ef4444';
+      ctx.fillRect(e.x,e.y,e.w,e.h);
+      ctx.fillStyle='#fff';ctx.font='14px sans-serif';ctx.fillText(e.tx,e.x+8,e.y+22);
+      if(e.y+e.h>ship.y&&e.x<ship.x+ship.w&&e.x+e.w>ship.x){
+        if(e.correct){blScore+=10;e.active=false;if(enemies.every(function(x){return!x.active})){blRnd++;newQ()}}
+        else{blHp--;e.active=false}
+        if(blHp<=0)blOver=true
+      }
+      if(e.y>400){e.active=false;if(enemies.every(function(x){return!x.active})){blRnd++;newQ()}}
+    });
+    $('blScore').textContent=blScore;$('blRnd').textContent=blRnd;$('blHp').textContent=blHp;
+    if(!blOver)requestAnimationFrame(blLoop);
+  }
+  window.blEnd=function(){
+    $('blGame').style.display='none';
+    $('blRes').textContent='Final score: '+blScore;
+    $('blMsg').textContent=blScore>=500?'Big score! ':'Keep practicing.';
+    addXp(Math.floor(blScore/20));
+    if(blScore>=500){badge('b500');U.st.blBest=Math.max(U.st.blBest||0,blScore)}
+    U.st.blRounds=(U.st.blRounds||0)+1;
+    if(U.st.blRounds>=1)badge('b1');
+    if(U.st.blRounds>=3)badge('b3');
+    chk();save();
+    $('blEnd').style.display='';
+  };
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowLeft'&&ship.x>0)ship.x-=12;
+    if(e.key==='ArrowRight'&&ship.x<570)ship.x+=12;
+    if(e.key===' '){bullets.push({x:ship.x+ship.w/2-2,y:ship.y});}
+  });
+  newQ();
+}
+window.blaster=blaster;
+
+/* =====================================================================
+   GEM MATCH (match-3)
+   ===================================================================== */
+function gemMatch(){
+  if(!U){$('main').innerHTML='<div class="sec"><h1>Games</h1><p class="mut">Log in to play.</p><button class="btn gold" onclick="loginBox()">Log in</button></div>';return}
+  var colors=['#6d6bff,#22d3ee','#f43f5e,#fb923c','#10b981,#22d3ee','#8b5cf6,#ec4899','#f59e0b,#ef4444'];
+  var cols=6,rows=6,grid=[],sel=null,score=0,moves=0;
+  function randGem(){return Math.floor(Math.random()*colors.length)}
+  function fill(){for(var y=0;y<rows;y++){grid[y]=[];for(var x=0;x<cols;x++)grid[y][x]=randGem()}}
+  function matches(){
+    var hit=[];
+    for(var y=0;y<rows;y++)for(var x=0;x<cols;x++){
+      if(x<cols-2&&grid[y][x]==grid[y][x+1]&&grid[y][x]==grid[y][x+2])hit.push([y,x],[y,x+1],[y,x+2]);
+      if(y<rows-2&&grid[y][x]==grid[y+1][x]&&grid[y][x]==grid[y+2][x])hit.push([y,x],[y+1,x],[y+2,x]);
+    }
+    return hit
+  }
+  function apply(){
+    var h=matches();
+    if(h.length){
+      var set=new Set(h.map(function(p){return p.join(',')}));
+      set.forEach(function(p){var pp=p.split(',');grid[pp[0]][pp[1]]=-1});
+      score+=h.length*10;moves++;
+      // drop
+      for(var x=0;x<cols;x++){var write=rows-1;for(var y=rows-1;y>=0;y--)if(grid[y][x]>=0){grid[write][x]=grid[y][x];write--}for(var y=write;y>=0;y--)grid[y][x]=randGem()}
+      return true
+    }
+    return false
+  }
+  function draw(){
+    var out='';
+    for(var y=0;y<rows;y++){
+      out+='<div style="display:flex;gap:4px">';
+      for(var x=0;x<cols;x++){
+        var g=grid[y][x];
+        var c=g>=0?colors[g]:'#eee';
+        var selCls=(sel&&sel.y==y&&sel.x==x)?'selected':'';
+        out+='<div class="gem '+selCls+'" onclick="gemPick('+y+','+x+')" style="background:linear-gradient(135deg,'+c+')">'+(g>=0?'':'')+'</div>'
+      }
+      out+='</div>'
+    }
+    $('gemGrid').innerHTML=out;
+    $('gemHud').textContent='Score '+score+' &middot; Moves '+moves;
+  }
+  window.gemPick=function(y,x){
+    if(!sel){sel={y:y,x:x};draw();return}
+    var dy=Math.abs(sel.y-y),dx=Math.abs(sel.x-x);
+    if((dy==1&&dx==0)||(dy==0&&dx==1)){
+      var tmp=grid[sel.y][sel.x];grid[sel.y][sel.x]=grid[y][x];grid[y][x]=tmp;
+      sel=null;draw();
+      if(!apply()){setTimeout(function(){var tmp2=grid[sel&&sel.y||0][sel&&sel.x||0];},0)}
+    }else{sel={y:y,x:x};draw()}
+  }
+  var html='<div class="sec"><h1>Gem Match</h1><p class="mut">Swap adjacent gems to make matches of 3.</p>';
+  html+='<div id="gemBox"><div class="gem-intro"><div class="mut" id="gemHud">Score 0 &middot; Moves 0</div><button class="btn gold" onclick="gemStart()">Start</button></div>';
+  html+='<div id="gemGame" style="display:none"><div id="gemGrid"></div></div>';
+  html+='<div id="gemEnd" style="display:none"><h2 id="gemRes"></h2><div class="mut" id="gemMsg"></div><button class="btn gold" onclick="gemMatch()">Play Again</button><button class="btn ghost" onclick="games()">Menu</button></div></div></div>';
+  $('main').innerHTML=html;
+  window.gemStart=function(){fill();score=0;moves=0;sel=null;$('gemGame').style.display='';$('gemEnd').style.display='none';draw();};
+  window.gemEnd=function(){
+    $('gemGame').style.display='none';
+    $('gemRes').textContent='Final score: '+score;
+    $('gemMsg').textContent=score>=1000?'Gem hunter! ':'Keep matching.';
+    addXp(Math.floor(score/10));
+    if(score>=1000){badge('gem1');U.st.gemBest=Math.max(U.st.gemBest||0,score)}
+    U.st.gemQ=(U.st.gemQ||0)+score;
+    if(U.st.gemQ>=10)badge('gemq');
+    chk();save();
+    $('gemEnd').style.display='';
+  };
+}
+window.gemMatch=gemMatch;
+
+/* =====================================================================
+   FRIEND DUELS
+   ===================================================================== */
+function duels(){
+  if(!U){$('main').innerHTML='<div class="sec"><h1>Games</h1><p class="mut">Log in to duel friends.</p><button class="btn gold" onclick="loginBox()">Log in</button></div>';return}
+  var html='<div class="sec"><h1>Friend Duels</h1><p class="mut">Challenge a friend to a quiz. Live or play-later.</p>';
+  html+='<div class="grid">';
+  html+='<div class="card"><h3>Live Duel</h3><p class="mut">Share a room code and race in real time.</p><button class="btn gold" onclick="duelCreate()">Create Room</button></div>';
+  html+='<div class="card"><h3>Play Later</h3><p class="mut">Send a quiz to a friend to complete when they log in.</p><button class="btn gold" onclick="duelSend()">Send Challenge</button></div>';
+  html+='<div class="card"><h3>My Friends</h3><div id="duelFriends" class="mut">Loading…</div></div>';
+  html+='</div></div>';
+  $('main').innerHTML=html;
+  refreshFriends();
+  window.duelCreate=function(){
+    var code=Math.floor(100000+Math.random()*900000).toString();
+    DG={code:code,host:U.id,players:[U.id],started:false};
+    sb.from('duels').insert({code:code,host:U.id,status:'waiting'}).then(function(){});
+    $('modal').innerHTML='<div class="modal"><div class="box"><h2>Live Duel Room</h2><p class="mut">Room code: <b>'+code+'</b></p><p class="mut">Give this code to a friend. They enter it on their Profile page to join.</p><button class="btn ghost" onclick="$(\'modal\').innerHTML=\'\'">Close</button></div></div>';
+    badge('duel');U.st.duels=(U.st.duels||0)+1;chk();save();
+  };
+  window.duelSend=function(){
+    var target=prompt('Friend username:');
+    if(!target)return;
+    sb.from('profiles').select('id').eq('username',target).single().then(function(r){
+      if(r.error||!r.data){toast('User not found');return}
+      sb.from('duel_invites').insert({from:U.id,to:r.data.id,status:'pending'}).then(function(){toast('Challenge sent');refreshFriends()})
+    })
+  };
+  window.refreshFriends=function(){
+    if(!U)return;
+    var el=$('duelFriends');
+    if(!el)return;
+    var list=U.friends.map(function(f){return f.name||f}).join(', ')||'None yet.';
+    el.textContent=list;
+  }
+}
+window.duels=duels;
+
+/* =====================================================================
+   GAMES PAGE RENDER
+   ===================================================================== */
+function games(){
+  if(!U){$('main').innerHTML='<div class="sec"><h1>Games</h1><p class="mut">Log in to play Quiz Race, Myth Buster, Prompt Doctor, Flashcard Sprint, Match Up, Quiz Blaster, Gem Match, and Friend Duels.</p><button class="btn gold" onclick="loginBox()">Log in</button></div>';return}
+  var html='<div class="sec"><h1>Games</h1><p class="mut">Play to earn XP and badges.</p><div class="grid">';
+  html+='<div class="card"><h3>Quiz Race</h3><p class="mut">10 questions, answer fast. Wrong answers lose XP.</p><button class="btn gold" onclick="race()">Play</button></div>';
+  html+='<div class="card"><h3>Myth Buster</h3><p class="mut">True or false AI myths.</p><button class="btn gold" onclick="myth()">Play</button></div>';
+  html+='<div class="card"><h3>Prompt Doctor</h3><p class="mut">Pick the better rewritten prompt.</p><button class="btn gold" onclick="promptDoc()">Play</button></div>';
+  html+='<div class="card"><h3>Flashcard Sprint</h3><p class="mut">8 cards, say the answer, flip to check.</p><button class="btn gold" onclick="flashcard()">Play</button></div>';
+  html+='<div class="card"><h3>Match Up</h3><p class="mut">Match terms to definitions.</p><button class="btn gold" onclick="matchUp()">Play</button></div>';
+  html+='<div class="card"><h3>Quiz Blaster</h3><p class="mut">Canvas shooter — shoot the correct answer.</p><button class="btn gold" onclick="blaster()">Play</button></div>';
+  html+='<div class="card"><h3>Gem Match</h3><p class="mut">Match-3 gem puzzle.</p><button class="btn gold" onclick="gemMatch()">Play</button></div>';
+  html+='<div class="card"><h3>Friend Duels</h3><p class="mut">Challenge friends live or play-later.</p><button class="btn gold" onclick="duels()">Open</button></div>';
+  html+='</div></div>';
+  $('main').innerHTML=html;
+}
+$('main').innerHTML=games();
 init();
 </script>
 </body>

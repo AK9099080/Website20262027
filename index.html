@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<base href="/">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<base href="/">
 <title>AxonEDU &middot; AI Education</title>
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -18,13 +18,14 @@
   </div>
   <nav class="main-nav">
     <a href="index.html" class="nav-link on">Home</a>
-    <a href="about.html" class="nav-link">Why Learn AI</a>
-    <a href="stats.html" class="nav-link">Statistics</a>
+    <a href="why.html" class="nav-link">Why Learn AI</a>
+    <a href="statistics.html" class="nav-link">Statistics</a>
     <a href="news.html" class="nav-link">News</a>
     <a href="dash.html" class="nav-link">Dashboard</a>
     <a href="lib.html" class="nav-link">Library</a>
     <a href="games.html" class="nav-link">Games</a>
     <a href="lb.html" class="nav-link">Leaderboards</a>
+    <a href="me.html" class="nav-link">Profile</a>
     <a href="references.html" class="nav-link">References</a>
   </nav>
   <div class="auth-center">
@@ -39,8 +40,8 @@
 <footer>
   <div class="footer-links">
     <a href="index.html">Home</a>
-    <a href="about.html">Why Learn AI</a>
-    <a href="stats.html">Statistics</a>
+    <a href="why.html">Why Learn AI</a>
+    <a href="statistics.html">Statistics</a>
     <a href="news.html">News</a>
     <a href="references.html">References</a>
   </div>
@@ -294,7 +295,7 @@ var REFS=[];
 /* =====================================================================
    STATE & SUPABASE
    ===================================================================== */
-var U=null,DB={},G=null,FC=null,MU=null,BL=null,DG=null,RT=null,INB=null,LT=null,LQ=null;
+var U=null,DB={},route='home',filt='All',lb='world',G=null,FC=null,MU=null,BL=null,DG=null,RT=null,GM=null,INB=null;
 var SB_URL='https://rytzhadculmofsblaxju.supabase.co';
 var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ5dHpoYWRjdWxtb2ZzYmxheGp1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4Mjg3MDIsImV4cCI6MjEwODQwNDcwMn0.d74dfDYWQGKGAmeYS43Bw24PSsdQF1WLHKQGQq7S4CU';
 var sb=null,LB={rows:[],note:'',loading:false},QUIET=false;
@@ -308,19 +309,11 @@ function loseXp(n){U.xp=Math.max(0,U.xp-n);sb.rpc('lose_xp',{n:n}).then(fail);ch
 function badge(k){if(U&&U.badges.indexOf(k)<0){U.badges.push(k);if(!QUIET)toast('New badge: '+BADGES.filter(function(b){return b[0]==k})[0][2])}}
 function chk(){if(!U)return;var c={les:0,tot:0,mods:0,md:{},lv:lvl(),xp:U.xp,st:U.st||{},fr:U.friends?U.friends.length:0,sch:U.school,cls:U.cls};MODS.forEach(function(m){var n=(U.done[m.id]||[]).length;c.les+=n;c.tot+=m.L.length;if(n==m.L.length){c.mods++;c.md[m.id]=1}});ACH.forEach(function(a){if(a[4](c))badge(a[0])})}
 function save(){if(U&&sb)sb.from('profiles').update({stats:U.st}).eq('id',U.id).then(function(){})}
-function go(r){var m={home:'index.html',why:'about.html',stats:'stats.html',news:'news.html',dash:'dash.html',lib:'lib.html',games:'games.html',lb:'lb.html',me:'me.html'};if(m[r])location.href=m[r];}
+function go(r){var m={home:'index.html',why:'why.html',stats:'statistics.html',news:'news.html',dash:'dash.html',lib:'lib.html',games:'games.html',lb:'lb.html',me:'me.html'};if(m[r])location.href=m[r];}
 function updateAuthUI(){
-  var ab=$('authBtn'),lb=$('logoutBtn'),uc=$('userChip');
-  if(U){
-    ab.style.display='none';
-    lb.style.display='inline-block';
-    uc.style.display='inline-block';
-    uc.innerHTML=av(28)+'<b>'+U.name+'</b> Lv'+lvl();
-  } else {
-    ab.style.display='inline-block';
-    lb.style.display='none';
-    uc.style.display='none';
-  }
+  var ab=$('authBtn'),lbBtn=$('logoutBtn'),uc=$('userChip');
+  if(U){ab.style.display='none';lbBtn.style.display='inline-block';uc.style.display='inline-block';uc.innerHTML=av(28)+'<b>'+U.name+'</b> Lv'+lvl();}
+  else{ab.style.display='inline-block';lbBtn.style.display='none';uc.style.display='none';}
 }
 async function loadUser(id){
   try{
@@ -330,18 +323,14 @@ async function loadUser(id){
     U={id:id,name:p.data.username,xp:p.data.xp,av:Math.min(p.data.avatar||0,AVS.length-1),school:p.data.school||'',cls:p.data.class_code||'',done:{},badges:[],created:p.data.created_at,wins:0,st:(p.data.stats&&typeof p.data.stats=='object'?p.data.stats:{}),friends:[],reqIn:[],reqOut:[]};
     (pr.data||[]).forEach(function(r){U.done[r.module_id]=r.lessons});
     U.wins=U.st.raceWins||0;
-    await loadFriends();
-    QUIET=true;chk();QUIET=false;startInbox();return true
-  }catch(e){U=null;return false}
+    QUIET=true;chk();QUIET=false;return true}
+  catch(e){U=null;return false}
 }
 async function init(){
-  if(sb){
-    try{var r=await sb.auth.getSession();if(r.data.session)await loadUser(r.data.session.user.id)}catch(e){}}
+  if(sb){try{var r=await sb.auth.getSession();if(r.data.session)await loadUser(r.data.session.user.id)}catch(e){}}
   updateAuthUI();
-  renderHome();
 }
-function loginBox(){
-  $('modal').innerHTML='<div class="modal" onclick="if(event.target==this)$(\'modal\').innerHTML=\'\'"><div class="box"><h2>Log in or sign up</h2><p class="mut">Pick a username (3–16 letters, numbers or _) and a 6-digit PIN. New username? We’ll create your account. Existing one? Enter your PIN to continue. Don’t use your real name.</p><input type="text" id="un" maxlength="16" placeholder="Username" autocomplete="off"><input type="password" id="pin" inputmode="numeric" maxlength="6" placeholder="6-digit PIN" onkeydown="if(event.key==\'Enter\')doLogin()"><button class="btn" id="lgbtn" onclick="doLogin()">Let’s go</button> <button class="btn ghost" onclick="$(\'modal\').innerHTML=\'\'">Cancel</button></div></div>';$('un').focus()}
+function loginBox(){$('modal').innerHTML='<div class="modal" onclick="if(event.target==this)$(\'modal\').innerHTML=\'\'"><div class="box"><h2>Log in or sign up</h2><p class="mut">Pick a username (3–16 letters, numbers or _) and a 6-digit PIN. New username? We’ll create your account. Existing one? Enter your PIN to continue. Don’t use your real name.</p><input type="text" id="un" maxlength="16" placeholder="Username" autocomplete="off"><input type="password" id="pin" inputmode="numeric" maxlength="6" placeholder="6-digit PIN" onkeydown="if(event.key==\'Enter\')doLogin()"><button class="btn" id="lgbtn" onclick="doLogin()">Let’s go</button> <button class="btn ghost" onclick="$(\'modal\').innerHTML=\'\'">Cancel</button></div></div>';$('un').focus()}
 async function doLogin(){
   var v=$('un').value.trim(),pin=$('pin').value.trim();
   if(!/^[A-Za-z0-9_]{3,16}$/.test(v)){toast('Username: 3–16 letters, numbers or _');return}
@@ -359,25 +348,20 @@ async function doLogin(){
     if(!await loadUser(r.data.user.id)){b.disabled=false;return}$('modal').innerHTML='';toast('Welcome, '+U.name+'!');go('dash')}
   catch(e){b.disabled=false;toast('Login failed: '+(e&&e.message?e.message:'Check your connection'));}
 }
-async function logout(){
-  try{if(INB)sb.removeChannel(INB)}catch(e){}
-  if(RT)liveStop();
-  try{await sb.auth.signOut()}catch(e){}
-  U=null;updateAuthUI();renderHome();location.href='index.html'}
+async function logout(){try{if(INB)sb.removeChannel(INB)}catch(e){}if(RT)liveStop();try{await sb.auth.signOut()}catch(e){}U=null;updateAuthUI();location.href='index.html'}
 function fail(r){if(r&&r.error)toast('Could not save. Check your connection.')}
 
 /* =====================================================================
-   PAGE RENDERING
+   PAGE RENDERING — HOME
    ===================================================================== */
 function tags(m){return m.tags.map(function(t){return '<span class="tag '+t+'">'+t+'</span>'}).join('')}
-function mcard(m){var p=prog(m);return '<div class="card"><div class="chip">'+m.ic+'</div><h3>'+m.t+'</h3><p class="mut">'+m.d+'</p>'+tags(m)+'<div class="bar"><i style="width:'+p+'%"></i></div><div class="src mut">'+p+'% complete</div><button class="btn" style="margin-top:10px" onclick="go(\'lib\')">'+(p==100?'Review':p?'Continue':'Start')+'</button></div>'}
 function home(){
   return '<div class="hero"><div><div class="eyebrow">AI literacy for grades 9–12</div><h1>Understand AI. Use it well. Level up.</h1><p>AxonEDU is a free learning portal for grades 9–12. Learn how AI works, try real tools, and earn XP while you do it.</p><button class="btn gold" onclick="'+(U?"go('dash')":'loginBox()')+'" style="font-size:17px;padding:12px 26px">'+(U?'Continue learning':'Start learning')+'</button></div><img src="https://github.com/AK9099080/Website20262027/blob/main/img/hero.png?raw=true" alt="AxonEDU hero" style="width:100%;border-radius:14px;border:1px solid var(--line);display:block" onerror="this.style.display=\'none\'"></div>'+
   '<div class="sec"><h2>About us</h2><p>We’re students who think AI shouldn’t feel like a mystery or a shortcut. Our lessons are short, our games are fun, and everything is built around using AI honestly and smartly in school.</p></div>'+
   '<div class="sec"><h2>What sets us apart</h2><div class="grid">'+[['01','Learn by playing','Race classmates and earn XP, badges and avatars.'],['02','Easy to pick','Every lesson is tagged Easy, Hard, Essential or First.'],['03','Ethics built in','Not just how to use AI, but how to use it fairly.'],['04','Balanced news','Plain updates on advancements and concerns, no politics.']].map(function(c){return '<div class="card"><div class="chip">'+c[0]+'</div><h3>'+c[1]+'</h3><p class="mut">'+c[2]+'</p></div>'}).join('')+'</div></div>'+
   '<div class="sec"><h2>5 learning modules</h2><div class="grid">'+MODS.map(function(m){return '<div class="card"><div class="chip">'+m.ic+'</div><h3>'+m.t+'</h3><p class="mut">'+m.d+'</p>'+tags(m)+'</div>'}).join('')+'</div></div>'
 }
-function renderHome(){$('main').innerHTML=home()}
+$('main').innerHTML=home();
 init();
 </script>
 </body>

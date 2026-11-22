@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<base href="/">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<base href="/">
 <title>Library &middot; AxonEDU</title>
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -18,13 +18,14 @@
   </div>
   <nav class="main-nav">
     <a href="index.html" class="nav-link">Home</a>
-    <a href="about.html" class="nav-link">Why Learn AI</a>
-    <a href="stats.html" class="nav-link">Statistics</a>
+    <a href="why.html" class="nav-link">Why Learn AI</a>
+    <a href="statistics.html" class="nav-link">Statistics</a>
     <a href="news.html" class="nav-link">News</a>
     <a href="dash.html" class="nav-link">Dashboard</a>
     <a href="lib.html" class="nav-link on">Library</a>
     <a href="games.html" class="nav-link">Games</a>
     <a href="lb.html" class="nav-link">Leaderboards</a>
+    <a href="me.html" class="nav-link">Profile</a>
     <a href="references.html" class="nav-link">References</a>
   </nav>
   <div class="auth-center">
@@ -39,8 +40,8 @@
 <footer>
   <div class="footer-links">
     <a href="index.html">Home</a>
-    <a href="about.html">Why Learn AI</a>
-    <a href="stats.html">Statistics</a>
+    <a href="why.html">Why Learn AI</a>
+    <a href="statistics.html">Statistics</a>
     <a href="news.html">News</a>
     <a href="references.html">References</a>
   </div>
@@ -48,6 +49,9 @@
 </footer>
 
 <script>
+/* =====================================================================
+   SHARED DATA — QUIZ, MYTH, PROMPT, TERMS, ALLQ
+   ===================================================================== */
 function Q(q,right,w1,w2,w3){var o=[right,w1,w2,w3].filter(Boolean).sort(function(){return Math.random()-.5});return{q:q,o:o,a:o.indexOf(right)}}
 function TF(q,isTrue){return{q:q,o:['True','False'],a:isTrue?0:1}}
 var QUIZ=[
@@ -93,7 +97,7 @@ Q('A hallucination is most likely to include…','Invented quotes or citations',
 Q('Which habit helps you learn with AI?','Try first, then use AI to check','Ask AI before reading anything','Never read the original','Copy and paste'),
 Q('What does a CAPTCHA try to tell apart?','Humans from automated bots','Cats from dogs','Fast from slow','Old from new'),
 Q('Which step reduces AI bias?','Testing on many different groups of people','Using only one kind of data','Ignoring complaints','Hiding results'),
-Q('What does a “context window” limit?','How much text a model can consider at once','How long you can chat per day','The screen size','The font'),
+Q('What does “context window” limit?','How much text a model can consider at once','How long you can chat per day','The screen size','The font'),
 Q('Which is a sign of good data?','It is accurate, current and covers many groups','It is old and unchecked','It is all the same','It is secret'),
 Q('What does “open source” software mean?','Its code is available for others to view or use','It is free of bugs','It has no owner','It runs offline only'),
 Q('Spaced repetition means…','Reviewing material at growing time gaps','Studying once all night','Reading one page','Skipping review'),
@@ -117,7 +121,7 @@ Q('Which prompt adds useful context?','Fix the grammar in my essay for 9th-grade
 Q('You want an example. Best follow-up?','Give one real-world example of this idea','More','Why','Again'),
 Q('Best way to use AI on a math problem?','Try it first, then ask AI to check your steps','Copy the answer','Ask for the answer only','Skip the problem'),
 Q('How do you test an AI’s claim?','Check a trusted source','Trust it','Ask it twice','Ignore it'),
-Q('Which prompt asks for a summary well?','Summarize this paragraph in 3 bullets for a 10th grader, then list 2 key terms','Summarize','Make it short','Tell me everything'),
+Q('Best way to summarize?','Summarize this paragraph in 3 bullets for a 10th grader, then list 2 key terms','Summarize','Make it short','Tell me everything'),
 Q('Which prompt asks for a useful format?','List the pros and cons of solar power in a two-column table','Solar','Tell me about energy','Explain'),
 Q('Which prompt sets a helpful role?','Act as a patient tutor and quiz me on fractions, one question at a time','Fractions','Be smart','Math now'),
 Q('You got a vague answer. Best follow-up?','Add details: “Make it specific to a high school chemistry class”','Say “bad”','Ask the same thing again','Give up'),
@@ -129,6 +133,9 @@ Q('Which prompt best asks for a comparison?','Compare mitosis and meiosis in a t
 var TERMS=[['Machine learning','Software that learns patterns from examples instead of fixed rules'],['Training data','The examples an AI learns from'],['Hallucination','When AI confidently states something false or invented'],['Bias','Unfair patterns an AI picks up from its data'],['Prompt','The instruction or question you give an AI'],['Deepfake','An AI-made fake image, audio or video of a real person'],['Generative AI','AI that creates new text, images or audio'],['Iteration','Improving an answer through follow-up requests'],['Plagiarism','Passing off someone else’s or an AI’s work as your own'],['Privacy','Keeping personal information out of tools you do not control'],['Algorithm','Step-by-step instructions a computer follows'],['Neural network','Layers of connected units that learn patterns'],['Token','A small chunk of text a language model reads'],['Large language model','AI trained on huge amounts of text to predict and write language'],['Model','The trained set of numbers that captures patterns'],['Parameter','A number inside a model that is adjusted during training'],['Supervised learning','Learning from examples that come with correct labels'],['Chatbot','A program you can hold a conversation with'],['Context window','How much text a model can consider at once'],['Fine-tuning','Extra training that specializes a model'],['Automation','Using technology to do tasks with little human effort'],['Transparency','Being open about how and when AI was used'],['Human in the loop','A person reviews or approves AI decisions'],['Overfitting','Memorizing training data instead of learning general patterns'],['Reverse image search','Finding where else an image appears online'],['Citation','A note crediting where information came from']];
 var ALLQ=QUIZ.concat(MYTH,PROMPT);
 
+/* =====================================================================
+   LESSON CONTENT — MODS
+   ===================================================================== */
 var MODS=[
 {id:'basics',t:'AI Basics',ic:'01',tags:['Easy','Essential','First'],d:'What AI really is, how it learns, and where it falls short.',L:[
 ['What is AI?',['Artificial intelligence (AI) is the field of building computer systems that do tasks that usually need human intelligence, such as recognizing speech, spotting faces in photos, translating languages, or recommending videos.','Almost all AI today is “narrow”: it is very good at one kind of task and cannot easily transfer that skill to something else. A chess program cannot write a poem, and a poem-writing program cannot drive a car.','AI does not think or understand the way people do. It finds patterns in data and uses math to predict what is most likely. When your phone suggests the next word, it is calculating probabilities from patterns in huge amounts of text.','You already meet AI daily: spam filters, map apps that reroute around traffic, streaming recommendations, and voice assistants. “General” AI, a machine as flexible as a human, does not exist today and is still a research goal.'],[
@@ -193,7 +200,7 @@ Q('Why can’t you rely only on visual clues to spot fakes?','AI keeps improving
 Q('Making a fake image of a classmate is…','Harmful and can break rules or laws','A harmless joke always','Required in some classes','Good practice')]],
 ['Responsibility, transparency and impact',['When AI makes a mistake, people and organizations are still responsible. “The computer did it” is not an excuse. Whoever builds, chooses, or uses a system shares accountability.','Transparency means being open about when and how AI is used, and being honest about what it cannot do.','Decisions with big consequences for people, such as health, law, or grades, should include human review.','AI also has costs. Training and running large models uses a lot of electricity and often water for cooling, and AI is changing jobs. Use AI thoughtfully, and build skills that work alongside it.'],[
 Q('High-stakes decisions about people should…','Include human review','Be fully automatic','Be hidden','Be random'),
-Q('Why does AI have an environmental impact?','Training and running models uses a lot of energy','AI uses paper','AI is made of metal only','It does not'),
+Q('Why does AI have an environmental impact?','Training and running models uses large amounts of energy','AI uses paper','AI is made of metal only','It does not'),
 Q('Transparency means…','Being open about when and how AI was used','Hiding AI use','Making AI invisible','Deleting records')]]
 ]},
 {id:'gen',t:'Generative AI',ic:'04',tags:['Medium'],d:'How AI writes, draws and composes, and where it goes wrong.',L:[
@@ -204,7 +211,7 @@ Q('Generative models learn from…','Large amounts of existing examples','One si
 ['How language models work',['A large language model (LLM) is trained on huge amounts of text. Its core skill is predicting the next token, a small chunk of text such as a word or part of a word, over and over to build a response.','After the first training, models are often tuned further using human feedback, so their answers are more helpful and safer.','A model has a context window, which limits how much text it can consider at once. Very long chats or documents may push early details out.','LLMs do not look facts up like a database unless connected to search tools. They generate text that sounds right based on patterns, which is why they can be fluent and wrong.'],[
 Q('A large language model mainly works by…','Predicting the next piece of text','Copying web pages exactly','Reading minds','Using a calculator only'),
 Q('A “token” is…','A small chunk of text','A coin','A password','A video frame'),
-Q('Context window means…','How much text a model can consider at once','The browser window','The time of day','A pop-up ad')]],
+Q('Context window means…','How much text the model can consider at once','The browser window','The time of day','A pop-up ad')]],
 ['Hallucinations and limits',['A hallucination is a confident answer that is false or invented. It might be a made-up quote, a book that does not exist, or a wrong date.','Hallucinations are more likely with obscure topics, very specific requests like exact page numbers, and questions that assume something false.','You can reduce them: give the AI the text to work from, ask it to say when it is unsure, and request sources you can check.','Always verify important claims with reliable sources. A confident tone does not mean an answer is correct.'],[
 Q('A hallucination is…','A confident answer that is false or invented','A spelling mistake','A slow reply','A long answer'),
 Q('Which request is most likely to produce made-up details?','Exact page numbers from an obscure study','Adding 2 + 2','Defining “noun”','Naming the seasons'),
@@ -284,9 +291,13 @@ var STATS=[['65%','of teens say they’ve used an AI chatbot or tool','Pew Resea
 var NEWS=[['Models get better at reasoning','Newer AI systems can work through multi-step math and science problems, showing their steps along the way.','Advancement'],['Schools write AI policies','Districts are publishing guidelines on when AI help is allowed, and many ask students to cite it.','Education'],['AI helps spot disease earlier','Researchers are testing image-analysis tools that flag possible problems for doctors to review.','Science'],['Concerns: errors and over-reliance','Teachers note AI can be wrong and that leaning on it can weaken practice with writing and problem-solving.','Caution'],['Open and small models grow','Smaller models are now able to run on laptops and phones, making AI more widely available.','Advancement'],['Calls for clearer labels','Some groups want AI-made images and text to be clearly marked so people aren’t misled.','Caution']];
 var REFS=[];
 
-var U=null,SB_URL='https://rytzhadculmofsblaxju.supabase.co';
+/* =====================================================================
+   STATE & SUPABASE
+   ===================================================================== */
+var U=null,DB={},route='home',filt='All',lb='world',G=null,FC=null,MU=null,BL=null,DG=null,RT=null,GM=null,INB=null;
+var SB_URL='https://rytzhadculmofsblaxju.supabase.co';
 var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ5dHpoYWRjdWxtb2ZzYmxheGp1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4Mjg3MDIsImV4cCI6MjEwODQwNDcwMn0.d74dfDYWQGKGAmeYS43Bw24PSsdQF1WLHKQGQq7S4CU';
-var sb=null,QUIET=false;
+var sb=null,LB={rows:[],note:'',loading:false},QUIET=false;
 try{sb=supabase.createClient(SB_URL,SB_KEY)}catch(e){}
 function $(i){return document.getElementById(i)}
 function lvl(){return Math.floor(U.xp/100)+1}
@@ -297,31 +308,28 @@ function loseXp(n){U.xp=Math.max(0,U.xp-n);sb.rpc('lose_xp',{n:n}).then(fail);ch
 function badge(k){if(U&&U.badges.indexOf(k)<0){U.badges.push(k);if(!QUIET)toast('New badge: '+BADGES.filter(function(b){return b[0]==k})[0][2])}}
 function chk(){if(!U)return;var c={les:0,tot:0,mods:0,md:{},lv:lvl(),xp:U.xp,st:U.st||{},fr:U.friends?U.friends.length:0,sch:U.school,cls:U.cls};MODS.forEach(function(m){var n=(U.done[m.id]||[]).length;c.les+=n;c.tot+=m.L.length;if(n==m.L.length){c.mods++;c.md[m.id]=1}});ACH.forEach(function(a){if(a[4](c))badge(a[0])})}
 function save(){if(U&&sb)sb.from('profiles').update({stats:U.st}).eq('id',U.id).then(function(){})}
-function go(r){var m={home:'index.html',why:'about.html',stats:'stats.html',news:'news.html',dash:'dash.html',lib:'lib.html',games:'games.html',lb:'lb.html',me:'me.html'};if(m[r])location.href=m[r];}
+function go(r){var m={home:'index.html',why:'why.html',stats:'statistics.html',news:'news.html',dash:'dash.html',lib:'lib.html',games:'games.html',lb:'lb.html',me:'me.html'};if(m[r])location.href=m[r];}
 function updateAuthUI(){
-  var ab=$('authBtn'),lb=$('logoutBtn'),uc=$('userChip');
-  if(U){
-    ab.style.display='none';lb.style.display='inline-block';uc.style.display='inline-block';
-    uc.innerHTML=av(28)+'<b>'+U.name+'</b> Lv'+lvl();
-  } else {
-    ab.style.display='inline-block';lb.style.display='none';uc.style.display='none';
-  }
+  var ab=$('authBtn'),lbBtn=$('logoutBtn'),uc=$('userChip');
+  if(U){ab.style.display='none';lbBtn.style.display='inline-block';uc.style.display='inline-block';uc.innerHTML=av(28)+'<b>'+U.name+'</b> Lv'+lvl();}
+  else{ab.style.display='inline-block';lbBtn.style.display='none';uc.style.display='none';}
 }
 async function loadUser(id){
-  var p=await sb.from('profiles').select('*').eq('id',id).single();
-  if(p.error||!p.data){await sb.auth.signOut();U=null;return false}
-  var pr=await sb.from('progress').select('module_id,lessons').eq('user_id',id);
-  U={id:id,name:p.data.username,xp:p.data.xp,av:Math.min(p.data.avatar||0,AVS.length-1),school:p.data.school||'',cls:p.data.class_code||'',done:{},badges:[],created:p.data.created_at,wins:0,st:(p.data.stats&&typeof p.data.stats=='object'?p.data.stats:{}),friends:[],reqIn:[],reqOut:[]};
-  (pr.data||[]).forEach(function(r){U.done[r.module_id]=r.lessons});
-  U.wins=U.st.raceWins||0;
-  QUIET=true;chk();QUIET=false;return true}
+  try{
+    var p=await sb.from('profiles').select('*').eq('id',id).single();
+    if(p.error||!p.data){await sb.auth.signOut();U=null;return false}
+    var pr=await sb.from('progress').select('module_id,lessons').eq('user_id',id);
+    U={id:id,name:p.data.username,xp:p.data.xp,av:Math.min(p.data.avatar||0,AVS.length-1),school:p.data.school||'',cls:p.data.class_code||'',done:{},badges:[],created:p.data.created_at,wins:0,st:(p.data.stats&&typeof p.data.stats=='object'?p.data.stats:{}),friends:[],reqIn:[],reqOut:[]};
+    (pr.data||[]).forEach(function(r){U.done[r.module_id]=r.lessons});
+    U.wins=U.st.raceWins||0;
+    QUIET=true;chk();QUIET=false;return true}
+  catch(e){U=null;return false}
+}
 async function init(){
   if(sb){try{var r=await sb.auth.getSession();if(r.data.session)await loadUser(r.data.session.user.id)}catch(e){}}
   updateAuthUI();
-  $('main').innerHTML=libPage();
 }
-function loginBox(){
-  $('modal').innerHTML='<div class="modal" onclick="if(event.target==this)$(\'modal\').innerHTML=\'\'"><div class="box"><h2>Log in or sign up</h2><p class="mut">Pick a username (3–16 letters, numbers or _) and a 6-digit PIN. New username? We’ll create your account. Existing one? Enter your PIN to continue. Don’t use your real name.</p><input type="text" id="un" maxlength="16" placeholder="Username" autocomplete="off"><input type="password" id="pin" inputmode="numeric" maxlength="6" placeholder="6-digit PIN" onkeydown="if(event.key==\'Enter\')doLogin()"><button class="btn" id="lgbtn" onclick="doLogin()">Let’s go</button> <button class="btn ghost" onclick="$(\'modal\').innerHTML=\'\'">Cancel</button></div></div>';$('un').focus()}
+function loginBox(){$('modal').innerHTML='<div class="modal" onclick="if(event.target==this)$(\'modal\').innerHTML=\'\'"><div class="box"><h2>Log in or sign up</h2><p class="mut">Pick a username (3–16 letters, numbers or _) and a 6-digit PIN. New username? We’ll create your account. Existing one? Enter your PIN to continue. Don’t use your real name.</p><input type="text" id="un" maxlength="16" placeholder="Username" autocomplete="off"><input type="password" id="pin" inputmode="numeric" maxlength="6" placeholder="6-digit PIN" onkeydown="if(event.key==\'Enter\')doLogin()"><button class="btn" id="lgbtn" onclick="doLogin()">Let’s go</button> <button class="btn ghost" onclick="$(\'modal\').innerHTML=\'\'">Cancel</button></div></div>';$('un').focus()}
 async function doLogin(){
   var v=$('un').value.trim(),pin=$('pin').value.trim();
   if(!/^[A-Za-z0-9_]{3,16}$/.test(v)){toast('Username: 3–16 letters, numbers or _');return}
@@ -336,21 +344,81 @@ async function doLogin(){
       var ins=await sb.from('profiles').insert({id:s.data.user.id,username:v});
       if(ins.error){await sb.auth.signOut();b.disabled=false;toast('That username is already taken');return}
       r={data:{user:s.data.user}}}
-    if(!await loadUser(r.data.user.id)){b.disabled=false;return}$('modal').innerHTML='';toast('Welcome, '+U.name+'!');go('lib')}
+    if(!await loadUser(r.data.user.id)){b.disabled=false;return}$('modal').innerHTML='';toast('Welcome, '+U.name+'!');go('dash')}
   catch(e){b.disabled=false;toast('Login failed: '+(e&&e.message?e.message:'Check your connection'));}
 }
-async function logout(){
-  try{if(INB)sb.removeChannel(INB)}catch(e){}
-  if(RT)liveStop();
-  try{await sb.auth.signOut()}catch(e){}
-  U=null;updateAuthUI();$('main').innerHTML=libPage();location.href='index.html'}
+async function logout(){try{if(INB)sb.removeChannel(INB)}catch(e){}if(RT)liveStop();try{await sb.auth.signOut()}catch(e){}U=null;updateAuthUI();location.href='index.html'}
 function fail(r){if(r&&r.error)toast('Could not save. Check your connection.')}
-function tags(m){return m.tags.map(function(t){return '<span class="tag '+t+'">'+t+'</span>'}).join('')}
-function libPage(){
-  var g=MODS.map(function(m){var d=U.done[m.id]||[];return '<div class="card"><h3>'+m.t+'</h3><p class="mut">'+m.d+'</p>'+tags(m)+'<div class="mut">'+d.length+'/'+m.L.length+' lessons done</div>'+m.L.map(function(l,i){return '<div style="margin-top:8px;border-bottom:1px dashed #eef;padding-bottom:6px"><h4>'+l[0]+'</h4><p class="mut" style="margin-top:4px">'+l[1].slice(0,1).join(' ')+'</p><button class="btn" style="margin-top:6px" onclick="openLesson(\''+m.id+'\','+i+')">'+(d.indexOf(i)>=0?'Review':'Read')+'</button></div>'}).join('')+'</div>'}).join('');
-  return '<h1>Library</h1><p class="mut">Browse every lesson in every module. Tap a lesson to read it, then take its short quiz on the Dashboard.</p>'+g;
+
+/* =====================================================================
+   PAGE RENDERING — LIBRARY
+   ===================================================================== */
+function openLesson(mid,li){
+  if(!U){toast('Log in first');return}
+  var m=MODS.find(function(x){return x.id==mid});
+  var les=m.L[li];
+  var done=(U.done[mid]||[]).indexOf(li)>=0;
+  var body='<div class="box" style="max-width:760px;margin:24px auto"><button class="btn ghost" onclick="lib()" style="float:right">Back</button>';
+  body+='<h2 style="margin-top:0">'+m.t+': '+les[0]+'</h2>';
+  body+='<div style="line-height:1.7">'+les[1].map(function(p){return '<p>'+p+'</p>'}).join('')+'</div>';
+  if(les[2]&&les[2].length){body+='<h3 style="margin-top:14px">Quick Check</h3><div id="qcbox"></div><button class="btn gold" onclick="quizCheck(\''+mid+'\','+li+')">Check My Answers</button><div id="qcres"></div></div>';
+  body+='</div>';
+  $('modal').innerHTML='<div class="modal" onclick="if(event.target==this)$(\'modal\').innerHTML=\'\'">'+body+'</div>';
+  renderQuizCheck(mid,li);
 }
-function openLesson(id,i){clearInterval(LT);var m=MODS.filter(function(x){return x.id==id})[0],l=m.L[i],dn=(U.done[id]||[]).indexOf(i)>=0;LQ={id:id,i:i,t0:Date.now(),a:[]};var txt=l[1].map(function(p){return '<p>'+p+'</p>'}).join('');$('main').innerHTML='<h2>'+l[0]+'</h2><div class="mut" style="line-height:1.7;margin:16px 0">'+txt+'</div>'+(dn?'<p class="mut" style="margin-top:12px">You’ve completed this lesson.</p>':'')+'<div style="margin-top:20px"><button class="btn" onclick="lessonQuiz()">'+(dn?'Review':'Take the quiz')+'</button> <button class="btn ghost" onclick="$(\'main\').innerHTML=libPage()">Back to library</button></div>'}function lessonQuiz(){var m=MODS.filter(function(x){return x.id==LQ.id})[0],l=m.L[LQ.i];LQ.a=[];var qs=l[2];$('modal').innerHTML='<div class="modal" onclick="if(event.target==this)closeM()"><div class="box" style="max-width:720px"><h2>'+l[0]+'</h2><div id="qs">'+qs.map(function(q,qi){return '<div style="margin-top:14px"><h4>'+q.q+'</h4>'+q.o.map(function(o,k){return '<button class="opt" id="o'+qi+'_'+k+'" onclick="lqPick('+qi+','+k+')">'+o+'</button>'}).join('')+'</div>'}).join('')+'</div><div style="margin-top:16px;display:flex;gap:10px"><button id="qb" class="btn" disabled onkeydown="if(event.key==\'Enter\')lqSubmit()">Quiz unlocks in 15s</button> <button class="btn ghost" onclick="closeM()">Cancel</button></div></div></div>'}function lqPick(qi,oi){if(LQ.done)return;LQ.a[qi]=oi;var q=MODS.filter(function(x){return x.id==LQ.id})[0].L[LQ.i][2][qi];q.o.forEach(function(o,k){var b=$('o'+qi+'_'+k);if(b)b.className='opt'+(k==oi?' sel':'')})}function lqSubmit(){var m=MODS.filter(function(x){return x.id==LQ.id})[0],qs=m.L[LQ.i][2],n=0;for(var k=0;k<qs.length;k++)if(LQ.a[k]==null){toast('Answer every question first');return}LQ.done=true;qs.forEach(function(q,qi){if(LQ.a[qi]==q.a)n++;q.o.forEach(function(o,k){var b=$('o'+qi+'_'+k);if(b)b.className='opt'+(k==q.a?' good':(k==LQ.a[qi]?' no':''))})});var pass=n>=2,s=$('qs');s.outerHTML='<div class="res" style="width:100%"><h3>'+n+' / '+qs.length+(pass?' · Passed':' · Not yet')+'</h3><p class="mut">'+(pass?'Nice work.':'Green shows the correct answers. Re-read the lesson and try again.')+'</p></div>';if(pass){done(LQ.id,LQ.i,n==qs.length);}else{done(LQ.id,LQ.i,false);}}function done(id,i,perfect){var m=MODS.filter(function(x){return x.id==id})[0];U.done[id]=U.done[id]||[];if(U.done[id].indexOf(i)<0){U.done[id].push(i);addXp(25);if(perfect){addXp(10);bump('perfect')}if(U.done[id].length==m.L.length){addXp(50);toast('Module complete! +50 bonus XP')}saveProg(id);$('main').innerHTML=libPage()}function closeM(){$('modal').innerHTML='';$('main').innerHTML=libPage()}function saveProg(id){sb.from('progress').upsert({user_id:U.id,module_id:id,lessons:U.done[id]}).then(fail)}function bump(k,n){U.st[k]=(U.st[k]||0)+(n||1);saveSt();chk()}function saveSt(){clearTimeout(window._stt);window._stt=setTimeout(function(){if(U&&sb)sb.from('profiles').update({stats:U.st}).eq('id',U.id).then(function(){})},800)}
+function quizCheckState(){}
+function renderQuizCheck(mid,li){
+  var m=MODS.find(function(x){return x.id==mid});
+  var qs=lesQ(mid,li);
+  var html='';
+  qs.forEach(function(q,i){
+    html+='<div style="margin:8px 0"><p>'+(i+1)+'. '+q.q+'</p>';
+    q.o.forEach(function(o,j){html+='<label style="display:block;margin:4px 0"><input type="radio" name="qc'+i+'" value="'+j+'"> '+o+'</label>'});
+    html+='</div>';
+  });
+  $('qcbox').innerHTML=html;
+}
+function lesQ(mid,li){
+  var m=MODS.find(function(x){return x.id==mid});
+  return m.L[li][2]||[];
+}
+function quizCheck(mid,li){
+  var qs=lesQ(mid,li);
+  var score=0;
+  qs.forEach(function(q,i){
+    var sel=document.querySelector('input[name="qc'+i+'"]:checked');
+    if(sel&&parseInt(sel.value)==q.a)score++;
+  });
+  var done=U.done[mid]||[];
+  if(done.indexOf(li)<0){
+    done.push(li);U.done[mid]=done;
+    sb.from('progress').upsert({user_id:U.id,module_id:mid,lessons:done}).then(function(){});
+    addXp(10);
+  }
+  $('qcres').innerHTML='<div class="mut" style="margin-top:8px">You got '+score+'/'+qs.length+' right.'+(score==qs.length?' Lesson complete! +10 XP':'')+'</div>';
+  chk();save();
+}
+function lib(){
+  if(!U){$('main').innerHTML='<div class="sec"><h1>Library</h1><p class="mut">Log in to open lessons and track your reading.</p><button class="btn gold" onclick="loginBox()">Log in</button></div>';return}
+  var done=U.done||{};
+  var html='<div class="sec"><h1>Library</h1><p class="mut">Read lessons and check your understanding. Completed lessons save to your profile.</p>';
+  html+='<div class="grid">';
+  MODS.forEach(function(m){
+    var n=(done[m.id]||[]).length;
+    var p=Math.round((n/m.L.length)*100);
+    html+='<div class="card"><div class="chip">'+m.ic+'</div><h3>'+m.t+'</h3><p class="mut">'+m.d+'</p>'+tags(m)+'<div class="bar" style="height:8px;background:#eee;border-radius:4px;overflow:hidden;margin:8px 0"><div class="bar-fill" style="width:'+p+'%;background:'+(n==m.L.length?'#10b981':'var(--c-pri)')+';height:100%"></div></div>';
+    html+='<div class="mut" style="font-size:13px;margin-top:4px">'+n+'/'+m.L.length+' lessons &middot; '+p+'%</div>';
+    m.L.forEach(function(les,i){
+      var d=(done[m.id]||[]).indexOf(i)>=0;
+      html+='<div class="row" style="margin-top:8px"><div style="flex:1"><div style="font-weight:600">'+les[0]+'</div><div class="mut" style="font-size:13px">'+d?'done':'not yet'+'</div></div><button class="btn'+(d?' ghost':' gold')+'" onclick="openLesson(\''+m.id+'\','+i+')">'+(d?'Re-read':'Start')+'</button></div>';
+    });
+    html+='</div>';
+  });
+  html+='</div></div>';
+  $('main').innerHTML=html;
+}
+function tags(m){return m.tags.map(function(t){return '<span class="tag '+t+'">'+t+'</span>'}).join('')}
+$('main').innerHTML=lib();
 init();
 </script>
 </body>
